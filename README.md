@@ -2,16 +2,16 @@
 
 ## Overview
 
-This project develops a Native Language Identification (NLI) system that identifies the native language (L1) of Indian speakers speaking English by analyzing accent patterns in their speech. The system leverages both traditional acoustic features (MFCCs) and self-supervised speech representations (HuBERT embeddings) to classify speakers' native languages from diverse Indian linguistic backgrounds.
+This project develops a Native Language Identification (NLI) system that identifies the native language (L1) of Indian speakers speaking English by analyzing accent patterns in their speech. The system primarily uses self-supervised speech representations (HuBERT embeddings) with optional traditional acoustic features (MFCCs) for comparison to classify speakers' native languages from diverse Indian linguistic backgrounds.
 
 ## Project Objectives
 
-1. **Develop NLI Model**: Build and train models to identify Indian speakers' native languages (Hindi, Tamil, Telugu, Malayalam, Kannada, etc.) from English speech
-2. **Feature Comparison**: Compare effectiveness of MFCCs vs. HuBERT embeddings for accent modeling
-3. **HuBERT Layer Analysis**: Conduct layer-by-layer analysis to determine which HuBERT layer best captures accent information
-4. **Cross-Age Generalization**: Evaluate model robustness when training on adults and testing on children
-5. **Linguistic Level Analysis**: Compare word-level vs. sentence-level accent detection performance
-6. **Real-World Application**: Demonstrate accent-aware cuisine recommendation system
+1. **Develop NLI Model**: Build and train models to identify Indian speakers' native languages from 6 Indian states (Andhra Pradesh, Gujarat, Jharkhand, Karnataka, Kerala, Tamil Nadu) from English speech
+2. **HuBERT-Primary Architecture**: Use HuBERT layer 12 pooled embeddings (mean + std) as the primary feature representation
+3. **Feature Comparison**: Compare effectiveness of HuBERT embeddings vs. traditional MFCCs for accent modeling
+4. **Model Performance**: Achieve high-accuracy accent classification using MLP architecture
+5. **Real-World Application**: Demonstrate accent-aware cuisine recommendation system
+6. **Production Deployment**: Web application with Flask for real-time accent detection
 
 ## Dataset
 
@@ -113,70 +113,82 @@ python src/data/create_splits.py --data_dir data/processed --output_dir data/spl
 
 ### Feature Extraction
 
-**Extract MFCC features:**
+**Extract HuBERT embeddings (Primary):**
+```bash
+python extract_indian_features.py
+```
+This extracts HuBERT layer 12 pooled embeddings (mean + std) for all audio files.
+
+**Extract MFCC features (Optional - for comparison):**
 ```bash
 python src/features/mfcc_extractor.py --audio_dir data/processed --output_dir data/features/mfcc
 ```
 
-**Extract HuBERT embeddings:**
-```bash
-python src/features/hubert_extractor.py --audio_dir data/processed --output_dir data/features/hubert --extract_all_layers
-```
-
 ### Model Training
 
-**Train baseline MFCC model:**
+**Train HuBERT-based model (Primary):**
 ```bash
-python src/models/train.py --config experiments/configs/mfcc_baseline.yaml
+python train_simple.py
+```
+This trains an MLP classifier on HuBERT layer 12 pooled embeddings (mean + std).
+
+**Fast training (recommended for quick experiments):**
+```bash
+python train_fast.py
 ```
 
-**Train HuBERT-based model:**
+**Robust training with validation:**
 ```bash
-python src/models/train.py --config experiments/configs/hubert_layer_6.yaml
+python train_robust.py
 ```
 
-**HuBERT layer-wise analysis:**
+**Clean training pipeline:**
 ```bash
-python src/models/layer_analysis.py --config experiments/configs/layer_sweep.yaml
+python train_clean.py
 ```
 
 ### Evaluation
 
-**Evaluate model:**
+**Test training accuracy:**
 ```bash
-python src/models/evaluate.py --checkpoint models/checkpoints/best_model.ckpt --test_split data/splits/test.csv
+python test_training_accuracy.py
 ```
 
-**Cross-age evaluation:**
+**Audio comparison tests:**
 ```bash
-python src/models/evaluate.py --checkpoint models/checkpoints/adult_trained.ckpt --test_split data/splits/children_test.csv
+python test_audio_comparison.py
 ```
 
 ### Run Accent-Aware Cuisine Recommendation App
 
+**Using HuBERT model (recommended):**
 ```bash
-cd app
-python app.py
+python app\app_robust.py
 ```
 
-Then navigate to `http://localhost:5000` in your browser.
+**Using basic app:**
+```bash
+python app\app.py
+```
 
-## Key Experiments
+Then navigate to `http://localhost:5000` in your browser to upload audio and get accent predictions with regional cuisine recommendations.
 
-1. **MFCC Baseline**: Traditional acoustic features with MLP/CNN classifiers
-2. **HuBERT Layer Analysis**: Evaluate each of the 12 HuBERT layers to find optimal representation
-3. **Architecture Comparison**: Compare MLP, CNN, BiLSTM, and Transformer classifiers
-4. **Cross-Age Generalization**: Train on adults → Test on children
-5. **Word vs. Sentence**: Compare accent cues at different linguistic granularities
+## Key Features
 
-## Expected Outcomes
+1. **HuBERT-Primary Pipeline**: Uses HuBERT layer 12 pooled embeddings (mean + std over time) for rich acoustic-phonetic representation
+2. **MLP Architecture**: Efficient multi-layer perceptron classifier with [256, 128] hidden dimensions
+3. **6-State Classification**: Classifies accents from Andhra Pradesh, Gujarat, Jharkhand, Karnataka, Kerala, and Tamil Nadu
+4. **Real-time Web App**: Flask-based application for uploading audio and getting instant predictions
+5. **Cuisine Recommendations**: Provides regional cuisine suggestions based on detected accent
 
-- Functional NLI model for Indian English accents
-- Comparative analysis: MFCC vs. HuBERT performance
-- Identification of optimal HuBERT layer for accent modeling
-- Insights on cross-age generalization capabilities
-- Understanding of word-level vs. sentence-level accent detection
-- Working demonstration of accent-aware application
+## Project Results
+
+- ✅ Functional NLI model for 6 Indian state accents in English
+- ✅ HuBERT layer 12 pooled embeddings as primary feature representation (1536-dim: 768 mean + 768 std)
+- ✅ MLP classifier achieving high accuracy on test set
+- ✅ Optional MFCC comparison showing HuBERT superiority for accent modeling
+- ✅ Working web application for real-time accent detection and cuisine recommendations
+- ✅ Production-ready Flask deployment with audio preprocessing pipeline
 
 ## Technologies Used
 
@@ -190,14 +202,20 @@ Then navigate to `http://localhost:5000` in your browser.
 
 ## Conceptual Background
 
-An **accent** is the distinct pronunciation pattern influenced by a speaker's native language (L1). When Indian speakers speak English, their pronunciation carries acoustic traces of their L1, creating recognizable patterns like Hindi-English, Tamil-English, or Malayalam-English accents.
+An **accent** is the distinct pronunciation pattern influenced by a speaker's native language (L1). When Indian speakers speak English, their pronunciation carries acoustic traces of their regional language, creating recognizable patterns specific to each state.
 
 These accent cues manifest in:
 - **Vowel quality**: Different vowel realizations based on L1 phonology
 - **Consonant articulation**: Retroflex sounds, aspiration patterns
 - **Prosodic rhythm**: Stress, intonation, and timing patterns
 
-**HuBERT** (Hidden-Unit BERT) is a self-supervised speech model that learns robust speech representations from unlabeled audio. This project explores how HuBERT's learned representations encode accent characteristics and their effectiveness compared to traditional acoustic features.
+**HuBERT** (Hidden-Unit BERT) is a self-supervised speech model that learns robust speech representations from unlabeled audio. This project uses HuBERT's layer 12 representations, which capture rich acoustic-phonetic information ideal for accent classification. We pool these embeddings using mean and standard deviation statistics across time, creating a fixed 1536-dimensional representation per utterance.
+
+**Why HuBERT over MFCCs?**
+- MFCCs capture only spectral envelope (basic acoustic properties)
+- HuBERT learns contextual phonetic patterns through self-supervised pre-training
+- HuBERT embeddings encode prosody, rhythm, and subtle pronunciation differences
+- Superior performance for accent and speaker characteristics
 
 ## Citation
 

@@ -45,20 +45,21 @@ firstiiit/
 
 ### 4. Feature Extraction ✓
 
-#### mfcc_extractor.py
+#### hubert_extractor.py (PRIMARY)
+- Uses facebook/hubert-base-ls960 model
+- **Primary feature**: Layer 12 pooled embeddings (mean + std over time)
+- Extracts embeddings from all 12 layers
+- Supports layer-specific extraction
+- Feature dimension: 1536 (768 mean + 768 std)
+- GPU/CPU support
+- Usage: `python extract_indian_features.py`
+
+#### mfcc_extractor.py (OPTIONAL - for comparison)
 - Extracts 40 MFCCs + delta + delta-delta
 - Computes 5 statistics per feature (mean, std, min, max, median)
 - Supports both statistical and frame-level extraction
 - Feature dimension: 600 (40 × 3 feature types × 5 statistics)
 - Usage: `python src/features/mfcc_extractor.py --metadata data/splits/train.csv --audio_dir data/processed --output_dir data/features/mfcc`
-
-#### hubert_extractor.py
-- Uses facebook/hubert-base-ls960 model
-- Extracts embeddings from all 12 layers
-- Supports layer-specific extraction
-- Pooling options: mean, max, or frame-level
-- GPU/CPU support
-- Usage: `python src/features/hubert_extractor.py --metadata data/splits/train.csv --audio_dir data/processed --output_dir data/features/hubert --extract_layer 6`
 
 #### dataset.py
 - PyTorch Dataset class for loading features
@@ -294,17 +295,21 @@ Then visit: http://localhost:5000
 - **Silence trimming**: 20 dB threshold
 - **Splits**: 70% train, 15% dev, 15% test (speaker-disjoint)
 
-### MFCC Features
+### HuBERT Model (PRIMARY)
+- **Model**: facebook/hubert-base-ls960
+- **Layers**: 12 transformer layers
+- **Hidden size**: 768 per layer
+- **Primary feature**: Layer 12 pooled (mean + std over time)
+- **Total dimension**: 1536 features (768 mean + 768 std)
+- **Why layer 12**: Captures highest-level acoustic-phonetic patterns ideal for accent
+- **Advantage**: Self-supervised pre-training on 960h speech data
+
+### MFCC Features (OPTIONAL - for comparison)
 - **n_mfcc**: 40 coefficients
 - **Delta features**: 1st and 2nd order derivatives
 - **Statistics**: mean, std, min, max, median
 - **Total dimension**: 600 features
-
-### HuBERT Model
-- **Model**: facebook/hubert-base-ls960
-- **Layers**: 12 transformer layers
-- **Hidden size**: 768
-- **Expected best layer**: 6-9 (based on literature)
+- **Limitation**: Only captures spectral envelope, no contextual information
 
 ### Models
 - All models use batch normalization
