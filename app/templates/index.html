@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Native Language Identification</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+            padding: 20px;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            margin-bottom: 30px;
+        }
+
+        .upload-section {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .upload-box {
+            border: 3px dashed #667eea;
+            border-radius: 15px;
+            padding: 40px;
+            margin: 20px 0;
+            background: #f8f9ff;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .upload-box:hover {
+            background: #eef0ff;
+            border-color: #764ba2;
+        }
+
+        .upload-box.dragover {
+            background: #e0e4ff;
+            border-color: #764ba2;
+        }
+
+        .upload-icon {
+            font-size: 3em;
+            margin-bottom: 10px;
+        }
+
+        #fileInput {
+            display: none;
+        }
+
+        .file-name {
+            margin: 15px 0;
+            font-weight: bold;
+            color: #667eea;
+            min-height: 24px;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 40px;
+            border: none;
+            border-radius: 30px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+
+        .btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            box-shadow: none;
+            transform: none;
+        }
+
+        .loading {
+            display: none;
+            margin: 20px 0;
+            color: #667eea;
+        }
+
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .result {
+            display: none;
+            margin-top: 30px;
+            padding: 30px;
+            background: linear-gradient(135deg, #f5f7ff 0%, #e8ebff 100%);
+            border-radius: 15px;
+            border-left: 5px solid #667eea;
+        }
+
+        .result.show {
+            display: block;
+            animation: slideIn 0.5s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .result h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+
+        .prediction-main {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .prediction-label {
+            font-size: 1em;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .prediction-value {
+            font-size: 2em;
+            font-weight: bold;
+            color: #667eea;
+            text-transform: capitalize;
+            margin-bottom: 10px;
+        }
+
+        .confidence-bar {
+            background: #e0e0e0;
+            border-radius: 10px;
+            height: 20px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        .confidence-fill {
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            height: 100%;
+            border-radius: 10px;
+            transition: width 1s ease;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 10px;
+            color: white;
+            font-size: 0.9em;
+            font-weight: bold;
+        }
+
+        .top-predictions {
+            margin-top: 20px;
+        }
+
+        .top-predictions h3 {
+            color: #555;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }
+
+        .prediction-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .prediction-item .accent {
+            font-weight: bold;
+            color: #333;
+            text-transform: capitalize;
+        }
+
+        .prediction-item .conf {
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .recommendations {
+            margin-top: 30px;
+        }
+
+        .recommendations h3 {
+            color: #555;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }
+
+        .recommendation-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border-left: 5px solid #667eea;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .recommendation-card h4 {
+            color: #667eea;
+            margin-bottom: 8px;
+            font-size: 1.1em;
+        }
+
+        .recommendation-card .region {
+            color: #764ba2;
+            font-weight: bold;
+            margin-bottom: 8px;
+            font-size: 0.9em;
+        }
+
+        .recommendation-card .description {
+            color: #666;
+            line-height: 1.5;
+        }
+
+        .error {
+            display: none;
+            background: #ffe0e0;
+            border-left: 5px solid #ff4444;
+            padding: 20px;
+            border-radius: 10px;
+            color: #cc0000;
+            margin-top: 20px;
+        }
+
+        .error.show {
+            display: block;
+        }
+
+        .model-info {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            color: white;
+            text-align: left;
+        }
+
+        .model-info h3 {
+            margin-bottom: 10px;
+        }
+
+        .model-info p {
+            margin: 5px 0;
+            opacity: 0.9;
+        }
+
+        .badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.9em;
+            margin: 3px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎙️ Indian Accent Recognition System</h1>
+            <p>Upload an audio file to identify the speaker's Indian state accent</p>
+            <div class="model-info">
+                <h3>📊 Model Information</h3>
+                <p><strong>Architecture:</strong> MLP Classifier [600 → 256 → 128 → 6]</p>
+                <p><strong>Test Accuracy:</strong> 100.00%</p>
+                <p><strong>Dataset:</strong> IndicAccentDB (2,798 samples)</p>
+                <p><strong>Supported Indian State Accents:</strong></p>
+                <div>
+                    <span class="badge">Andhra Pradesh</span>
+                    <span class="badge">Gujarat</span>
+                    <span class="badge">Jharkhand</span>
+                    <span class="badge">Karnataka</span>
+                    <span class="badge">Kerala</span>
+                    <span class="badge">Tamil Nadu</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="upload-section">
+                <div class="upload-box" id="uploadBox" onclick="document.getElementById('fileInput').click()">
+                    <div class="upload-icon">📁</div>
+                    <h3>Click to upload or drag & drop audio file</h3>
+                    <p style="color: #888; margin-top: 10px;">Supported formats: WAV, MP3, M4A, FLAC</p>
+                </div>
+                <input type="file" id="fileInput" accept="audio/*">
+                <div class="file-name" id="fileName"></div>
+                <button class="btn" id="predictBtn" onclick="predictAccent()" disabled>🔍 Predict Accent</button>
+            </div>
+
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p style="margin-top: 10px;">Analyzing audio...</p>
+            </div>
+
+            <div class="result" id="result">
+                <h2>🎯 Prediction Result</h2>
+                <div class="prediction-main">
+                    <div class="prediction-label">Detected Indian State Accent:</div>
+                    <div class="prediction-value" id="predictedAccent">-</div>
+                    <div class="confidence-bar">
+                        <div class="confidence-fill" id="confidenceFill" style="width: 0%">
+                            <span id="confidenceText">0%</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="top-predictions">
+                    <h3>📊 Top 3 Predictions</h3>
+                    <div id="topPredictions"></div>
+                </div>
+
+                <div class="recommendations">
+                    <h3>🍽️ Recommended Dishes from This Region</h3>
+                    <div id="recommendations"></div>
+                </div>
+            </div>
+
+            <div class="error" id="error">
+                <strong>❌ Error:</strong> <span id="errorMessage"></span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let selectedFile = null;
+
+        // File input change
+        document.getElementById('fileInput').addEventListener('change', function(e) {
+            if (e.target.files.length > 0) {
+                selectedFile = e.target.files[0];
+                document.getElementById('fileName').textContent = `Selected: ${selectedFile.name}`;
+                document.getElementById('predictBtn').disabled = false;
+                hideResults();
+            }
+        });
+
+        // Drag and drop
+        const uploadBox = document.getElementById('uploadBox');
+        
+        uploadBox.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            uploadBox.classList.add('dragover');
+        });
+
+        uploadBox.addEventListener('dragleave', function(e) {
+            e.preventDefault();
+            uploadBox.classList.remove('dragover');
+        });
+
+        uploadBox.addEventListener('drop', function(e) {
+            e.preventDefault();
+            uploadBox.classList.remove('dragover');
+            
+            if (e.dataTransfer.files.length > 0) {
+                selectedFile = e.dataTransfer.files[0];
+                document.getElementById('fileInput').files = e.dataTransfer.files;
+                document.getElementById('fileName').textContent = `Selected: ${selectedFile.name}`;
+                document.getElementById('predictBtn').disabled = false;
+                hideResults();
+            }
+        });
+
+        function hideResults() {
+            document.getElementById('result').classList.remove('show');
+            document.getElementById('error').classList.remove('show');
+        }
+
+        async function predictAccent() {
+            if (!selectedFile) return;
+
+            // Show loading, hide results
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('predictBtn').disabled = true;
+            hideResults();
+
+            // Prepare form data
+            const formData = new FormData();
+            formData.append('audio', selectedFile);
+
+            try {
+                const response = await fetch('/predict', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                // Hide loading
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('predictBtn').disabled = false;
+
+                if (data.accent) {
+                    // Show result
+                    document.getElementById('predictedAccent').textContent = data.accent;
+                    document.getElementById('confidenceText').textContent = data.confidence.toFixed(1) + '%';
+                    document.getElementById('confidenceFill').style.width = data.confidence + '%';
+
+                    // Show top predictions
+                    const topPredictionsDiv = document.getElementById('topPredictions');
+                    topPredictionsDiv.innerHTML = '';
+                    
+                    data.top_predictions.forEach((pred, index) => {
+                        const item = document.createElement('div');
+                        item.className = 'prediction-item';
+                        item.innerHTML = `
+                            <span class="accent">${index + 1}. ${pred.accent}</span>
+                            <span class="conf">${pred.confidence.toFixed(1)}%</span>
+                        `;
+                        topPredictionsDiv.appendChild(item);
+                    });
+
+                    // Show cuisine recommendations
+                    const recommendationsDiv = document.getElementById('recommendations');
+                    recommendationsDiv.innerHTML = '';
+                    
+                    if (data.recommendations && data.recommendations.length > 0) {
+                        data.recommendations.forEach((rec) => {
+                            const card = document.createElement('div');
+                            card.className = 'recommendation-card';
+                            card.innerHTML = `
+                                <h4>${rec.name}</h4>
+                                <p class="region">📍 ${rec.region}</p>
+                                <p class="description">${rec.description}</p>
+                            `;
+                            recommendationsDiv.appendChild(card);
+                        });
+                    }
+
+                    document.getElementById('result').classList.add('show');
+                } else {
+                    // Show error
+                    document.getElementById('errorMessage').textContent = data.error;
+                    document.getElementById('error').classList.add('show');
+                }
+            } catch (error) {
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('predictBtn').disabled = false;
+                document.getElementById('errorMessage').textContent = 'Failed to connect to server: ' + error.message;
+                document.getElementById('error').classList.add('show');
+            }
+        }
+    </script>
+</body>
+</html>

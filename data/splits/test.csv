@@ -1,0 +1,421 @@
+filepath,filename,speaker_id,native_language,age_group,utterance_type,text,sampling_rate,split,duration
+andhra_pradesh\Andhra_speaker (126).wav,Andhra_speaker (126).wav,andhra_pradesh_spk_0290,andhra_pradesh,adult,read,,44100,test,2.34
+andhra_pradesh\Andhra_speaker (1283).wav,Andhra_speaker (1283).wav,andhra_pradesh_spk_0316,andhra_pradesh,adult,read,,48000,test,4.0
+andhra_pradesh\Andhra_speaker (1103).wav,Andhra_speaker (1103).wav,andhra_pradesh_spk_0117,andhra_pradesh,adult,read,,48000,test,3.6
+andhra_pradesh\Andhra_speaker (1408).wav,Andhra_speaker (1408).wav,andhra_pradesh_spk_0455,andhra_pradesh,adult,read,,48000,test,3.6
+andhra_pradesh\Andhra_speaker (124).wav,Andhra_speaker (124).wav,andhra_pradesh_spk_0268,andhra_pradesh,adult,read,,44100,test,3.04
+andhra_pradesh\Andhra_speaker (1300).wav,Andhra_speaker (1300).wav,andhra_pradesh_spk_0336,andhra_pradesh,adult,read,,48000,test,4.4
+andhra_pradesh\Andhra_speaker (107).wav,Andhra_speaker (107).wav,andhra_pradesh_spk_0079,andhra_pradesh,adult,read,,44100,test,3.38
+andhra_pradesh\Andhra_speaker (1186).wav,Andhra_speaker (1186).wav,andhra_pradesh_spk_0208,andhra_pradesh,adult,read,,48000,test,4.6
+andhra_pradesh\Andhra_speaker (1212).wav,Andhra_speaker (1212).wav,andhra_pradesh_spk_0238,andhra_pradesh,adult,read,,48000,test,0.4
+andhra_pradesh\Andhra_speaker (1428).wav,Andhra_speaker (1428).wav,andhra_pradesh_spk_0477,andhra_pradesh,adult,read,,48000,test,5.2
+andhra_pradesh\Andhra_speaker (1121).wav,Andhra_speaker (1121).wav,andhra_pradesh_spk_0137,andhra_pradesh,adult,read,,48000,test,5.2
+andhra_pradesh\Andhra_speaker (1364).wav,Andhra_speaker (1364).wav,andhra_pradesh_spk_0406,andhra_pradesh,adult,read,,48000,test,4.6
+andhra_pradesh\Andhra_speaker (1367).wav,Andhra_speaker (1367).wav,andhra_pradesh_spk_0409,andhra_pradesh,adult,read,,48000,test,4.8
+andhra_pradesh\Andhra_speaker (1403).wav,Andhra_speaker (1403).wav,andhra_pradesh_spk_0450,andhra_pradesh,adult,read,,48000,test,4.8
+andhra_pradesh\Andhra_speaker (1366).wav,Andhra_speaker (1366).wav,andhra_pradesh_spk_0408,andhra_pradesh,adult,read,,48000,test,5.0
+andhra_pradesh\Andhra_speaker (1131).wav,Andhra_speaker (1131).wav,andhra_pradesh_spk_0148,andhra_pradesh,adult,read,,48000,test,4.8
+andhra_pradesh\Andhra_speaker (1298).wav,Andhra_speaker (1298).wav,andhra_pradesh_spk_0332,andhra_pradesh,adult,read,,48000,test,5.0
+andhra_pradesh\Andhra_speaker (1350).wav,Andhra_speaker (1350).wav,andhra_pradesh_spk_0391,andhra_pradesh,adult,read,,48000,test,4.6
+andhra_pradesh\Andhra_speaker (1048).wav,Andhra_speaker (1048).wav,andhra_pradesh_spk_0055,andhra_pradesh,adult,read,,48000,test,5.4
+andhra_pradesh\Andhra_speaker (1421).wav,Andhra_speaker (1421).wav,andhra_pradesh_spk_0470,andhra_pradesh,adult,read,,48000,test,4.2
+andhra_pradesh\Andhra_speaker (13).wav,Andhra_speaker (13).wav,andhra_pradesh_spk_0334,andhra_pradesh,adult,read,,44100,test,3.1
+andhra_pradesh\Andhra_speaker (1181).wav,Andhra_speaker (1181).wav,andhra_pradesh_spk_0203,andhra_pradesh,adult,read,,48000,test,4.8
+andhra_pradesh\Andhra_speaker (1446).wav,Andhra_speaker (1446).wav,andhra_pradesh_spk_0497,andhra_pradesh,adult,read,,48000,test,5.2
+andhra_pradesh\Andhra_speaker (1111).wav,Andhra_speaker (1111).wav,andhra_pradesh_spk_0126,andhra_pradesh,adult,read,,48000,test,5.0
+andhra_pradesh\Andhra_speaker (110).wav,Andhra_speaker (110).wav,andhra_pradesh_spk_0113,andhra_pradesh,adult,read,,44100,test,1.9
+andhra_pradesh\Andhra_speaker (1238).wav,Andhra_speaker (1238).wav,andhra_pradesh_spk_0266,andhra_pradesh,adult,read,,48000,test,5.0
+andhra_pradesh\Andhra_speaker (1297).wav,Andhra_speaker (1297).wav,andhra_pradesh_spk_0331,andhra_pradesh,adult,read,,48000,test,4.2
+andhra_pradesh\Andhra_speaker (1083).wav,Andhra_speaker (1083).wav,andhra_pradesh_spk_0094,andhra_pradesh,adult,read,,48000,test,14.2
+andhra_pradesh\Andhra_speaker (1068).wav,Andhra_speaker (1068).wav,andhra_pradesh_spk_0077,andhra_pradesh,adult,read,,48000,test,5.6
+andhra_pradesh\Andhra_speaker (1426).wav,Andhra_speaker (1426).wav,andhra_pradesh_spk_0475,andhra_pradesh,adult,read,,48000,test,5.2
+andhra_pradesh\Andhra_speaker (1250).wav,Andhra_speaker (1250).wav,andhra_pradesh_spk_0280,andhra_pradesh,adult,read,,48000,test,4.2
+andhra_pradesh\Andhra_speaker (1348).wav,Andhra_speaker (1348).wav,andhra_pradesh_spk_0388,andhra_pradesh,adult,read,,48000,test,4.2
+andhra_pradesh\Andhra_speaker (1033).wav,Andhra_speaker (1033).wav,andhra_pradesh_spk_0039,andhra_pradesh,adult,read,,48000,test,3.8
+andhra_pradesh\Andhra_speaker (1173).wav,Andhra_speaker (1173).wav,andhra_pradesh_spk_0194,andhra_pradesh,adult,read,,48000,test,5.4
+andhra_pradesh\Andhra_speaker (1435).wav,Andhra_speaker (1435).wav,andhra_pradesh_spk_0485,andhra_pradesh,adult,read,,48000,test,4.2
+andhra_pradesh\Andhra_speaker (1019).wav,Andhra_speaker (1019).wav,andhra_pradesh_spk_0023,andhra_pradesh,adult,read,,48000,test,2.66
+andhra_pradesh\Andhra_speaker (1162).wav,Andhra_speaker (1162).wav,andhra_pradesh_spk_0182,andhra_pradesh,adult,read,,48000,test,4.8
+andhra_pradesh\Andhra_speaker (1189).wav,Andhra_speaker (1189).wav,andhra_pradesh_spk_0211,andhra_pradesh,adult,read,,48000,test,4.4
+andhra_pradesh\Andhra_speaker (1092).wav,Andhra_speaker (1092).wav,andhra_pradesh_spk_0104,andhra_pradesh,adult,read,,48000,test,4.8
+andhra_pradesh\Andhra_speaker (1395).wav,Andhra_speaker (1395).wav,andhra_pradesh_spk_0440,andhra_pradesh,adult,read,,48000,test,4.4
+andhra_pradesh\Andhra_speaker (143).wav,Andhra_speaker (143).wav,andhra_pradesh_spk_0479,andhra_pradesh,adult,read,,44100,test,2.22
+andhra_pradesh\Andhra_speaker (108).wav,Andhra_speaker (108).wav,andhra_pradesh_spk_0090,andhra_pradesh,adult,read,,44100,test,2.24
+andhra_pradesh\Andhra_speaker (1160).wav,Andhra_speaker (1160).wav,andhra_pradesh_spk_0180,andhra_pradesh,adult,read,,48000,test,4.8
+andhra_pradesh\Andhra_speaker (1444).wav,Andhra_speaker (1444).wav,andhra_pradesh_spk_0495,andhra_pradesh,adult,read,,48000,test,4.6
+andhra_pradesh\Andhra_speaker (1006).wav,Andhra_speaker (1006).wav,andhra_pradesh_spk_0009,andhra_pradesh,adult,read,,48000,test,3.34
+andhra_pradesh\Andhra_speaker (1072).wav,Andhra_speaker (1072).wav,andhra_pradesh_spk_0082,andhra_pradesh,adult,read,,48000,test,5.2
+andhra_pradesh\Andhra_speaker (1242).wav,Andhra_speaker (1242).wav,andhra_pradesh_spk_0271,andhra_pradesh,adult,read,,48000,test,4.8
+andhra_pradesh\Andhra_speaker (102).wav,Andhra_speaker (102).wav,andhra_pradesh_spk_0024,andhra_pradesh,adult,read,,44100,test,2.22
+andhra_pradesh\Andhra_speaker (1272).wav,Andhra_speaker (1272).wav,andhra_pradesh_spk_0304,andhra_pradesh,adult,read,,48000,test,5.2
+andhra_pradesh\Andhra_speaker (1117).wav,Andhra_speaker (1117).wav,andhra_pradesh_spk_0132,andhra_pradesh,adult,read,,48000,test,14.0
+andhra_pradesh\Andhra_speaker (1076).wav,Andhra_speaker (1076).wav,andhra_pradesh_spk_0086,andhra_pradesh,adult,read,,48000,test,5.0
+andhra_pradesh\Andhra_speaker (1049).wav,Andhra_speaker (1049).wav,andhra_pradesh_spk_0056,andhra_pradesh,adult,read,,48000,test,5.4
+andhra_pradesh\Andhra_speaker (1404).wav,Andhra_speaker (1404).wav,andhra_pradesh_spk_0451,andhra_pradesh,adult,read,,48000,test,5.4
+andhra_pradesh\Andhra_speaker (1323).wav,Andhra_speaker (1323).wav,andhra_pradesh_spk_0361,andhra_pradesh,adult,read,,48000,test,5.2
+andhra_pradesh\Andhra_speaker (1287).wav,Andhra_speaker (1287).wav,andhra_pradesh_spk_0320,andhra_pradesh,adult,read,,48000,test,5.0
+andhra_pradesh\Andhra_speaker (104).wav,Andhra_speaker (104).wav,andhra_pradesh_spk_0046,andhra_pradesh,adult,read,,44100,test,2.5
+andhra_pradesh\Andhra_speaker (109).wav,Andhra_speaker (109).wav,andhra_pradesh_spk_0101,andhra_pradesh,adult,read,,44100,test,2.4
+andhra_pradesh\Andhra_speaker (1344).wav,Andhra_speaker (1344).wav,andhra_pradesh_spk_0384,andhra_pradesh,adult,read,,48000,test,4.6
+andhra_pradesh\Andhra_speaker (1028).wav,Andhra_speaker (1028).wav,andhra_pradesh_spk_0033,andhra_pradesh,adult,read,,48000,test,4.8
+andhra_pradesh\Andhra_speaker (1443).wav,Andhra_speaker (1443).wav,andhra_pradesh_spk_0494,andhra_pradesh,adult,read,,48000,test,5.6
+andhra_pradesh\Andhra_speaker (1136).wav,Andhra_speaker (1136).wav,andhra_pradesh_spk_0153,andhra_pradesh,adult,read,,48000,test,4.8
+andhra_pradesh\Andhra_speaker (1067).wav,Andhra_speaker (1067).wav,andhra_pradesh_spk_0076,andhra_pradesh,adult,read,,48000,test,4.6
+andhra_pradesh\Andhra_speaker (1413).wav,Andhra_speaker (1413).wav,andhra_pradesh_spk_0461,andhra_pradesh,adult,read,,48000,test,4.4
+andhra_pradesh\Andhra_speaker (1319).wav,Andhra_speaker (1319).wav,andhra_pradesh_spk_0356,andhra_pradesh,adult,read,,48000,test,6.0
+andhra_pradesh\Andhra_speaker (1387).wav,Andhra_speaker (1387).wav,andhra_pradesh_spk_0431,andhra_pradesh,adult,read,,48000,test,5.0
+andhra_pradesh\Andhra_speaker (1055).wav,Andhra_speaker (1055).wav,andhra_pradesh_spk_0063,andhra_pradesh,adult,read,,48000,test,5.2
+andhra_pradesh\Andhra_speaker (1310).wav,Andhra_speaker (1310).wav,andhra_pradesh_spk_0347,andhra_pradesh,adult,read,,48000,test,4.8
+andhra_pradesh\Andhra_speaker (1211).wav,Andhra_speaker (1211).wav,andhra_pradesh_spk_0237,andhra_pradesh,adult,read,,48000,test,6.6
+andhra_pradesh\Andhra_speaker (1008).wav,Andhra_speaker (1008).wav,andhra_pradesh_spk_0011,andhra_pradesh,adult,read,,48000,test,4.56
+andhra_pradesh\Andhra_speaker (1066).wav,Andhra_speaker (1066).wav,andhra_pradesh_spk_0075,andhra_pradesh,adult,read,,48000,test,5.0
+andhra_pradesh\Andhra_speaker (1020).wav,Andhra_speaker (1020).wav,andhra_pradesh_spk_0025,andhra_pradesh,adult,read,,48000,test,2.28
+andhra_pradesh\Andhra_speaker (1154).wav,Andhra_speaker (1154).wav,andhra_pradesh_spk_0173,andhra_pradesh,adult,read,,48000,test,4.8
+andhra_pradesh\Andhra_speaker (1013).wav,Andhra_speaker (1013).wav,andhra_pradesh_spk_0017,andhra_pradesh,adult,read,,48000,test,4.04
+andhra_pradesh\Andhra_speaker (1389).wav,Andhra_speaker (1389).wav,andhra_pradesh_spk_0433,andhra_pradesh,adult,read,,48000,test,5.2
+andhra_pradesh\Andhra_speaker (129).wav,Andhra_speaker (129).wav,andhra_pradesh_spk_0323,andhra_pradesh,adult,read,,44100,test,2.22
+gujrat\Gujrat_speaker_01_5_1.wav,Gujrat_speaker_01_5_1.wav,gujrat_spk_0075,gujrat,adult,read,,48000,test,3.4346666666666668
+gujrat\Gujrat_speaker_02_6_3.wav,Gujrat_speaker_02_6_3.wav,gujrat_spk_0246,gujrat,adult,read,,48000,test,4.032
+gujrat\Gujrat_speaker_01_4_9.wav,Gujrat_speaker_01_4_9.wav,gujrat_spk_0073,gujrat,adult,read,,48000,test,3.328
+gujrat\Gujrat_speaker_01_8_2.wav,Gujrat_speaker_01_8_2.wav,gujrat_spk_0126,gujrat,adult,read,,48000,test,3.3706666666666667
+gujrat\Gujrat_speaker_02_10_5.wav,Gujrat_speaker_02_10_5.wav,gujrat_spk_0159,gujrat,adult,read,,48000,test,4.245333333333333
+gujrat\Gujrat_speaker_02_8_6.wav,Gujrat_speaker_02_8_6.wav,gujrat_spk_0279,gujrat,adult,read,,48000,test,5.226666666666667
+gujrat\Gujrat_speaker_01_6_11.wav,Gujrat_speaker_01_6_11.wav,gujrat_spk_0092,gujrat,adult,read,,48000,test,2.986666666666667
+gujrat\Gujrat_speaker_01_1_3.wav,Gujrat_speaker_01_1_3.wav,gujrat_spk_0022,gujrat,adult,read,,48000,test,3.6266666666666665
+gujrat\Gujrat_speaker_01_6_3.wav,Gujrat_speaker_01_6_3.wav,gujrat_spk_0097,gujrat,adult,read,,48000,test,3.498666666666667
+gujrat\Gujrat_speaker_01_8_5.wav,Gujrat_speaker_01_8_5.wav,gujrat_spk_0129,gujrat,adult,read,,48000,test,3.7546666666666666
+gujrat\Gujrat_speaker_01_1_12.wav,Gujrat_speaker_01_1_12.wav,gujrat_spk_0019,gujrat,adult,read,,48000,test,3.2426666666666666
+gujrat\Gujrat_speaker_01_10_14.wav,Gujrat_speaker_01_10_14.wav,gujrat_spk_0007,gujrat,adult,read,,48000,test,3.008
+gujrat\Gujrat_speaker_02_5_13.wav,Gujrat_speaker_02_5_13.wav,gujrat_spk_0228,gujrat,adult,read,,48000,test,3.7333333333333334
+gujrat\Gujrat_speaker_01_4_8.wav,Gujrat_speaker_01_4_8.wav,gujrat_spk_0072,gujrat,adult,read,,48000,test,3.050666666666667
+gujrat\Gujrat_speaker_02_2_13.wav,Gujrat_speaker_02_2_13.wav,gujrat_spk_0183,gujrat,adult,read,,48000,test,4.544
+gujrat\Gujrat_speaker_01_5_11.wav,Gujrat_speaker_01_5_11.wav,gujrat_spk_0077,gujrat,adult,read,,48000,test,3.2
+gujrat\Gujrat_speaker_01_4_12.wav,Gujrat_speaker_01_4_12.wav,gujrat_spk_0063,gujrat,adult,read,,48000,test,3.6266666666666665
+gujrat\Gujrat_speaker_02_5_11.wav,Gujrat_speaker_02_5_11.wav,gujrat_spk_0226,gujrat,adult,read,,48000,test,4.565333333333333
+gujrat\Gujrat_speaker_02_1_9.wav,Gujrat_speaker_02_1_9.wav,gujrat_spk_0177,gujrat,adult,read,,48000,test,3.264
+gujrat\Gujrat_speaker_02_1_2.wav,Gujrat_speaker_02_1_2.wav,gujrat_spk_0170,gujrat,adult,read,,48000,test,4.437333333333333
+gujrat\Gujrat_speaker_02_3_2.wav,Gujrat_speaker_02_3_2.wav,gujrat_spk_0200,gujrat,adult,read,,48000,test,4.629333333333333
+gujrat\Gujrat_speaker_02_9_1.wav,Gujrat_speaker_02_9_1.wav,gujrat_spk_0284,gujrat,adult,read,,48000,test,3.904
+gujrat\Gujrat_speaker_01_5_12.wav,Gujrat_speaker_01_5_12.wav,gujrat_spk_0078,gujrat,adult,read,,48000,test,3.477333333333333
+gujrat\Gujrat_speaker_01_1_10.wav,Gujrat_speaker_01_1_10.wav,gujrat_spk_0017,gujrat,adult,read,,48000,test,3.7973333333333334
+gujrat\Gujrat_speaker_01_1_5.wav,Gujrat_speaker_01_1_5.wav,gujrat_spk_0024,gujrat,adult,read,,48000,test,3.52
+gujrat\Gujrat_speaker_02_3_1.wav,Gujrat_speaker_02_3_1.wav,gujrat_spk_0194,gujrat,adult,read,,48000,test,4.266666666666667
+gujrat\Gujrat_speaker_02_7.wav,Gujrat_speaker_02_7.wav,gujrat_spk_0253,gujrat,adult,read,,48000,test,4.394666666666667
+gujrat\Gujrat_speaker_01_3_7.wav,Gujrat_speaker_01_3_7.wav,gujrat_spk_0056,gujrat,adult,read,,48000,test,3.008
+gujrat\Gujrat_speaker_02_8_9.wav,Gujrat_speaker_02_8_9.wav,gujrat_spk_0282,gujrat,adult,read,,48000,test,4.672
+gujrat\Gujrat_speaker_02_5_1.wav,Gujrat_speaker_02_5_1.wav,gujrat_spk_0224,gujrat,adult,read,,48000,test,4.544
+gujrat\Gujrat_speaker_02_1_4.wav,Gujrat_speaker_02_1_4.wav,gujrat_spk_0172,gujrat,adult,read,,48000,test,4.096
+gujrat\Gujrat_speaker_02_4_11.wav,Gujrat_speaker_02_4_11.wav,gujrat_spk_0211,gujrat,adult,read,,48000,test,4.394666666666667
+gujrat\Gujrat_speaker_02_5_6.wav,Gujrat_speaker_02_5_6.wav,gujrat_spk_0234,gujrat,adult,read,,48000,test,3.8186666666666667
+gujrat\Gujrat_speaker_01_7_9.wav,Gujrat_speaker_01_7_9.wav,gujrat_spk_0118,gujrat,adult,read,,48000,test,3.0933333333333333
+gujrat\Gujrat_speaker_02_9_12.wav,Gujrat_speaker_02_9_12.wav,gujrat_spk_0287,gujrat,adult,read,,48000,test,4.650666666666667
+gujrat\Gujrat_speaker_01_9_8.wav,Gujrat_speaker_01_9_8.wav,gujrat_spk_0147,gujrat,adult,read,,48000,test,3.925333333333333
+gujrat\Gujrat_speaker_02_3_11.wav,Gujrat_speaker_02_3_11.wav,gujrat_spk_0196,gujrat,adult,read,,48000,test,3.776
+gujrat\Gujrat_speaker_01_3_1.wav,Gujrat_speaker_01_3_1.wav,gujrat_spk_0045,gujrat,adult,read,,48000,test,3.0933333333333333
+gujrat\Gujrat_speaker_01_7_13.wav,Gujrat_speaker_01_7_13.wav,gujrat_spk_0109,gujrat,adult,read,,48000,test,3.264
+gujrat\Gujrat_speaker_02_9_7.wav,Gujrat_speaker_02_9_7.wav,gujrat_spk_0295,gujrat,adult,read,,48000,test,4.48
+gujrat\Gujrat_speaker_01_7_7.wav,Gujrat_speaker_01_7_7.wav,gujrat_spk_0116,gujrat,adult,read,,48000,test,3.1146666666666665
+gujrat\Gujrat_speaker_01_9_14.wav,Gujrat_speaker_01_9_14.wav,gujrat_spk_0140,gujrat,adult,read,,48000,test,2.4106666666666667
+gujrat\Gujrat_speaker_01_6_1.wav,Gujrat_speaker_01_6_1.wav,gujrat_spk_0090,gujrat,adult,read,,48000,test,4.586666666666667
+gujrat\Gujrat_speaker_02_1_13.wav,Gujrat_speaker_02_1_13.wav,gujrat_spk_0168,gujrat,adult,read,,48000,test,4.608
+gujrat\Gujrat_speaker_02_6_4.wav,Gujrat_speaker_02_6_4.wav,gujrat_spk_0247,gujrat,adult,read,,48000,test,5.013333333333334
+jharkhand\Jharkhand_speaker_01_Recording (9)_32.wav,Jharkhand_speaker_01_Recording (9)_32.wav,jharkhand_spk_0290,jharkhand,adult,read,,44100,test,5.828208616780046
+jharkhand\Jharkhand_speaker_01_Recording_26.wav,Jharkhand_speaker_01_Recording_26.wav,jharkhand_spk_0316,jharkhand,adult,read,,44100,test,5.735328798185941
+jharkhand\Jharkhand_speaker_01_Recording (4)_25.wav,Jharkhand_speaker_01_Recording (4)_25.wav,jharkhand_spk_0117,jharkhand,adult,read,,44100,test,6.339047619047619
+jharkhand\Jharkhand_speaker_02_L87.wav,Jharkhand_speaker_02_L87.wav,jharkhand_spk_0455,jharkhand,adult,read,,48000,test,2.986666666666667
+jharkhand\Jharkhand_speaker_01_Recording (9)_12.wav,Jharkhand_speaker_01_Recording (9)_12.wav,jharkhand_spk_0268,jharkhand,adult,read,,44100,test,6.106848072562358
+jharkhand\Jharkhand_speaker_02_L101.wav,Jharkhand_speaker_02_L101.wav,jharkhand_spk_0336,jharkhand,adult,read,,48000,test,3.925333333333333
+jharkhand\Jharkhand_speaker_01_Recording (3)_20.wav,Jharkhand_speaker_01_Recording (3)_20.wav,jharkhand_spk_0079,jharkhand,adult,read,,44100,test,4.760090702947846
+jharkhand\Jharkhand_speaker_01_Recording (7)_18.wav,Jharkhand_speaker_01_Recording (7)_18.wav,jharkhand_spk_0208,jharkhand,adult,read,,44100,test,5.178049886621316
+jharkhand\Jharkhand_speaker_01_Recording (8)_15.wav,Jharkhand_speaker_01_Recording (8)_15.wav,jharkhand_spk_0238,jharkhand,adult,read,,44100,test,6.849886621315193
+jharkhand\Jharkhand_speaker_03_04.wav,Jharkhand_speaker_03_04.wav,jharkhand_spk_0477,jharkhand,adult,read,,48000,test,3.696
+jharkhand\Jharkhand_speaker_01_Recording (5)_13.wav,Jharkhand_speaker_01_Recording (5)_13.wav,jharkhand_spk_0137,jharkhand,adult,read,,44100,test,3.9706122448979593
+jharkhand\Jharkhand_speaker_02_L42.wav,Jharkhand_speaker_02_L42.wav,jharkhand_spk_0406,jharkhand,adult,read,,48000,test,4.8213333333333335
+jharkhand\Jharkhand_speaker_02_L45.wav,Jharkhand_speaker_02_L45.wav,jharkhand_spk_0409,jharkhand,adult,read,,48000,test,3.6053333333333333
+jharkhand\Jharkhand_speaker_02_L82.wav,Jharkhand_speaker_02_L82.wav,jharkhand_spk_0450,jharkhand,adult,read,,48000,test,3.541333333333333
+jharkhand\Jharkhand_speaker_02_L44.wav,Jharkhand_speaker_02_L44.wav,jharkhand_spk_0408,jharkhand,adult,read,,48000,test,3.8186666666666667
+jharkhand\Jharkhand_speaker_01_Recording (5)_23.wav,Jharkhand_speaker_01_Recording (5)_23.wav,jharkhand_spk_0148,jharkhand,adult,read,,44100,test,6.362267573696145
+jharkhand\Jharkhand_speaker_02_40.wav,Jharkhand_speaker_02_40.wav,jharkhand_spk_0332,jharkhand,adult,read,,44100,test,4.504671201814059
+jharkhand\Jharkhand_speaker_02_L27.wav,Jharkhand_speaker_02_L27.wav,jharkhand_spk_0391,jharkhand,adult,read,,44100,test,4.551111111111111
+jharkhand\Jharkhand_speaker_01_Recording (2)_29.wav,Jharkhand_speaker_01_Recording (2)_29.wav,jharkhand_spk_0055,jharkhand,adult,read,,44100,test,6.013968253968254
+jharkhand\Jharkhand_speaker_03_01_2.wav,Jharkhand_speaker_03_01_2.wav,jharkhand_spk_0470,jharkhand,adult,read,,48000,test,3.072
+jharkhand\Jharkhand_speaker_02_L10.wav,Jharkhand_speaker_02_L10.wav,jharkhand_spk_0334,jharkhand,adult,read,,44100,test,5.201269841269841
+jharkhand\Jharkhand_speaker_01_Recording (7)_13.wav,Jharkhand_speaker_01_Recording (7)_13.wav,jharkhand_spk_0203,jharkhand,adult,read,,44100,test,5.270929705215419
+jharkhand\Jharkhand_speaker_03_10_1.wav,Jharkhand_speaker_03_10_1.wav,jharkhand_spk_0497,jharkhand,adult,read,,48000,test,3.336
+jharkhand\Jharkhand_speaker_01_Recording (4)_4.wav,Jharkhand_speaker_01_Recording (4)_4.wav,jharkhand_spk_0126,jharkhand,adult,read,,44100,test,5.9675283446712015
+jharkhand\Jharkhand_speaker_01_Recording (4)_21.wav,Jharkhand_speaker_01_Recording (4)_21.wav,jharkhand_spk_0113,jharkhand,adult,read,,44100,test,5.085170068027211
+jharkhand\Jharkhand_speaker_01_Recording (9)_10.wav,Jharkhand_speaker_01_Recording (9)_10.wav,jharkhand_spk_0266,jharkhand,adult,read,,44100,test,6.03718820861678
+jharkhand\Jharkhand_speaker_02_31.wav,Jharkhand_speaker_02_31.wav,jharkhand_spk_0331,jharkhand,adult,read,,44100,test,4.690430839002268
+jharkhand\Jharkhand_speaker_01_Recording (3)_5.wav,Jharkhand_speaker_01_Recording (3)_5.wav,jharkhand_spk_0094,jharkhand,adult,read,,44100,test,5.897868480725624
+jharkhand\Jharkhand_speaker_01_Recording (3)_19.wav,Jharkhand_speaker_01_Recording (3)_19.wav,jharkhand_spk_0077,jharkhand,adult,read,,44100,test,4.85297052154195
+jharkhand\Jharkhand_speaker_03_03_1.wav,Jharkhand_speaker_03_03_1.wav,jharkhand_spk_0475,jharkhand,adult,read,,48000,test,2.496
+jharkhand\Jharkhand_speaker_01_Recording (9)_23.wav,Jharkhand_speaker_01_Recording (9)_23.wav,jharkhand_spk_0280,jharkhand,adult,read,,44100,test,5.479909297052155
+jharkhand\Jharkhand_speaker_02_L23.wav,Jharkhand_speaker_02_L23.wav,jharkhand_spk_0388,jharkhand,adult,read,,44100,test,4.458231292517007
+jharkhand\Jharkhand_speaker_01_Recording (2)_14.wav,Jharkhand_speaker_01_Recording (2)_14.wav,jharkhand_spk_0039,jharkhand,adult,read,,44100,test,5.7817687074829935
+jharkhand\Jharkhand_speaker_01_Recording (6)_6.wav,Jharkhand_speaker_01_Recording (6)_6.wav,jharkhand_spk_0194,jharkhand,adult,read,,44100,test,5.944308390022676
+jharkhand\Jharkhand_speaker_03_06_2.wav,Jharkhand_speaker_03_06_2.wav,jharkhand_spk_0485,jharkhand,adult,read,,48000,test,3.384
+jharkhand\Jharkhand_speaker_01_Recording (10)_3.wav,Jharkhand_speaker_01_Recording (10)_3.wav,jharkhand_spk_0023,jharkhand,adult,read,,44100,test,5.642448979591837
+jharkhand\Jharkhand_speaker_01_Recording (6)_24.wav,Jharkhand_speaker_01_Recording (6)_24.wav,jharkhand_spk_0182,jharkhand,adult,read,,44100,test,5.270929705215419
+jharkhand\Jharkhand_speaker_01_Recording (7)_20.wav,Jharkhand_speaker_01_Recording (7)_20.wav,jharkhand_spk_0211,jharkhand,adult,read,,44100,test,4.272471655328798
+jharkhand\Jharkhand_speaker_01_Recording (4)_13.wav,Jharkhand_speaker_01_Recording (4)_13.wav,jharkhand_spk_0104,jharkhand,adult,read,,44100,test,4.017052154195011
+jharkhand\Jharkhand_speaker_02_L73.wav,Jharkhand_speaker_02_L73.wav,jharkhand_spk_0440,jharkhand,adult,read,,48000,test,3.6693333333333333
+jharkhand\Jharkhand_speaker_03_04_2.wav,Jharkhand_speaker_03_04_2.wav,jharkhand_spk_0479,jharkhand,adult,read,,48000,test,3.384
+jharkhand\Jharkhand_speaker_01_Recording (3)_30.wav,Jharkhand_speaker_01_Recording (3)_30.wav,jharkhand_spk_0090,jharkhand,adult,read,,44100,test,5.317369614512471
+jharkhand\Jharkhand_speaker_01_Recording (6)_22.wav,Jharkhand_speaker_01_Recording (6)_22.wav,jharkhand_spk_0180,jharkhand,adult,read,,44100,test,5.50312925170068
+jharkhand\Jharkhand_speaker_03_1.wav,Jharkhand_speaker_03_1.wav,jharkhand_spk_0495,jharkhand,adult,read,,48000,test,2.664
+jharkhand\Jharkhand_speaker_01_Recording (10)_17.wav,Jharkhand_speaker_01_Recording (10)_17.wav,jharkhand_spk_0009,jharkhand,adult,read,,44100,test,4.85297052154195
+jharkhand\Jharkhand_speaker_01_Recording (3)_23.wav,Jharkhand_speaker_01_Recording (3)_23.wav,jharkhand_spk_0082,jharkhand,adult,read,,44100,test,6.501587301587302
+jharkhand\Jharkhand_speaker_01_Recording (9)_15.wav,Jharkhand_speaker_01_Recording (9)_15.wav,jharkhand_spk_0271,jharkhand,adult,read,,44100,test,4.690430839002268
+jharkhand\Jharkhand_speaker_01_Recording (10)_30.wav,Jharkhand_speaker_01_Recording (10)_30.wav,jharkhand_spk_0024,jharkhand,adult,read,,44100,test,5.944308390022676
+jharkhand\Jharkhand_speaker_01_Recording_15.wav,Jharkhand_speaker_01_Recording_15.wav,jharkhand_spk_0304,jharkhand,adult,read,,44100,test,4.922630385487528
+jharkhand\Jharkhand_speaker_01_Recording (5).wav,Jharkhand_speaker_01_Recording (5).wav,jharkhand_spk_0132,jharkhand,adult,read,,44100,test,5.7817687074829935
+jharkhand\Jharkhand_speaker_01_Recording (3)_27.wav,Jharkhand_speaker_01_Recording (3)_27.wav,jharkhand_spk_0086,jharkhand,adult,read,,44100,test,4.806530612244898
+jharkhand\Jharkhand_speaker_01_Recording (2)_3.wav,Jharkhand_speaker_01_Recording (2)_3.wav,jharkhand_spk_0056,jharkhand,adult,read,,44100,test,5.456689342403628
+jharkhand\Jharkhand_speaker_02_L83.wav,Jharkhand_speaker_02_L83.wav,jharkhand_spk_0451,jharkhand,adult,read,,48000,test,3.3066666666666666
+jharkhand\Jharkhand_speaker_02_L125.wav,Jharkhand_speaker_02_L125.wav,jharkhand_spk_0361,jharkhand,adult,read,,48000,test,4.053333333333334
+jharkhand\Jharkhand_speaker_01_Recording_3.wav,Jharkhand_speaker_01_Recording_3.wav,jharkhand_spk_0320,jharkhand,adult,read,,44100,test,5.7817687074829935
+jharkhand\Jharkhand_speaker_01_Recording (2)_20.wav,Jharkhand_speaker_01_Recording (2)_20.wav,jharkhand_spk_0046,jharkhand,adult,read,,44100,test,5.131609977324263
+jharkhand\Jharkhand_speaker_01_Recording (4)_10.wav,Jharkhand_speaker_01_Recording (4)_10.wav,jharkhand_spk_0101,jharkhand,adult,read,,44100,test,4.992290249433107
+jharkhand\Jharkhand_speaker_02_L2.wav,Jharkhand_speaker_02_L2.wav,jharkhand_spk_0384,jharkhand,adult,read,,44100,test,5.688888888888889
+jharkhand\Jharkhand_speaker_01_Recording (2).wav,Jharkhand_speaker_01_Recording (2).wav,jharkhand_spk_0033,jharkhand,adult,read,,44100,test,5.897868480725624
+jharkhand\Jharkhand_speaker_03_09_2.wav,Jharkhand_speaker_03_09_2.wav,jharkhand_spk_0494,jharkhand,adult,read,,48000,test,2.736
+jharkhand\Jharkhand_speaker_01_Recording (5)_28.wav,Jharkhand_speaker_01_Recording (5)_28.wav,jharkhand_spk_0153,jharkhand,adult,read,,44100,test,5.851428571428571
+jharkhand\Jharkhand_speaker_01_Recording (3)_18.wav,Jharkhand_speaker_01_Recording (3)_18.wav,jharkhand_spk_0076,jharkhand,adult,read,,44100,test,7.4071655328798185
+jharkhand\Jharkhand_speaker_02_L92.wav,Jharkhand_speaker_02_L92.wav,jharkhand_spk_0461,jharkhand,adult,read,,48000,test,3.392
+jharkhand\Jharkhand_speaker_02_L120.wav,Jharkhand_speaker_02_L120.wav,jharkhand_spk_0356,jharkhand,adult,read,,48000,test,4.032
+jharkhand\Jharkhand_speaker_02_L65.wav,Jharkhand_speaker_02_L65.wav,jharkhand_spk_0431,jharkhand,adult,read,,48000,test,4.010666666666666
+jharkhand\Jharkhand_speaker_01_Recording (2)_7.wav,Jharkhand_speaker_01_Recording (2)_7.wav,jharkhand_spk_0063,jharkhand,adult,read,,44100,test,5.085170068027211
+jharkhand\Jharkhand_speaker_02_L112.wav,Jharkhand_speaker_02_L112.wav,jharkhand_spk_0347,jharkhand,adult,read,,48000,test,3.904
+jharkhand\Jharkhand_speaker_01_Recording (8)_14.wav,Jharkhand_speaker_01_Recording (8)_14.wav,jharkhand_spk_0237,jharkhand,adult,read,,44100,test,4.783310657596372
+jharkhand\Jharkhand_speaker_01_Recording (10)_19.wav,Jharkhand_speaker_01_Recording (10)_19.wav,jharkhand_spk_0011,jharkhand,adult,read,,44100,test,5.317369614512471
+jharkhand\Jharkhand_speaker_01_Recording (3)_17.wav,Jharkhand_speaker_01_Recording (3)_17.wav,jharkhand_spk_0075,jharkhand,adult,read,,44100,test,5.572789115646258
+jharkhand\Jharkhand_speaker_01_Recording (10)_31.wav,Jharkhand_speaker_01_Recording (10)_31.wav,jharkhand_spk_0025,jharkhand,adult,read,,44100,test,6.548027210884354
+jharkhand\Jharkhand_speaker_01_Recording (6)_16.wav,Jharkhand_speaker_01_Recording (6)_16.wav,jharkhand_spk_0173,jharkhand,adult,read,,44100,test,5.688888888888889
+jharkhand\Jharkhand_speaker_01_Recording (10)_24.wav,Jharkhand_speaker_01_Recording (10)_24.wav,jharkhand_spk_0017,jharkhand,adult,read,,44100,test,6.965986394557823
+jharkhand\Jharkhand_speaker_02_L67.wav,Jharkhand_speaker_02_L67.wav,jharkhand_spk_0433,jharkhand,adult,read,,48000,test,5.610666666666667
+jharkhand\Jharkhand_speaker_01_Recording_32.wav,Jharkhand_speaker_01_Recording_32.wav,jharkhand_spk_0323,jharkhand,adult,read,,44100,test,5.851428571428571
+karnataka\Karnataka_speaker_02_1 (217).wav,Karnataka_speaker_02_1 (217).wav,karnataka_spk_0290,karnataka,adult,read,,48000,test,5.2
+karnataka\Karnataka_speaker_02_1 (240).wav,Karnataka_speaker_02_1 (240).wav,karnataka_spk_0316,karnataka,adult,read,,48000,test,5.2
+karnataka\Karnataka_speaker_01_List21_8.wav,Karnataka_speaker_01_List21_8.wav,karnataka_spk_0117,karnataka,adult,read,,48000,test,3.639854166666667
+karnataka\Karnataka_speaker_02_1 (366).wav,Karnataka_speaker_02_1 (366).wav,karnataka_spk_0455,karnataka,adult,read,,48000,test,5.0
+karnataka\Karnataka_speaker_02_1 (198).wav,Karnataka_speaker_02_1 (198).wav,karnataka_spk_0268,karnataka,adult,read,,48000,test,5.0
+karnataka\Karnataka_speaker_02_1 (259).wav,Karnataka_speaker_02_1 (259).wav,karnataka_spk_0336,karnataka,adult,read,,48000,test,5.0
+karnataka\Karnataka_speaker_01_List17_6.wav,Karnataka_speaker_01_List17_6.wav,karnataka_spk_0079,karnataka,adult,read,,48000,test,3.8849791666666667
+karnataka\Karnataka_speaker_02_1 (143).wav,Karnataka_speaker_02_1 (143).wav,karnataka_spk_0208,karnataka,adult,read,,48000,test,4.8
+karnataka\Karnataka_speaker_02_1 (170).wav,Karnataka_speaker_02_1 (170).wav,karnataka_spk_0238,karnataka,adult,read,,48000,test,5.2
+karnataka\Karnataka_speaker_02_1 (386).wav,Karnataka_speaker_02_1 (386).wav,karnataka_spk_0477,karnataka,adult,read,,48000,test,5.4
+karnataka\Karnataka_speaker_01_List25_8.wav,Karnataka_speaker_01_List25_8.wav,karnataka_spk_0137,karnataka,adult,read,,48000,test,4.434083333333334
+karnataka\Karnataka_speaker_02_1 (321).wav,Karnataka_speaker_02_1 (321).wav,karnataka_spk_0406,karnataka,adult,read,,48000,test,5.6
+karnataka\Karnataka_speaker_02_1 (324).wav,Karnataka_speaker_02_1 (324).wav,karnataka_spk_0409,karnataka,adult,read,,48000,test,9.6
+karnataka\Karnataka_speaker_02_1 (361).wav,Karnataka_speaker_02_1 (361).wav,karnataka_spk_0450,karnataka,adult,read,,48000,test,4.2
+karnataka\Karnataka_speaker_02_1 (323).wav,Karnataka_speaker_02_1 (323).wav,karnataka_spk_0408,karnataka,adult,read,,48000,test,5.0
+karnataka\Karnataka_speaker_01_List26_9.wav,Karnataka_speaker_01_List26_9.wav,karnataka_spk_0148,karnataka,adult,read,,48000,test,3.913854166666667
+karnataka\Karnataka_speaker_02_1 (255).wav,Karnataka_speaker_02_1 (255).wav,karnataka_spk_0332,karnataka,adult,read,,48000,test,4.8
+karnataka\Karnataka_speaker_02_1 (308).wav,Karnataka_speaker_02_1 (308).wav,karnataka_spk_0391,karnataka,adult,read,,48000,test,5.4
+karnataka\Karnataka_speaker_01_List15_3.wav,Karnataka_speaker_01_List15_3.wav,karnataka_spk_0055,karnataka,adult,read,,48000,test,3.9674791666666667
+karnataka\Karnataka_speaker_02_1 (38).wav,Karnataka_speaker_02_1 (38).wav,karnataka_spk_0470,karnataka,adult,read,,48000,test,5.0
+karnataka\Karnataka_speaker_02_1 (257).wav,Karnataka_speaker_02_1 (257).wav,karnataka_spk_0334,karnataka,adult,read,,48000,test,4.8
+karnataka\Karnataka_speaker_02_1 (139).wav,Karnataka_speaker_02_1 (139).wav,karnataka_spk_0203,karnataka,adult,read,,48000,test,4.8
+karnataka\Karnataka_speaker_02_1 (403).wav,Karnataka_speaker_02_1 (403).wav,karnataka_spk_0497,karnataka,adult,read,,48000,test,4.4
+karnataka\Karnataka_speaker_01_List24_7.wav,Karnataka_speaker_01_List24_7.wav,karnataka_spk_0126,karnataka,adult,read,,48000,test,3.422833333333333
+karnataka\Karnataka_speaker_01_List21_4.wav,Karnataka_speaker_01_List21_4.wav,karnataka_spk_0113,karnataka,adult,read,,48000,test,3.5521458333333333
+karnataka\Karnataka_speaker_02_1 (196).wav,Karnataka_speaker_02_1 (196).wav,karnataka_spk_0266,karnataka,adult,read,,48000,test,4.4
+karnataka\Karnataka_speaker_02_1 (254).wav,Karnataka_speaker_02_1 (254).wav,karnataka_spk_0331,karnataka,adult,read,,48000,test,5.0
+karnataka\Karnataka_speaker_01_List1_Splitted_2.wav,Karnataka_speaker_01_List1_Splitted_2.wav,karnataka_spk_0094,karnataka,adult,read,,48000,test,3.101729166666667
+karnataka\Karnataka_speaker_01_List17_4.wav,Karnataka_speaker_01_List17_4.wav,karnataka_spk_0077,karnataka,adult,read,,48000,test,2.6292291666666667
+karnataka\Karnataka_speaker_02_1 (384).wav,Karnataka_speaker_02_1 (384).wav,karnataka_spk_0475,karnataka,adult,read,,48000,test,11.2
+karnataka\Karnataka_speaker_02_1 (208).wav,Karnataka_speaker_02_1 (208).wav,karnataka_spk_0280,karnataka,adult,read,,48000,test,5.2
+karnataka\Karnataka_speaker_02_1 (305).wav,Karnataka_speaker_02_1 (305).wav,karnataka_spk_0388,karnataka,adult,read,,48000,test,4.6
+karnataka\Karnataka_speaker_01_List13_7.wav,Karnataka_speaker_01_List13_7.wav,karnataka_spk_0039,karnataka,adult,read,,48000,test,3.4201875
+karnataka\Karnataka_speaker_02_1 (130).wav,Karnataka_speaker_02_1 (130).wav,karnataka_spk_0194,karnataka,adult,read,,48000,test,5.4
+karnataka\Karnataka_speaker_02_1 (393).wav,Karnataka_speaker_02_1 (393).wav,karnataka_spk_0485,karnataka,adult,read,,48000,test,4.6
+karnataka\Karnataka_speaker_01_List12_10.wav,Karnataka_speaker_01_List12_10.wav,karnataka_spk_0023,karnataka,adult,read,,48000,test,5.112729166666667
+karnataka\Karnataka_speaker_02_1 (12).wav,Karnataka_speaker_02_1 (12).wav,karnataka_spk_0182,karnataka,adult,read,,48000,test,5.4
+karnataka\Karnataka_speaker_02_1 (146).wav,Karnataka_speaker_02_1 (146).wav,karnataka_spk_0211,karnataka,adult,read,,48000,test,5.0
+karnataka\Karnataka_speaker_01_List20_5.wav,Karnataka_speaker_01_List20_5.wav,karnataka_spk_0104,karnataka,adult,read,,48000,test,3.5244375
+karnataka\Karnataka_speaker_02_1 (352).wav,Karnataka_speaker_02_1 (352).wav,karnataka_spk_0440,karnataka,adult,read,,48000,test,4.8
+karnataka\Karnataka_speaker_02_1 (388).wav,Karnataka_speaker_02_1 (388).wav,karnataka_spk_0479,karnataka,adult,read,,48000,test,4.8
+karnataka\Karnataka_speaker_01_List19_7.wav,Karnataka_speaker_01_List19_7.wav,karnataka_spk_0090,karnataka,adult,read,,48000,test,3.853666666666667
+karnataka\Karnataka_speaker_02_1 (118).wav,Karnataka_speaker_02_1 (118).wav,karnataka_spk_0180,karnataka,adult,read,,48000,test,4.2
+karnataka\Karnataka_speaker_02_1 (401).wav,Karnataka_speaker_02_1 (401).wav,karnataka_spk_0495,karnataka,adult,read,,48000,test,5.4
+karnataka\Karnataka_speaker_01_72_9.wav,Karnataka_speaker_01_72_9.wav,karnataka_spk_0009,karnataka,adult,read,,48000,test,3.1283333333333334
+karnataka\Karnataka_speaker_01_List17_9.wav,Karnataka_speaker_01_List17_9.wav,karnataka_spk_0082,karnataka,adult,read,,48000,test,4.0812083333333335
+karnataka\Karnataka_speaker_02_1 (20).wav,Karnataka_speaker_02_1 (20).wav,karnataka_spk_0271,karnataka,adult,read,,48000,test,5.0
+karnataka\Karnataka_speaker_01_List12_2.wav,Karnataka_speaker_01_List12_2.wav,karnataka_spk_0024,karnataka,adult,read,,48000,test,3.3948541666666667
+karnataka\Karnataka_speaker_02_1 (23).wav,Karnataka_speaker_02_1 (23).wav,karnataka_spk_0304,karnataka,adult,read,,48000,test,4.8
+karnataka\Karnataka_speaker_01_List25_3.wav,Karnataka_speaker_01_List25_3.wav,karnataka_spk_0132,karnataka,adult,read,,48000,test,3.6240208333333332
+karnataka\Karnataka_speaker_01_List19_3.wav,Karnataka_speaker_01_List19_3.wav,karnataka_spk_0086,karnataka,adult,read,,48000,test,3.6723125
+karnataka\Karnataka_speaker_01_List15_4.wav,Karnataka_speaker_01_List15_4.wav,karnataka_spk_0056,karnataka,adult,read,,48000,test,3.599375
+karnataka\Karnataka_speaker_02_1 (362).wav,Karnataka_speaker_02_1 (362).wav,karnataka_spk_0451,karnataka,adult,read,,48000,test,5.2
+karnataka\Karnataka_speaker_02_1 (281).wav,Karnataka_speaker_02_1 (281).wav,karnataka_spk_0361,karnataka,adult,read,,48000,test,5.2
+karnataka\Karnataka_speaker_02_1 (244).wav,Karnataka_speaker_02_1 (244).wav,karnataka_spk_0320,karnataka,adult,read,,48000,test,4.8
+karnataka\Karnataka_speaker_01_List14_4.wav,Karnataka_speaker_01_List14_4.wav,karnataka_spk_0046,karnataka,adult,read,,48000,test,3.825083333333333
+karnataka\Karnataka_speaker_01_List20_2.wav,Karnataka_speaker_01_List20_2.wav,karnataka_spk_0101,karnataka,adult,read,,48000,test,3.484395833333333
+karnataka\Karnataka_speaker_02_1 (301).wav,Karnataka_speaker_02_1 (301).wav,karnataka_spk_0384,karnataka,adult,read,,48000,test,5.6
+karnataka\Karnataka_speaker_01_List13_10.wav,Karnataka_speaker_01_List13_10.wav,karnataka_spk_0033,karnataka,adult,read,,48000,test,3.9674375
+karnataka\Karnataka_speaker_02_1 (400).wav,Karnataka_speaker_02_1 (400).wav,karnataka_spk_0494,karnataka,adult,read,,48000,test,4.8
+karnataka\Karnataka_speaker_01_List27_4.wav,Karnataka_speaker_01_List27_4.wav,karnataka_spk_0153,karnataka,adult,read,,48000,test,4.3431875
+karnataka\Karnataka_speaker_01_List17_3.wav,Karnataka_speaker_01_List17_3.wav,karnataka_spk_0076,karnataka,adult,read,,48000,test,3.453333333333333
+karnataka\Karnataka_speaker_02_1 (371).wav,Karnataka_speaker_02_1 (371).wav,karnataka_spk_0461,karnataka,adult,read,,48000,test,4.8
+karnataka\Karnataka_speaker_02_1 (277).wav,Karnataka_speaker_02_1 (277).wav,karnataka_spk_0356,karnataka,adult,read,,48000,test,5.0
+karnataka\Karnataka_speaker_02_1 (344).wav,Karnataka_speaker_02_1 (344).wav,karnataka_spk_0431,karnataka,adult,read,,48000,test,5.0
+karnataka\Karnataka_speaker_01_List16_10.wav,Karnataka_speaker_01_List16_10.wav,karnataka_spk_0063,karnataka,adult,read,,48000,test,4.5067916666666665
+karnataka\Karnataka_speaker_02_1 (269).wav,Karnataka_speaker_02_1 (269).wav,karnataka_spk_0347,karnataka,adult,read,,48000,test,4.6
+karnataka\Karnataka_speaker_02_1 (17).wav,Karnataka_speaker_02_1 (17).wav,karnataka_spk_0237,karnataka,adult,read,,48000,test,5.2
+karnataka\Karnataka_speaker_01_List11_10.wav,Karnataka_speaker_01_List11_10.wav,karnataka_spk_0011,karnataka,adult,read,,48000,test,3.2594166666666666
+karnataka\Karnataka_speaker_01_List17_2.wav,Karnataka_speaker_01_List17_2.wav,karnataka_spk_0075,karnataka,adult,read,,48000,test,3.84575
+karnataka\Karnataka_speaker_01_List12_3.wav,Karnataka_speaker_01_List12_3.wav,karnataka_spk_0025,karnataka,adult,read,,48000,test,4.131083333333334
+karnataka\Karnataka_speaker_02_1 (111).wav,Karnataka_speaker_02_1 (111).wav,karnataka_spk_0173,karnataka,adult,read,,48000,test,5.2
+karnataka\Karnataka_speaker_01_List11_5.wav,Karnataka_speaker_01_List11_5.wav,karnataka_spk_0017,karnataka,adult,read,,48000,test,3.6045625
+karnataka\Karnataka_speaker_02_1 (346).wav,Karnataka_speaker_02_1 (346).wav,karnataka_spk_0433,karnataka,adult,read,,48000,test,5.0
+karnataka\Karnataka_speaker_02_1 (247).wav,Karnataka_speaker_02_1 (247).wav,karnataka_spk_0323,karnataka,adult,read,,48000,test,5.0
+kerala\Kerala_speaker_03_malayalam_s01_050.wav,Kerala_speaker_03_malayalam_s01_050.wav,kerala_spk_0290,kerala,adult,read,,48000,test,4.8
+kerala\Kerala_speaker_03_malayalam_s01_076.wav,Kerala_speaker_03_malayalam_s01_076.wav,kerala_spk_0316,kerala,adult,read,,48000,test,5.0
+kerala\Kerala_speaker_01_4_7.wav,Kerala_speaker_01_4_7.wav,kerala_spk_0117,kerala,adult,read,,48000,test,3.3066666666666666
+kerala\Kerala_speaker_03_malayalam_s01_215.wav,Kerala_speaker_03_malayalam_s01_215.wav,kerala_spk_0455,kerala,adult,read,,48000,test,4.8
+kerala\Kerala_speaker_03_malayalam_s01_028.wav,Kerala_speaker_03_malayalam_s01_028.wav,kerala_spk_0268,kerala,adult,read,,48000,test,5.8
+kerala\Kerala_speaker_03_malayalam_s01_096.wav,Kerala_speaker_03_malayalam_s01_096.wav,kerala_spk_0336,kerala,adult,read,,48000,test,4.6
+kerala\Kerala_speaker_01_3_15.wav,Kerala_speaker_01_3_15.wav,kerala_spk_0079,kerala,adult,read,,48000,test,3.456
+kerala\Kerala_speaker_01_8_23.wav,Kerala_speaker_01_8_23.wav,kerala_spk_0208,kerala,adult,read,,48000,test,2.8373333333333335
+kerala\Kerala_speaker_01_9_8.wav,Kerala_speaker_01_9_8.wav,kerala_spk_0238,kerala,adult,read,,48000,test,2.56
+kerala\Kerala_speaker_03_malayalam_s01_237.wav,Kerala_speaker_03_malayalam_s01_237.wav,kerala_spk_0477,kerala,adult,read,,48000,test,13.8
+kerala\Kerala_speaker_01_5_3.wav,Kerala_speaker_01_5_3.wav,kerala_spk_0137,kerala,adult,read,,48000,test,3.328
+kerala\Kerala_speaker_03_malayalam_s01_166.wav,Kerala_speaker_03_malayalam_s01_166.wav,kerala_spk_0406,kerala,adult,read,,48000,test,6.0
+kerala\Kerala_speaker_03_malayalam_s01_169.wav,Kerala_speaker_03_malayalam_s01_169.wav,kerala_spk_0409,kerala,adult,read,,48000,test,5.2
+kerala\Kerala_speaker_03_malayalam_s01_210.wav,Kerala_speaker_03_malayalam_s01_210.wav,kerala_spk_0450,kerala,adult,read,,48000,test,5.0
+kerala\Kerala_speaker_03_malayalam_s01_168.wav,Kerala_speaker_03_malayalam_s01_168.wav,kerala_spk_0408,kerala,adult,read,,48000,test,4.4
+kerala\Kerala_speaker_01_6_12.wav,Kerala_speaker_01_6_12.wav,kerala_spk_0148,kerala,adult,read,,48000,test,4.074666666666666
+kerala\Kerala_speaker_03_malayalam_s01_092.wav,Kerala_speaker_03_malayalam_s01_092.wav,kerala_spk_0332,kerala,adult,read,,48000,test,4.6
+kerala\Kerala_speaker_03_malayalam_s01_151.wav,Kerala_speaker_03_malayalam_s01_151.wav,kerala_spk_0391,kerala,adult,read,,48000,test,4.8
+kerala\Kerala_speaker_01_2_15.wav,Kerala_speaker_01_2_15.wav,kerala_spk_0055,kerala,adult,read,,48000,test,4.522666666666667
+kerala\Kerala_speaker_03_malayalam_s01_230.wav,Kerala_speaker_03_malayalam_s01_230.wav,kerala_spk_0470,kerala,adult,read,,48000,test,5.0
+kerala\Kerala_speaker_03_malayalam_s01_094.wav,Kerala_speaker_03_malayalam_s01_094.wav,kerala_spk_0334,kerala,adult,read,,48000,test,4.8
+kerala\Kerala_speaker_01_8_19.wav,Kerala_speaker_01_8_19.wav,kerala_spk_0203,kerala,adult,read,,48000,test,3.2426666666666666
+kerala\Kerala_speaker_03_malayalam_s01_257.wav,Kerala_speaker_03_malayalam_s01_257.wav,kerala_spk_0497,kerala,adult,read,,48000,test,5.0
+kerala\Kerala_speaker_01_5_14.wav,Kerala_speaker_01_5_14.wav,kerala_spk_0126,kerala,adult,read,,48000,test,2.688
+kerala\Kerala_speaker_01_4_3.wav,Kerala_speaker_01_4_3.wav,kerala_spk_0113,kerala,adult,read,,48000,test,3.2853333333333334
+kerala\Kerala_speaker_03_malayalam_s01_026.wav,Kerala_speaker_03_malayalam_s01_026.wav,kerala_spk_0266,kerala,adult,read,,48000,test,5.0
+kerala\Kerala_speaker_03_malayalam_s01_091.wav,Kerala_speaker_03_malayalam_s01_091.wav,kerala_spk_0331,kerala,adult,read,,48000,test,5.4
+kerala\Kerala_speaker_01_3_8.wav,Kerala_speaker_01_3_8.wav,kerala_spk_0094,kerala,adult,read,,48000,test,2.88
+kerala\Kerala_speaker_01_3_13.wav,Kerala_speaker_01_3_13.wav,kerala_spk_0077,kerala,adult,read,,48000,test,2.7946666666666666
+kerala\Kerala_speaker_03_malayalam_s01_235.wav,Kerala_speaker_03_malayalam_s01_235.wav,kerala_spk_0475,kerala,adult,read,,48000,test,4.6
+kerala\Kerala_speaker_03_malayalam_s01_040.wav,Kerala_speaker_03_malayalam_s01_040.wav,kerala_spk_0280,kerala,adult,read,,48000,test,4.6
+kerala\Kerala_speaker_03_malayalam_s01_148.wav,Kerala_speaker_03_malayalam_s01_148.wav,kerala_spk_0388,kerala,adult,read,,48000,test,14.8
+kerala\Kerala_speaker_01_1_22.wav,Kerala_speaker_01_1_22.wav,kerala_spk_0039,kerala,adult,read,,48000,test,3.989333333333333
+kerala\Kerala_speaker_01_8_10.wav,Kerala_speaker_01_8_10.wav,kerala_spk_0194,kerala,adult,read,,48000,test,2.517333333333333
+kerala\Kerala_speaker_03_malayalam_s01_245.wav,Kerala_speaker_03_malayalam_s01_245.wav,kerala_spk_0485,kerala,adult,read,,48000,test,4.8
+kerala\Kerala_speaker_01_10_8.wav,Kerala_speaker_01_10_8.wav,kerala_spk_0023,kerala,adult,read,,48000,test,2.944
+kerala\Kerala_speaker_01_7_21.wav,Kerala_speaker_01_7_21.wav,kerala_spk_0182,kerala,adult,read,,48000,test,4.1386666666666665
+kerala\Kerala_speaker_01_8_5.wav,Kerala_speaker_01_8_5.wav,kerala_spk_0211,kerala,adult,read,,48000,test,3.264
+kerala\Kerala_speaker_01_4_16.wav,Kerala_speaker_01_4_16.wav,kerala_spk_0104,kerala,adult,read,,48000,test,4.650666666666667
+kerala\Kerala_speaker_03_malayalam_s01_200.wav,Kerala_speaker_03_malayalam_s01_200.wav,kerala_spk_0440,kerala,adult,read,,48000,test,5.2
+kerala\Kerala_speaker_03_malayalam_s01_239.wav,Kerala_speaker_03_malayalam_s01_239.wav,kerala_spk_0479,kerala,adult,read,,48000,test,4.8
+kerala\Kerala_speaker_01_3_4.wav,Kerala_speaker_01_3_4.wav,kerala_spk_0090,kerala,adult,read,,48000,test,4.117333333333334
+kerala\Kerala_speaker_01_7_2.wav,Kerala_speaker_01_7_2.wav,kerala_spk_0180,kerala,adult,read,,48000,test,3.1786666666666665
+kerala\Kerala_speaker_03_malayalam_s01_255.wav,Kerala_speaker_03_malayalam_s01_255.wav,kerala_spk_0495,kerala,adult,read,,48000,test,5.2
+kerala\Kerala_speaker_01_10_16.wav,Kerala_speaker_01_10_16.wav,kerala_spk_0009,kerala,adult,read,,48000,test,2.624
+kerala\Kerala_speaker_01_3_18.wav,Kerala_speaker_01_3_18.wav,kerala_spk_0082,kerala,adult,read,,48000,test,3.3493333333333335
+kerala\Kerala_speaker_03_malayalam_s01_031.wav,Kerala_speaker_03_malayalam_s01_031.wav,kerala_spk_0271,kerala,adult,read,,48000,test,4.8
+kerala\Kerala_speaker_01_10_9.wav,Kerala_speaker_01_10_9.wav,kerala_spk_0024,kerala,adult,read,,48000,test,3.4346666666666668
+kerala\Kerala_speaker_03_malayalam_s01_064.wav,Kerala_speaker_03_malayalam_s01_064.wav,kerala_spk_0304,kerala,adult,read,,48000,test,5.8
+kerala\Kerala_speaker_01_5_2.wav,Kerala_speaker_01_5_2.wav,kerala_spk_0132,kerala,adult,read,,48000,test,3.3066666666666666
+kerala\Kerala_speaker_01_3_21.wav,Kerala_speaker_01_3_21.wav,kerala_spk_0086,kerala,adult,read,,48000,test,3.6693333333333333
+kerala\Kerala_speaker_01_2_16.wav,Kerala_speaker_01_2_16.wav,kerala_spk_0056,kerala,adult,read,,48000,test,2.986666666666667
+kerala\Kerala_speaker_03_malayalam_s01_211.wav,Kerala_speaker_03_malayalam_s01_211.wav,kerala_spk_0451,kerala,adult,read,,48000,test,4.6
+kerala\Kerala_speaker_03_malayalam_s01_121.wav,Kerala_speaker_03_malayalam_s01_121.wav,kerala_spk_0361,kerala,adult,read,,48000,test,4.2
+kerala\Kerala_speaker_03_malayalam_s01_080.wav,Kerala_speaker_03_malayalam_s01_080.wav,kerala_spk_0320,kerala,adult,read,,48000,test,5.4
+kerala\Kerala_speaker_01_1_8.wav,Kerala_speaker_01_1_8.wav,kerala_spk_0046,kerala,adult,read,,48000,test,3.1786666666666665
+kerala\Kerala_speaker_01_4_13.wav,Kerala_speaker_01_4_13.wav,kerala_spk_0101,kerala,adult,read,,48000,test,3.2426666666666666
+kerala\Kerala_speaker_03_malayalam_s01_144.wav,Kerala_speaker_03_malayalam_s01_144.wav,kerala_spk_0384,kerala,adult,read,,48000,test,4.4
+kerala\Kerala_speaker_01_1_17.wav,Kerala_speaker_01_1_17.wav,kerala_spk_0033,kerala,adult,read,,48000,test,5.696
+kerala\Kerala_speaker_03_malayalam_s01_254.wav,Kerala_speaker_03_malayalam_s01_254.wav,kerala_spk_0494,kerala,adult,read,,48000,test,5.0
+kerala\Kerala_speaker_01_6_17.wav,Kerala_speaker_01_6_17.wav,kerala_spk_0153,kerala,adult,read,,48000,test,2.7946666666666666
+kerala\Kerala_speaker_01_3_12.wav,Kerala_speaker_01_3_12.wav,kerala_spk_0076,kerala,adult,read,,48000,test,2.944
+kerala\Kerala_speaker_03_malayalam_s01_221.wav,Kerala_speaker_03_malayalam_s01_221.wav,kerala_spk_0461,kerala,adult,read,,48000,test,5.2
+kerala\Kerala_speaker_03_malayalam_s01_116.wav,Kerala_speaker_03_malayalam_s01_116.wav,kerala_spk_0356,kerala,adult,read,,48000,test,5.0
+kerala\Kerala_speaker_03_malayalam_s01_191.wav,Kerala_speaker_03_malayalam_s01_191.wav,kerala_spk_0431,kerala,adult,read,,48000,test,4.4
+kerala\Kerala_speaker_01_2_22.wav,Kerala_speaker_01_2_22.wav,kerala_spk_0063,kerala,adult,read,,48000,test,3.4133333333333336
+kerala\Kerala_speaker_03_malayalam_s01_107.wav,Kerala_speaker_03_malayalam_s01_107.wav,kerala_spk_0347,kerala,adult,read,,48000,test,5.4
+kerala\Kerala_speaker_01_9_7.wav,Kerala_speaker_01_9_7.wav,kerala_spk_0237,kerala,adult,read,,48000,test,4.8213333333333335
+kerala\Kerala_speaker_01_10_18.wav,Kerala_speaker_01_10_18.wav,kerala_spk_0011,kerala,adult,read,,48000,test,3.7546666666666666
+kerala\Kerala_speaker_01_3_11.wav,Kerala_speaker_01_3_11.wav,kerala_spk_0075,kerala,adult,read,,48000,test,4.522666666666667
+kerala\Kerala_speaker_01_1_1.wav,Kerala_speaker_01_1_1.wav,kerala_spk_0025,kerala,adult,read,,48000,test,3.029333333333333
+kerala\Kerala_speaker_01_7_13.wav,Kerala_speaker_01_7_13.wav,kerala_spk_0173,kerala,adult,read,,48000,test,3.6053333333333333
+kerala\Kerala_speaker_01_10_23.wav,Kerala_speaker_01_10_23.wav,kerala_spk_0017,kerala,adult,read,,48000,test,4.437333333333333
+kerala\Kerala_speaker_03_malayalam_s01_193.wav,Kerala_speaker_03_malayalam_s01_193.wav,kerala_spk_0433,kerala,adult,read,,48000,test,5.2
+kerala\Kerala_speaker_03_malayalam_s01_083.wav,Kerala_speaker_03_malayalam_s01_083.wav,kerala_spk_0323,kerala,adult,read,,48000,test,4.8
+tamil\Tamil_speaker (126).wav,Tamil_speaker (126).wav,tamil_spk_0290,tamil,adult,read,,48000,test,3.328
+tamil\Tamil_speaker (1283).wav,Tamil_speaker (1283).wav,tamil_spk_0316,tamil,adult,read,,48000,test,4.8
+tamil\Tamil_speaker (1103).wav,Tamil_speaker (1103).wav,tamil_spk_0117,tamil,adult,read,,48000,test,1.2
+tamil\Tamil_speaker (1408).wav,Tamil_speaker (1408).wav,tamil_spk_0455,tamil,adult,read,,48000,test,5.0
+tamil\Tamil_speaker (124).wav,Tamil_speaker (124).wav,tamil_spk_0268,tamil,adult,read,,48000,test,2.7733333333333334
+tamil\Tamil_speaker (1300).wav,Tamil_speaker (1300).wav,tamil_spk_0336,tamil,adult,read,,48000,test,4.8
+tamil\Tamil_speaker (107).wav,Tamil_speaker (107).wav,tamil_spk_0079,tamil,adult,read,,48000,test,3.392
+tamil\Tamil_speaker (1186).wav,Tamil_speaker (1186).wav,tamil_spk_0208,tamil,adult,read,,48000,test,5.4
+tamil\Tamil_speaker (1212).wav,Tamil_speaker (1212).wav,tamil_spk_0238,tamil,adult,read,,48000,test,5.0
+tamil\Tamil_speaker (1428).wav,Tamil_speaker (1428).wav,tamil_spk_0477,tamil,adult,read,,48000,test,5.0
+tamil\Tamil_speaker (1121).wav,Tamil_speaker (1121).wav,tamil_spk_0137,tamil,adult,read,,48000,test,4.8
+tamil\Tamil_speaker (1364).wav,Tamil_speaker (1364).wav,tamil_spk_0406,tamil,adult,read,,48000,test,5.6
+tamil\Tamil_speaker (1367).wav,Tamil_speaker (1367).wav,tamil_spk_0409,tamil,adult,read,,48000,test,5.2
+tamil\Tamil_speaker (1403).wav,Tamil_speaker (1403).wav,tamil_spk_0450,tamil,adult,read,,48000,test,4.2
+tamil\Tamil_speaker (1366).wav,Tamil_speaker (1366).wav,tamil_spk_0408,tamil,adult,read,,48000,test,5.2
+tamil\Tamil_speaker (1131).wav,Tamil_speaker (1131).wav,tamil_spk_0148,tamil,adult,read,,48000,test,5.0
+tamil\Tamil_speaker (1298).wav,Tamil_speaker (1298).wav,tamil_spk_0332,tamil,adult,read,,48000,test,5.0
+tamil\Tamil_speaker (1350).wav,Tamil_speaker (1350).wav,tamil_spk_0391,tamil,adult,read,,48000,test,5.2
+tamil\Tamil_speaker (1048).wav,Tamil_speaker (1048).wav,tamil_spk_0055,tamil,adult,read,,44100,test,2.58
+tamil\Tamil_speaker (1421).wav,Tamil_speaker (1421).wav,tamil_spk_0470,tamil,adult,read,,48000,test,5.0
+tamil\Tamil_speaker (13).wav,Tamil_speaker (13).wav,tamil_spk_0334,tamil,adult,read,,48000,test,3.3066666666666666
+tamil\Tamil_speaker (1181).wav,Tamil_speaker (1181).wav,tamil_spk_0203,tamil,adult,read,,48000,test,5.0
+tamil\Tamil_speaker (1446).wav,Tamil_speaker (1446).wav,tamil_spk_0497,tamil,adult,read,,48000,test,5.0
+tamil\Tamil_speaker (1111).wav,Tamil_speaker (1111).wav,tamil_spk_0126,tamil,adult,read,,48000,test,4.8
+tamil\Tamil_speaker (110).wav,Tamil_speaker (110).wav,tamil_spk_0113,tamil,adult,read,,48000,test,2.9226666666666667
+tamil\Tamil_speaker (1238).wav,Tamil_speaker (1238).wav,tamil_spk_0266,tamil,adult,read,,48000,test,4.8
+tamil\Tamil_speaker (1297).wav,Tamil_speaker (1297).wav,tamil_spk_0331,tamil,adult,read,,48000,test,5.0
+tamil\Tamil_speaker (1083).wav,Tamil_speaker (1083).wav,tamil_spk_0094,tamil,adult,read,,44100,test,0.38
+tamil\Tamil_speaker (1068).wav,Tamil_speaker (1068).wav,tamil_spk_0077,tamil,adult,read,,44100,test,1.62
+tamil\Tamil_speaker (1426).wav,Tamil_speaker (1426).wav,tamil_spk_0475,tamil,adult,read,,48000,test,5.2
+tamil\Tamil_speaker (1250).wav,Tamil_speaker (1250).wav,tamil_spk_0280,tamil,adult,read,,48000,test,4.8
+tamil\Tamil_speaker (1348).wav,Tamil_speaker (1348).wav,tamil_spk_0388,tamil,adult,read,,48000,test,5.2
+tamil\Tamil_speaker (1033).wav,Tamil_speaker (1033).wav,tamil_spk_0039,tamil,adult,read,,44100,test,2.96
+tamil\Tamil_speaker (1173).wav,Tamil_speaker (1173).wav,tamil_spk_0194,tamil,adult,read,,48000,test,5.2
+tamil\Tamil_speaker (1435).wav,Tamil_speaker (1435).wav,tamil_spk_0485,tamil,adult,read,,48000,test,4.2
+tamil\Tamil_speaker (1019).wav,Tamil_speaker (1019).wav,tamil_spk_0023,tamil,adult,read,,44100,test,2.06
+tamil\Tamil_speaker (1162).wav,Tamil_speaker (1162).wav,tamil_spk_0182,tamil,adult,read,,48000,test,5.8
+tamil\Tamil_speaker (1189).wav,Tamil_speaker (1189).wav,tamil_spk_0211,tamil,adult,read,,48000,test,4.6
+tamil\Tamil_speaker (1092).wav,Tamil_speaker (1092).wav,tamil_spk_0104,tamil,adult,read,,48000,test,5.2
+tamil\Tamil_speaker (1395).wav,Tamil_speaker (1395).wav,tamil_spk_0440,tamil,adult,read,,48000,test,5.0
+tamil\Tamil_speaker (143).wav,Tamil_speaker (143).wav,tamil_spk_0479,tamil,adult,read,,48000,test,3.136
+tamil\Tamil_speaker (108).wav,Tamil_speaker (108).wav,tamil_spk_0090,tamil,adult,read,,48000,test,2.688
+tamil\Tamil_speaker (1160).wav,Tamil_speaker (1160).wav,tamil_spk_0180,tamil,adult,read,,48000,test,4.8
+tamil\Tamil_speaker (1444).wav,Tamil_speaker (1444).wav,tamil_spk_0495,tamil,adult,read,,48000,test,5.0
+tamil\Tamil_speaker (1006).wav,Tamil_speaker (1006).wav,tamil_spk_0009,tamil,adult,read,,44100,test,2.7
+tamil\Tamil_speaker (1072).wav,Tamil_speaker (1072).wav,tamil_spk_0082,tamil,adult,read,,44100,test,2.46
+tamil\Tamil_speaker (1242).wav,Tamil_speaker (1242).wav,tamil_spk_0271,tamil,adult,read,,48000,test,5.2
+tamil\Tamil_speaker (102).wav,Tamil_speaker (102).wav,tamil_spk_0024,tamil,adult,read,,48000,test,3.072
+tamil\Tamil_speaker (1272).wav,Tamil_speaker (1272).wav,tamil_spk_0304,tamil,adult,read,,48000,test,5.4
+tamil\Tamil_speaker (1117).wav,Tamil_speaker (1117).wav,tamil_spk_0132,tamil,adult,read,,48000,test,5.0
+tamil\Tamil_speaker (1076).wav,Tamil_speaker (1076).wav,tamil_spk_0086,tamil,adult,read,,44100,test,2.88
+tamil\Tamil_speaker (1049).wav,Tamil_speaker (1049).wav,tamil_spk_0056,tamil,adult,read,,44100,test,2.18
+tamil\Tamil_speaker (1404).wav,Tamil_speaker (1404).wav,tamil_spk_0451,tamil,adult,read,,48000,test,13.6
+tamil\Tamil_speaker (1323).wav,Tamil_speaker (1323).wav,tamil_spk_0361,tamil,adult,read,,48000,test,5.0
+tamil\Tamil_speaker (1287).wav,Tamil_speaker (1287).wav,tamil_spk_0320,tamil,adult,read,,48000,test,4.8
+tamil\Tamil_speaker (104).wav,Tamil_speaker (104).wav,tamil_spk_0046,tamil,adult,read,,48000,test,3.392
+tamil\Tamil_speaker (109).wav,Tamil_speaker (109).wav,tamil_spk_0101,tamil,adult,read,,48000,test,3.477333333333333
+tamil\Tamil_speaker (1344).wav,Tamil_speaker (1344).wav,tamil_spk_0384,tamil,adult,read,,48000,test,12.8
+tamil\Tamil_speaker (1028).wav,Tamil_speaker (1028).wav,tamil_spk_0033,tamil,adult,read,,44100,test,2.58
+tamil\Tamil_speaker (1443).wav,Tamil_speaker (1443).wav,tamil_spk_0494,tamil,adult,read,,48000,test,5.2
+tamil\Tamil_speaker (1136).wav,Tamil_speaker (1136).wav,tamil_spk_0153,tamil,adult,read,,48000,test,5.0
+tamil\Tamil_speaker (1067).wav,Tamil_speaker (1067).wav,tamil_spk_0076,tamil,adult,read,,44100,test,2.74
+tamil\Tamil_speaker (1413).wav,Tamil_speaker (1413).wav,tamil_spk_0461,tamil,adult,read,,48000,test,5.2
+tamil\Tamil_speaker (1319).wav,Tamil_speaker (1319).wav,tamil_spk_0356,tamil,adult,read,,48000,test,5.0
+tamil\Tamil_speaker (1387).wav,Tamil_speaker (1387).wav,tamil_spk_0431,tamil,adult,read,,48000,test,4.8
+tamil\Tamil_speaker (1055).wav,Tamil_speaker (1055).wav,tamil_spk_0063,tamil,adult,read,,44100,test,2.04
+tamil\Tamil_speaker (1310).wav,Tamil_speaker (1310).wav,tamil_spk_0347,tamil,adult,read,,48000,test,5.2
+tamil\Tamil_speaker (1211).wav,Tamil_speaker (1211).wav,tamil_spk_0237,tamil,adult,read,,48000,test,5.0
+tamil\Tamil_speaker (1008).wav,Tamil_speaker (1008).wav,tamil_spk_0011,tamil,adult,read,,44100,test,2.38
+tamil\Tamil_speaker (1066).wav,Tamil_speaker (1066).wav,tamil_spk_0075,tamil,adult,read,,44100,test,0.24
+tamil\Tamil_speaker (1020).wav,Tamil_speaker (1020).wav,tamil_spk_0025,tamil,adult,read,,44100,test,2.58
+tamil\Tamil_speaker (1154).wav,Tamil_speaker (1154).wav,tamil_spk_0173,tamil,adult,read,,48000,test,5.4
+tamil\Tamil_speaker (1013).wav,Tamil_speaker (1013).wav,tamil_spk_0017,tamil,adult,read,,44100,test,2.76
+tamil\Tamil_speaker (1389).wav,Tamil_speaker (1389).wav,tamil_spk_0433,tamil,adult,read,,48000,test,5.0
+tamil\Tamil_speaker (129).wav,Tamil_speaker (129).wav,tamil_spk_0323,tamil,adult,read,,48000,test,3.456
