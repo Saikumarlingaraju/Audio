@@ -271,8 +271,7 @@ MIT License - See LICENSE file for details
 ## Contributors
 
 - Manvita
-- Sathwik
-- Sahasra
+
 
 ## Acknowledgments
 
