@@ -34,11 +34,7 @@ wheels/
 .vscode/
 *.code-workspace
 
-# Data files
-data/raw/*
-data/processed/*
-!data/raw/.gitkeep
-!data/processed/.gitkeep
+# Data files (large files excluded, only keep structure)
 *.wav
 *.mp3
 *.flac
@@ -46,9 +42,7 @@ data/processed/*
 *.npy
 *.npz
 
-# Models
-models/checkpoints/*
-!models/checkpoints/.gitkeep
+# Models (exclude trained models, keep structure)
 *.pt
 *.pth
 *.ckpt
@@ -56,18 +50,19 @@ models/checkpoints/*
 *.hdf5
 
 # Logs and experiments
-experiments/logs/*
-!experiments/logs/.gitkeep
+experiments/logs/
 wandb/
 *.log
 runs/
 lightning_logs/
 
+# Uploads (temporary files)
+uploads/
+app/uploads/
+app/static/
+
 # Results
-results/figures/*
-results/metrics/*
-!results/figures/.gitkeep
-!results/metrics/.gitkeep
+results/
 
 # Environment
 .env

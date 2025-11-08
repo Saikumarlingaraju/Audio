@@ -6,13 +6,28 @@
 Created complete folder hierarchy:
 ```
 firstiiit/
-├── data/ (raw, processed, splits)
-├── notebooks/
-├── src/ (data, features, models, utils)
-├── models/checkpoints/
-├── experiments/ (configs, logs)
-├── results/ (figures, metrics)
-└── app/ (templates, static)
+├── data/
+│   ├── raw/indian_accents/        # Raw audio by state (6 states)
+│   ├── processed/commonvoice/     # Preprocessed audio (16kHz)
+│   ├── features/indian_accents/   # HuBERT & MFCC features
+│   └── splits/                    # train.csv, val.csv, test.csv
+├── src/
+│   ├── data/                      # Download & preprocessing scripts
+│   ├── features/                  # HuBERT & MFCC extractors
+│   ├── models/                    # MLP, CNN, BiLSTM, Transformer
+│   └── utils/                     # Config, metrics
+├── models/
+│   ├── checkpoints/               # demo_model.pt
+│   └── label_encoder.pkl
+├── experiments/
+│   ├── indian_accents_mlp/        # Training results
+│   └── indian_accents_mlp_augmented/
+├── app/
+│   ├── app.py, app_robust.py      # Flask applications
+│   └── templates/                 # Web interface (index.html)
+├── Train scripts (train_simple.py, train_fast.py, train_robust.py, etc.)
+├── Test scripts (test_training_accuracy.py, test_audio_comparison.py)
+└── Feature extraction (extract_indian_features.py)
 ```
 
 ### 2. Environment Setup ✓

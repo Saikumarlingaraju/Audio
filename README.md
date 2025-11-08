@@ -15,59 +15,93 @@ This project develops a Native Language Identification (NLI) system that identif
 
 ## Dataset
 
-**Indian Accent Database (IndicAccentDb)**
-- Source: [HuggingFace Dataset](https://huggingface.co/datasets/DarshanaS/IndicAccentDb)
-- Contains English speech recordings from Indian speakers with various L1 backgrounds
-- Includes both adult and child speaker subsets
-- Multiple native languages represented: Hindi, Tamil, Telugu, Malayalam, Kannada, and more
+**Indian Accent Database (Custom Collection)**
+- English speech recordings from Indian speakers across 6 states
+- **States covered**: Andhra Pradesh, Gujarat, Jharkhand, Karnataka, Kerala, Tamil Nadu
+- **Total samples**: 2,800 audio recordings
+- **Speaker type**: Adult speakers reading English text
+- **Recording conditions**: Varied sampling rates (44.1kHz, 48kHz) - preprocessed to 16kHz
+- **Duration**: ~2-3 seconds per utterance
+- **Data splits**: Train (70%), Validation (15%), Test (15%) - speaker-disjoint
 
 ## Project Structure
 
 ```
 firstiiit/
 ├── data/
-│   ├── raw/              # Raw audio files from IndicAccentDb
-│   ├── processed/        # Preprocessed audio files (16kHz, normalized)
-│   └── splits/           # Train/dev/test splits metadata
-├── notebooks/
-│   ├── 01_data_exploration.ipynb
-│   ├── 02_feature_extraction.ipynb
-│   ├── 03_baseline_models.ipynb
-│   ├── 04_hubert_analysis.ipynb
-│   └── 05_results_visualization.ipynb
+│   ├── raw/
+│   │   └── indian_accents/        # Raw audio files by state
+│   │       ├── andhra_pradesh/
+│   │       ├── gujrat/
+│   │       ├── jharkhand/
+│   │       ├── karnataka/
+│   │       ├── kerala/
+│   │       ├── tamil/
+│   │       ├── metadata_full.csv
+│   │       └── metadata_with_splits.csv
+│   ├── processed/
+│   │   └── commonvoice/           # Preprocessed audio (16kHz)
+│   ├── features/
+│   │   └── indian_accents/        # Extracted features
+│   │       ├── hubert_layer12_mean.pkl  # HuBERT embeddings (primary)
+│   │       ├── mfcc_stats.pkl           # MFCC features (comparison)
+│   │       ├── train_mean.npy
+│   │       └── train_std.npy
+│   └── splits/                     # Train/val/test splits
+│       ├── train.csv
+│       ├── val.csv
+│       └── test.csv
 ├── src/
 │   ├── data/
 │   │   ├── download_dataset.py
+│   │   ├── download_accentdb_extended.py
+│   │   ├── download_commonvoice.py
+│   │   ├── download_sample.py
 │   │   ├── preprocess.py
 │   │   └── create_splits.py
 │   ├── features/
-│   │   ├── mfcc_extractor.py
-│   │   ├── hubert_extractor.py
-│   │   └── dataset.py
+│   │   ├── hubert_extractor.py    # HuBERT feature extraction
+│   │   ├── mfcc_extractor.py      # MFCC feature extraction
+│   │   └── dataset.py             # PyTorch Dataset
 │   ├── models/
-│   │   ├── mlp.py
-│   │   ├── cnn.py
-│   │   ├── bilstm.py
-│   │   └── transformer.py
+│   │   ├── mlp.py                 # MLP classifier (primary)
+│   │   ├── cnn.py                 # CNN classifier
+│   │   ├── bilstm.py              # BiLSTM classifier
+│   │   └── transformer.py         # Transformer classifier
 │   └── utils/
-│       ├── logger.py
-│       ├── metrics.py
-│       └── config.py
+│       ├── config.py
+│       └── metrics.py
 ├── models/
-│   └── checkpoints/      # Saved model checkpoints
+│   ├── checkpoints/
+│   │   └── demo_model.pt          # Trained model checkpoint
+│   └── label_encoder.pkl          # Label encoder for classes
 ├── experiments/
-│   ├── configs/          # Experiment configuration files
-│   └── logs/             # Training logs
-├── results/
-│   ├── figures/          # Visualizations and plots
-│   └── metrics/          # Performance metrics and reports
+│   ├── indian_accents_mlp/        # MLP experiment results
+│   │   └── best_model.pt
+│   └── indian_accents_mlp_augmented/  # Augmented training results
+│       └── best_model.pt
 ├── app/
-│   ├── app.py            # Flask application for cuisine recommendation
-│   ├── templates/        # HTML templates
-│   └── static/           # CSS, JS, and static assets
-├── requirements.txt      # Python dependencies
-├── environment.yml       # Conda environment specification
-└── README.md            # This file
+│   ├── app.py                     # Basic Flask app
+│   ├── app_robust.py              # Production Flask app (HuBERT)
+│   ├── start_server.bat           # Windows startup script
+│   └── templates/
+│       └── index.html             # Web interface
+├── train_simple.py                # Simple training script (HuBERT primary)
+├── train_fast.py                  # Fast training script
+├── train_robust.py                # Robust training with validation
+├── train_clean.py                 # Clean training pipeline
+├── augment_and_train.py           # Training with data augmentation
+├── extract_indian_features.py     # HuBERT feature extraction
+├── create_indian_metadata.py      # Create metadata CSV
+├── test_training_accuracy.py      # Evaluate model accuracy
+├── test_audio_comparison.py       # Compare audio processing
+├── diagnose_pipeline.py           # Pipeline diagnostics
+├── requirements.txt               # Python dependencies
+├── environment.yml                # Conda environment
+├── PROJECT_SUMMARY.md             # Implementation summary
+├── LICENSE                        # MIT License
+├── .gitignore                     # Git exclusions
+└── README.md                      # This file
 ```
 
 ## Setup Instructions
@@ -91,23 +125,23 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-### 2. Download Dataset
+### 2. Prepare Dataset
 
+The dataset is already included in the repository under `data/raw/indian_accents/` with 2,800 audio files from 6 Indian states.
+
+**Create metadata with splits:**
 ```bash
-python src/data/download_dataset.py --output_dir data/raw
+python create_indian_metadata.py
 ```
 
-### 3. Preprocess Audio
-
+**Extract features:**
 ```bash
-python src/data/preprocess.py --input_dir data/raw --output_dir data/processed
+python extract_indian_features.py
 ```
 
-### 4. Create Data Splits
-
-```bash
-python src/data/create_splits.py --data_dir data/processed --output_dir data/splits
-```
+This will create:
+- `data/splits/train.csv`, `val.csv`, `test.csv` - Data splits
+- `data/features/indian_accents/hubert_layer12_mean.pkl` - HuBERT embeddings
 
 ## Usage
 
@@ -222,11 +256,11 @@ These accent cues manifest in:
 If you use this code or dataset, please cite:
 
 ```bibtex
-@misc{indicaccentdb,
-  title={Indian Accent Database},
-  author={Darshana S},
-  year={2024},
-  howpublished={\url{https://huggingface.co/datasets/DarshanaS/IndicAccentDb}}
+@misc{indian_accent_nli_2025,
+  title={Native Language Identification of Indian English Speakers Using HuBERT},
+  author={Manvita and Sathwik and Sahasra},
+  year={2025},
+  howpublished={\url{https://github.com/Manvita22/iiitpro}}
 }
 ```
 
@@ -242,6 +276,7 @@ MIT License - See LICENSE file for details
 
 ## Acknowledgments
 
-- IndicAccentDb dataset creators
-- HuggingFace for model hosting and datasets
-- Meta AI for HuBERT pre-trained models
+- Indian Accent speech data contributors
+- HuggingFace for Transformers library and model hosting
+- Meta AI for HuBERT pre-trained models (facebook/hubert-base-ls960)
+- PyTorch and scikit-learn communities
