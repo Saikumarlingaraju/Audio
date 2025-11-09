@@ -258,7 +258,7 @@ If you use this code or dataset, please cite:
 ```bibtex
 @misc{indian_accent_nli_2025,
   title={Native Language Identification of Indian English Speakers Using HuBERT},
-  author={Manvita and Sathwik and Sahasra},
+  author={Manvita},
   year={2025},
   howpublished={\url{https://github.com/Manvita22/iiitpro}}
 }
