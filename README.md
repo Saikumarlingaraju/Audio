@@ -12,6 +12,7 @@ This project implements and compares multiple approaches for Indian accent class
 - **MFCC Baseline**: Traditional audio features with MLP classifier
 - **HuBERT Layer-wise Analysis**: Systematic evaluation of transformer layers
 - **Word vs Sentence Comparison**: Impact of temporal context on accuracy
+- **Cross-Age Generalization**: Robustness evaluation across different age groups
 
 ### Key Achievements
 - ✅ **100% Test Accuracy** with HuBERT Layer 3 + Sentence-Level Audio
@@ -58,37 +59,7 @@ Kerala: ~467 utterances
 Tamil Nadu: ~467 utterances
 ```
 
-## 🏗️ Project Structure
 
-```
-firstiiit/
-├── data/
-│   ├── raw/
-│   │   └── indian_accents/          # Raw audio files (by state)
-│   ├── splits/                      # Train/val/test split CSVs
-│   ├── features/                    # Extracted features (MFCC, HuBERT)
-│   └── word_level/                  # Word-level segmented audio
-├── src/
-│   ├── data/                        # Data loading and preprocessing
-│   ├── features/                    # Feature extraction (MFCC, HuBERT)
-│   ├── models/                      # Model architectures (MLP, CNN, etc.)
-│   └── utils/                       # Helper utilities
-├── scripts/
-│   ├── layerwise_hubert_analysis.py # Layer-wise HuBERT evaluation
-│   ├── compare_word_sentence_level.py # Word vs sentence comparison
-│   └── train_all_models.py         # Training utilities
-├── experiments/                     # Trained models and results
-├── notebooks/                       # Jupyter notebooks
-├── app/                            # Flask web application
-├── extract_mfcc_features.py        # MFCC feature extraction
-├── train_simple.py                 # Simple training script
-├── run_word_sentence_comparison_kaggle.py # Kaggle comparison script
-├── FINAL_PROJECT_SUMMARY.txt       # Comprehensive results
-├── layer_wise_results.txt          # Layer-wise analysis results
-├── word_vs_sent_analysis.txt       # Word vs sentence analysis
-├── requirements.txt                # Python dependencies
-└── README.md                       # This file
-```
 
 ## 🚀 Getting Started
 
@@ -374,82 +345,23 @@ See `notebook2e5f8843c0.ipynb` for complete Kaggle workflow.
 ## 📚 Documentation
 
 Detailed documentation available in:
-- **FINAL_PROJECT_SUMMARY.txt**: Comprehensive project summary
 - **layer_wise_results.txt**: Complete layer-wise analysis
 - **word_vs_sent_analysis.txt**: Word vs sentence comparison analysis
 - **CROSS_AGE_ANALYSIS.md**: Cross-age generalization study (NEW! ⭐)
 
-## 🛠️ API Usage
 
-### Quick Inference
 
-```python
-from src.features.hubert_extractor import HuBERTExtractor
-from src.models.mlp import MLPClassifier
-import torch
 
-# Load model
-model = MLPClassifier(input_dim=768, hidden_dims=[256, 128], num_classes=6)
-model.load_state_dict(torch.load('experiments/indian_accents_hubert_layer3_mean/best_model.pt'))
-model.eval()
 
-# Extract features
-extractor = HuBERTExtractor()
-result = extractor.extract_from_file('audio.wav', extract_layer=3, pooling='mean')
-features = torch.FloatTensor(result['embeddings']['layer_3'])
 
-# Predict
-with torch.no_grad():
-    output = model(features.unsqueeze(0))
-    predicted_class = output.argmax(dim=1).item()
 
-labels = ['andhra_pradesh', 'gujrat', 'jharkhand', 'karnataka', 'kerala', 'tamil']
-print(f"Predicted accent: {labels[predicted_class]}")
-```
 
-## 🤝 Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
-## 📝 Citation
-
-If you use this code in your research, please cite:
-
-```bibtex
-@misc{indian_accent_classification_2025,
-  author = {Manvita22},
-  title = {Indian Accent Classification using HuBERT and MFCC},
-  year = {2025},
-  publisher = {GitHub},
-  url = {https://github.com/Manvita22/iiitpro}
-}
-```
-
-## 🙏 Acknowledgments
-
-- HuBERT model from [Hugging Face Transformers](https://huggingface.co/facebook/hubert-base-ls960)
-- Indian Accents Dataset contributors
-- Kaggle for providing free GPU resources
-- PyTorch and Transformers communities
 
 ## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 📧 Contact
 
-**Author**: Manvita22
-
-- GitHub: [@Manvita22](https://github.com/Manvita22)
-- Repository: [iiitpro](https://github.com/Manvita22/iiitpro)
-
-For questions or issues, please open an issue on GitHub.
 
 ## 🔮 Future Work
 
