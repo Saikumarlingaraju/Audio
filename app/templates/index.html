@@ -329,7 +329,7 @@
             <p>Upload an audio file to identify the speaker's Indian state accent</p>
             <div class="model-info">
                 <h3>📊 Model Information</h3>
-                <p><strong>Architecture:</strong> MLP Classifier [600 → 256 → 128 → 6]</p>
+                <p><strong>Architecture:</strong> MLP Classifier [1536 → 256 → 128 → 6]</p>
                 <p><strong>Test Accuracy:</strong> 100.00%</p>
                 <p><strong>Dataset:</strong> IndicAccentDB (2,798 samples)</p>
                 <p><strong>Supported Indian State Accents:</strong></p>
@@ -457,9 +457,9 @@
                 document.getElementById('loading').style.display = 'none';
                 document.getElementById('predictBtn').disabled = false;
 
-                if (data.accent) {
+                if (data.success && data.predicted_accent) {
                     // Show result
-                    document.getElementById('predictedAccent').textContent = data.accent;
+                    document.getElementById('predictedAccent').textContent = data.predicted_accent;
                     document.getElementById('confidenceText').textContent = data.confidence.toFixed(1) + '%';
                     document.getElementById('confidenceFill').style.width = data.confidence + '%';
 
@@ -497,7 +497,7 @@
                     document.getElementById('result').classList.add('show');
                 } else {
                     // Show error
-                    document.getElementById('errorMessage').textContent = data.error;
+                    document.getElementById('errorMessage').textContent = data.error || 'Unknown error occurred';
                     document.getElementById('error').classList.add('show');
                 }
             } catch (error) {

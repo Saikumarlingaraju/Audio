@@ -18,10 +18,12 @@ import os
 from src.models.mlp import MLPClassifier
 from src.features.mfcc_extractor import MFCCExtractor
 from src.features.hubert_extractor import HuBERTExtractor
+from src.utils.robust_prediction import RobustPredictor
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'uploads'
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max
+app.config['USE_ENSEMBLE'] = True  # Enable ensemble inference for external audio
 
 # Ensure upload directory exists
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
@@ -65,6 +67,16 @@ if PRIMARY_FEATURE_TYPE == 'mfcc':
     )
 else:
     hubert_extractor = HuBERTExtractor()
+
+# Initialize robust predictor for ensemble inference
+robust_predictor = None
+if app.config['USE_ENSEMBLE']:
+    try:
+        robust_predictor = RobustPredictor(str(MODEL_PATH), str(ENCODER_PATH))
+        print("✓ Robust predictor initialized (ensemble inference enabled)")
+    except Exception as e:
+        print(f"⚠️  Could not initialize robust predictor: {e}")
+        print("   Falling back to simple prediction")
 
 print(f"✓ Model loaded: Test accuracy {checkpoint.get('test_acc', checkpoint.get('val_acc', 'N/A')):.2f}%")
 print(f"✓ Classes: {label_encoder.classes_}")
@@ -263,9 +275,48 @@ def extract_features(audio_path):
         print(f"Error extracting features: {e}")
         raise
 
-def predict_accent(audio_path):
-    """Predict accent from audio file"""
+def predict_accent(audio_path, use_ensemble=None):
+    """
+    Predict accent from audio file
+    
+    Args:
+        audio_path: Path to audio file
+        use_ensemble: Override app config to force ensemble on/off (None = use config)
+    """
     try:
+        # Determine whether to use ensemble
+        should_use_ensemble = app.config['USE_ENSEMBLE'] if use_ensemble is None else use_ensemble
+        
+        # Use robust predictor with ensemble if available
+        if should_use_ensemble and robust_predictor is not None:
+            result = robust_predictor.predict_ensemble(audio_path, n_augmentations='auto')
+            
+            # Convert to app format
+            predicted_label = result['prediction']
+            confidence = result['confidence'] * 100
+            
+            # Build top predictions from class probabilities
+            top_predictions = []
+            for accent, prob in sorted(result['class_probabilities'].items(), 
+                                      key=lambda x: x[1], reverse=True):
+                top_predictions.append({
+                    'accent': accent.replace('_', ' ').title(),
+                    'confidence': float(prob * 100)
+                })
+            
+            # Get cuisine recommendations
+            recommendations = get_cuisine_recommendations(str(predicted_label))
+            
+            return {
+                'accent': predicted_label.replace('_', ' ').title(),
+                'confidence': float(confidence),
+                'top_predictions': top_predictions,
+                'recommendations': recommendations,
+                'method': 'ensemble',
+                'n_augmentations': result['n_augmentations']
+            }
+        
+        # Fallback to simple prediction
         # Extract features
         features = extract_features(audio_path)
         features_tensor = torch.FloatTensor(features).unsqueeze(0)
@@ -300,11 +351,14 @@ def predict_accent(audio_path):
             'accent': predicted_label.replace('_', ' ').title(),
             'confidence': float(confidence),
             'top_predictions': top_predictions,
-            'recommendations': recommendations
+            'recommendations': recommendations,
+            'method': 'simple'
         }
     
     except Exception as e:
         print(f"Prediction error: {e}")
+        import traceback
+        traceback.print_exc()
         raise
 
 @app.route('/')

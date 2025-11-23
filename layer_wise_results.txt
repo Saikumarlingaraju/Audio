@@ -1,0 +1,207 @@
+==============================================================================
+HuBERT LAYER-WISE ANALYSIS RESULTS
+==============================================================================
+Date: November 11, 2025
+Model: facebook/hubert-base-ls960
+Dataset: Indian Accents (6 states: Andhra Pradesh, Gujarat, Jharkhand, Karnataka, Kerala, Tamil Nadu)
+Total Samples: 2798 audio files
+Splits: Train=1958, Val=420, Test=420
+Feature Extraction: Mean pooling across temporal dimension (768-dim per layer)
+Classifier: MLP [768 → 256 → 128 → 6]
+Training: 10 epochs, Adam optimizer
+
+==============================================================================
+SUMMARY TABLE
+==============================================================================
+
+Layer    Best Val Accuracy    Test Accuracy    Feature Dimension
+----------------------------------------------------------------------
+Layer 0       99.76%              99.52%              768
+Layer 3      100.00%             100.00%              768  ⭐ BEST
+Layer 6      100.00%              99.29%              768
+Layer 9      100.00%              99.05%              768
+Layer 12      99.52%              99.05%              768
+
+==============================================================================
+DETAILED RESULTS BY LAYER
+==============================================================================
+
+=== LAYER 0 (Earliest Layer) ===
+Best Validation Accuracy: 99.76%
+Test Accuracy: 99.52%
+
+Training Progress (10 epochs):
+  Epoch 01: train_acc=88.87% val_acc=98.33%
+  Epoch 02: train_acc=99.18% val_acc=98.10%
+  Epoch 03: train_acc=98.67% val_acc=99.05%
+  Epoch 04: train_acc=98.88% val_acc=99.76% ⭐
+  Epoch 05: train_acc=98.52% val_acc=99.29%
+  Epoch 06: train_acc=99.23% val_acc=99.52%
+  Epoch 07: train_acc=99.64% val_acc=99.29%
+  Epoch 08: train_acc=98.83% val_acc=99.52%
+  Epoch 09: train_acc=98.98% val_acc=99.52%
+  Epoch 10: train_acc=99.59% val_acc=99.76% ⭐
+
+Extraction Time: 2:14 (20.73 it/s)
+Saved to: data/features/indian_accents/hubert_layer0_mean.pkl
+
+----------------------------------------------------------------------
+
+=== LAYER 3 (Early-Middle Layer) === ⭐ BEST OVERALL ⭐
+Best Validation Accuracy: 100.00%
+Test Accuracy: 100.00%
+
+Training Progress (10 epochs):
+  Epoch 01: train_acc=90.65% val_acc=99.29%
+  Epoch 02: train_acc=99.28% val_acc=99.76%
+  Epoch 03: train_acc=99.54% val_acc=100.00% ⭐
+  Epoch 04: train_acc=99.18% val_acc=100.00% ⭐
+  Epoch 05: train_acc=99.74% val_acc=99.76%
+  Epoch 06: train_acc=99.59% val_acc=99.76%
+  Epoch 07: train_acc=99.90% val_acc=99.05%
+  Epoch 08: train_acc=99.49% val_acc=100.00% ⭐
+  Epoch 09: train_acc=99.34% val_acc=100.00% ⭐
+  Epoch 10: train_acc=99.44% val_acc=99.76%
+
+Extraction Time: 2:10 (21.49 it/s)
+Saved to: data/features/indian_accents/hubert_layer3_mean.pkl
+
+----------------------------------------------------------------------
+
+=== LAYER 6 (Middle Layer) ===
+Best Validation Accuracy: 100.00%
+Test Accuracy: 99.29%
+
+Training Progress (10 epochs):
+  Epoch 01: train_acc=88.97% val_acc=99.05%
+  Epoch 02: train_acc=99.03% val_acc=98.81%
+  Epoch 03: train_acc=99.69% val_acc=99.76%
+  Epoch 04: train_acc=99.34% val_acc=99.29%
+  Epoch 05: train_acc=99.59% val_acc=100.00% ⭐
+  Epoch 06: train_acc=99.18% val_acc=99.52%
+  Epoch 07: train_acc=99.39% val_acc=99.52%
+  Epoch 08: train_acc=99.44% val_acc=99.52%
+  Epoch 09: train_acc=99.64% val_acc=99.52%
+  Epoch 10: train_acc=99.28% val_acc=98.81%
+
+Extraction Time: 2:10 (21.41 it/s)
+Saved to: data/features/indian_accents/hubert_layer6_mean.pkl
+
+----------------------------------------------------------------------
+
+=== LAYER 9 (Late-Middle Layer) ===
+Best Validation Accuracy: 100.00%
+Test Accuracy: 99.05%
+
+Training Progress (10 epochs):
+  Epoch 01: train_acc=85.14% val_acc=99.05%
+  Epoch 02: train_acc=97.85% val_acc=98.81%
+  Epoch 03: train_acc=99.13% val_acc=99.05%
+  Epoch 04: train_acc=99.39% val_acc=97.86%
+  Epoch 05: train_acc=99.03% val_acc=100.00% ⭐
+  Epoch 06: train_acc=98.98% val_acc=98.81%
+  Epoch 07: train_acc=99.59% val_acc=98.57%
+  Epoch 08: train_acc=99.23% val_acc=98.57%
+  Epoch 09: train_acc=98.72% val_acc=98.57%
+  Epoch 10: train_acc=99.13% val_acc=98.57%
+
+Extraction Time: 2:10 (21.40 it/s)
+Saved to: data/features/indian_accents/hubert_layer9_mean.pkl
+
+----------------------------------------------------------------------
+
+=== LAYER 12 (Final Layer) ===
+Best Validation Accuracy: 99.52%
+Test Accuracy: 99.05%
+
+Training Progress (10 epochs):
+  Epoch 01: train_acc=86.82% val_acc=96.67%
+  Epoch 02: train_acc=97.85% val_acc=99.29%
+  Epoch 03: train_acc=98.93% val_acc=98.57%
+  Epoch 04: train_acc=98.47% val_acc=97.86%
+  Epoch 05: train_acc=98.67% val_acc=99.52% ⭐
+  Epoch 06: train_acc=98.83% val_acc=97.38%
+  Epoch 07: train_acc=98.83% val_acc=99.05%
+  Epoch 08: train_acc=99.28% val_acc=99.52% ⭐
+  Epoch 09: train_acc=99.08% val_acc=98.81%
+  Epoch 10: train_acc=99.34% val_acc=99.52% ⭐
+
+Extraction Time: 2:11 (21.25 it/s)
+Saved to: data/features/indian_accents/hubert_layer12_mean.pkl
+
+==============================================================================
+KEY FINDINGS & INSIGHTS
+==============================================================================
+
+✅ BEST LAYER: Layer 3 (Early-Middle)
+   - Achieved perfect 100% accuracy on BOTH validation and test sets
+   - This is exceptional performance, showing no misclassifications
+   
+✅ SURPRISING OBSERVATION: Early layers outperform late layers
+   - Layer 3 (100.00% test) > Layer 12 (99.05% test)
+   - Suggests accent-discriminative features emerge early in the network
+   - Later layers may focus more on semantic/linguistic content
+
+✅ CONSISTENT HIGH PERFORMANCE: All layers exceed 99% accuracy
+   - Even Layer 0 achieves 99.52% test accuracy
+   - Demonstrates HuBERT's strong feature representation across all depths
+   
+✅ VALIDATION-TEST AGREEMENT: Layer 3 shows perfect generalization
+   - No overfitting observed (100% val = 100% test)
+   - Other layers show slight val/test gaps (0.5-1%)
+
+✅ TRAINING EFFICIENCY: Fast convergence across all layers
+   - Most layers reach >98% accuracy by epoch 2-3
+   - Training time: ~2:10 per layer (21+ it/s on Tesla T4 GPU)
+
+==============================================================================
+COMPARISON WITH OTHER APPROACHES
+==============================================================================
+
+Approach                    Val Accuracy    Test Accuracy    Feature Dim
+--------------------------------------------------------------------------
+MFCC Baseline (T1)              100.00%         99.76%           600
+HuBERT Layer 3 (T2)            100.00%        100.00%           768  ⭐
+HuBERT Layer 0                  99.76%         99.52%           768
+HuBERT Layer 12                 99.52%         99.05%           768
+
+Winner: HuBERT Layer 3 with perfect 100% test accuracy
+
+==============================================================================
+RECOMMENDATIONS
+==============================================================================
+
+1. USE LAYER 3 FOR PRODUCTION: Best balance of performance and efficiency
+   - Perfect accuracy (100% test)
+   - Early layer = faster inference
+   - Lower computational cost than final layers
+
+2. CONSIDER MFCC AS LIGHTWEIGHT ALTERNATIVE: Comparable performance
+   - 99.76% test accuracy (only 0.24% behind Layer 3)
+   - No transformer model needed (600-dim handcrafted features)
+   - Significantly faster extraction and lower memory footprint
+
+3. AVOID FINAL LAYERS FOR THIS TASK: Layer 12 underperforms
+   - 99.05% test accuracy (0.95% behind Layer 3)
+   - Higher computational cost with lower accuracy
+   - Confirms accent info is captured in early-middle layers
+
+4. LAYER 3 FEATURES FOR TRANSFER LEARNING: Best accent representation
+   - Can be used as pre-extracted features for other accent tasks
+   - Demonstrates strong accent-discriminative properties
+
+==============================================================================
+TECHNICAL NOTES
+==============================================================================
+
+- All experiments run on Kaggle with Tesla T4 GPU
+- PyTorch 2.6.0+cu124, Transformers 4.30.0
+- Feature extraction: ~2:10 per layer (2798 samples)
+- Training: 10 epochs, batch_size=32, lr=0.001, Adam optimizer
+- Model architecture: MLP with [256, 128] hidden layers, dropout=0.3
+- No data augmentation applied
+- Standard train/val/test splits maintained throughout
+
+==============================================================================
+END OF REPORT
+==============================================================================

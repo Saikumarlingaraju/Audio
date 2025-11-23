@@ -13,12 +13,12 @@ from flask import Flask, render_template, request, jsonify
 import torch
 import pickle
 import numpy as np
-import librosa
 import os
-import soundfile as sf
 
 from src.models.mlp import MLPClassifier
-from src.features.mfcc_extractor import MFCCExtractor
+
+# We'll import HuBERTExtractor lazily to avoid heavy imports during server start
+HubertExtractor = None
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'uploads'
@@ -28,36 +28,106 @@ app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
 # Load model and label encoder
-MODEL_PATH = root_dir / 'experiments' / 'indian_accents_mlp' / 'best_model.pt'
-ENCODER_PATH = root_dir / 'experiments' / 'indian_accents_mlp' / 'label_encoder.pkl'
+MODEL_PATH = root_dir / 'experiments' / 'indian_accents_hubert' / 'best_model.pt'
+ENCODER_PATH = root_dir / 'experiments' / 'indian_accents_hubert' / 'label_encoder.pkl'
 
 print("Loading model...")
 checkpoint = torch.load(str(MODEL_PATH), map_location='cpu')
 with open(str(ENCODER_PATH), 'rb') as f:
     label_encoder = pickle.load(f)
 
-model = MLPClassifier(input_dim=600, hidden_dims=[256, 128], num_classes=6, dropout=0.3)
+model = MLPClassifier(input_dim=1536, hidden_dims=[256, 128], num_classes=6, dropout=0.3)
 model.load_state_dict(checkpoint['model_state_dict'])
 model.eval()
 
-# Initialize MFCC extractor
-mfcc_extractor = MFCCExtractor(
-    sr=16000,
-    n_mfcc=40,
-    include_delta=True,
-    include_delta_delta=True
-)
+# Initialize HuBERT feature extractor (model is loaded in the extractor's constructor)
+hubert_extractor = None  # Lazy init to avoid blocking server start on network issues
 
-print(f"✓ Model loaded: Test accuracy {checkpoint.get('test_acc', checkpoint.get('val_acc', 'N/A')):.2f}%")
+# Safe printing of accuracy whether numeric or not
+_acc = checkpoint.get('test_acc', checkpoint.get('val_acc', None))
+if isinstance(_acc, (int, float)):
+    print(f"✓ Model weights loaded: Test accuracy {_acc:.2f}%")
+else:
+    print(f"✓ Model weights loaded. Test accuracy: {_acc}")
 print(f"✓ Classes: {list(label_encoder.classes_)}")
+print("→ HuBERT extractor will initialize on first prediction request.")
 
 
 def extract_features(audio_path):
-    """Extract MFCC features from audio file"""
-    features_dict = mfcc_extractor.extract_from_file(audio_path, return_frames=False)
-    # Extract just the array (not the dict)
-    features = features_dict['features'] if isinstance(features_dict, dict) else features_dict
-    return features
+    """Extract HuBERT features (mean+std over frames from layer 12 -> 1536 dims)."""
+    try:
+        global hubert_extractor
+        if hubert_extractor is None:
+            try:
+                print("Initializing HuBERT extractor (lazy)...")
+                # Lazy import to prevent heavy transformer/torch submodules from loading at app import time
+                global HubertExtractor
+                if HubertExtractor is None:
+                    from importlib import import_module
+                    HubertExtractor = getattr(import_module('src.features.hubert_extractor'), 'HuBERTExtractor')
+                hubert_extractor = HubertExtractor()
+            except Exception as init_err:
+                print(f"HuBERT init failed: {init_err}")
+                return None
+
+        # Ask extractor for frame-level embeddings from layer 12
+        result = hubert_extractor.extract_from_file(
+            audio_path, extract_layer=12, pooling=None
+        )
+
+        if result is None:
+            print(f"Feature extraction returned None for {audio_path}")
+            return None
+
+        # Pull out frames for the requested layer
+        frames = None
+        if isinstance(result, dict):
+            embeddings_dict = result.get('embeddings')
+            if isinstance(embeddings_dict, dict):
+                if 'layer_12' in embeddings_dict:
+                    frames = embeddings_dict['layer_12']  # shape: (T, 768)
+                elif 12 in embeddings_dict:
+                    frames = embeddings_dict[12]
+                else:
+                    # Fallback to first key
+                    first_key = list(embeddings_dict.keys())[0]
+                    print(f"Warning: using {first_key} instead of layer_12")
+                    frames = embeddings_dict[first_key]
+            else:
+                # Unexpected shape; try to use as frames
+                frames = embeddings_dict
+        else:
+            frames = result
+
+        if frames is None:
+            print(f"No frame-level embeddings found for {audio_path}")
+            return None
+
+        frames = np.asarray(frames)
+        if frames.ndim == 1:
+            # Already pooled to (768,), compute std as zeros to keep 1536 dims
+            mean_vec = frames.astype(np.float32)
+            std_vec = np.zeros_like(mean_vec, dtype=np.float32)
+        else:
+            # Compute mean and std over time dimension
+            mean_vec = np.nanmean(frames, axis=0).astype(np.float32)
+            std_vec = np.nanstd(frames, axis=0).astype(np.float32)
+
+        # Replace NaNs/Infs if any
+        mean_vec = np.nan_to_num(mean_vec, nan=0.0, posinf=0.0, neginf=0.0)
+        std_vec = np.nan_to_num(std_vec, nan=0.0, posinf=0.0, neginf=0.0)
+
+        # Concatenate to get 1536-dim feature
+        features = np.concatenate([mean_vec, std_vec]).astype(np.float32)
+        print(f"HuBERT features ready: {features.shape} (mean+std)")
+
+        return features
+
+    except Exception as e:
+        print(f"Feature extraction error: {str(e)}")
+        import traceback
+        traceback.print_exc()
+        return None
 
 
 def get_cuisine_recommendations(state):
@@ -101,48 +171,45 @@ def get_cuisine_recommendations(state):
 def predict_accent(audio_path):
     """Predict accent/language from audio file"""
     try:
-        # Extract features
         features = extract_features(audio_path)
-        features_tensor = torch.FloatTensor(features).unsqueeze(0)
-        
-        # Predict
+        if features is None:
+            return {'success': False, 'error': 'Feature extraction failed'}
+
+        # Ensure float32 1-D
+        features = np.asarray(features, dtype=np.float32).reshape(-1)
+        print(f"Feature vector final shape: {features.shape}")
+
+        expected_dim = 1536
+        if features.size != expected_dim:
+            print(f"Warning: resizing feature vector from {features.size} to {expected_dim}")
+            if features.size < expected_dim:
+                features = np.pad(features, (0, expected_dim - features.size))
+            else:
+                features = features[:expected_dim]
+
+        features_tensor = torch.from_numpy(features).unsqueeze(0)
         with torch.no_grad():
-            outputs = model(features_tensor)
-            probabilities = torch.softmax(outputs, dim=1)[0]
-            predicted_idx = torch.argmax(probabilities).item()
-        
-        # Get prediction and confidence
-        predicted_label = label_encoder.classes_[predicted_idx]
-        confidence = probabilities[predicted_idx].item() * 100
-        
-        # Get top 3 predictions
+            logits = model(features_tensor)
+            probs = torch.softmax(logits, dim=1)[0]
+        idx = torch.argmax(probs).item()
+        predicted = str(label_encoder.classes_[idx])
+        confidence = probs[idx].item() * 100
         top_k = min(3, len(label_encoder.classes_))
-        top_probs, top_indices = torch.topk(probabilities, top_k)
-        
+        top_probs, top_indices = torch.topk(probs, top_k)
         top_predictions = [
-            {
-                'accent': str(label_encoder.classes_[idx.item()]),
-                'confidence': prob.item() * 100
-            }
-            for prob, idx in zip(top_probs, top_indices)
+            {'accent': str(label_encoder.classes_[i.item()]), 'confidence': p.item() * 100}
+            for p, i in zip(top_probs, top_indices)
         ]
-        
-        # Get cuisine recommendations
-        recommendations = get_cuisine_recommendations(str(predicted_label))
-        
         return {
             'success': True,
-            'predicted_accent': str(predicted_label),
+            'predicted_accent': predicted,
             'confidence': confidence,
             'top_predictions': top_predictions,
-            'recommendations': recommendations
+            'recommendations': get_cuisine_recommendations(predicted)
         }
-    
     except Exception as e:
-        return {
-            'success': False,
-            'error': str(e)
-        }
+        import traceback; traceback.print_exc()
+        return {'success': False, 'error': f'Prediction failure: {e}'}
 
 
 @app.route('/')
@@ -181,11 +248,11 @@ def info():
     """Display model information"""
     return jsonify({
         'model': 'MLP Classifier - Indian Accents',
-        'architecture': '[600 → 256 → 128 → 6]',
+        'architecture': '[1536 → 256 → 128 → 6]',
         'parameters': '188,294',
-        'test_accuracy': '100.00%',
+        'test_accuracy': f"{checkpoint.get('test_acc', checkpoint.get('val_acc', 'N/A'))}",
         'dataset': 'IndicAccentDB (2,798 samples)',
-        'features': 'MFCC (600-dimensional)',
+        'features': 'HuBERT Layer 12 mean+std (1536-dimensional)',
         'classes': [str(c) for c in label_encoder.classes_],
         'num_classes': len(label_encoder.classes_)
     })
@@ -195,7 +262,11 @@ if __name__ == '__main__':
     print("\n" + "=" * 80)
     print("🌐 NATIVE LANGUAGE IDENTIFICATION - INDIAN ACCENTS")
     print("=" * 80)
-    print(f"✓ Model: MLP Classifier (100.00% test accuracy)")
+    try:
+        test_acc = checkpoint.get('test_acc', checkpoint.get('val_acc', 'N/A'))
+        print(f"✓ Model: MLP Classifier ({test_acc:.2f}% test accuracy)")
+    except Exception:
+        print(f"✓ Model: MLP Classifier (test accuracy: {checkpoint.get('test_acc', checkpoint.get('val_acc', 'N/A'))})")
     print(f"✓ Classes: {', '.join([str(c) for c in label_encoder.classes_])}")
     print(f"✓ Server starting on: http://127.0.0.1:5000")
     print("=" * 80)

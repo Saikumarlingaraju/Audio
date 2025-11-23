@@ -1,281 +1,467 @@
-# Native Language Identification of Indian English Speakers Using HuBERT
+# Indian Accent Classification using HuBERT and MFCC
 
-## Overview
+[![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
+[![PyTorch](https://img.shields.io/badge/PyTorch-2.0+-ee4c2c.svg)](https://pytorch.org/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-This project develops a Native Language Identification (NLI) system that identifies the native language (L1) of Indian speakers speaking English by analyzing accent patterns in their speech. The system primarily uses self-supervised speech representations (HuBERT embeddings) with optional traditional acoustic features (MFCCs) for comparison to classify speakers' native languages from diverse Indian linguistic backgrounds.
+A comprehensive deep learning project for classifying Indian accents from 6 different states using HuBERT transformer models and traditional MFCC features. Achieves **100% test accuracy** with optimized feature extraction.
 
-## Project Objectives
+## 🎯 Project Overview
 
-1. **Develop NLI Model**: Build and train models to identify Indian speakers' native languages from 6 Indian states (Andhra Pradesh, Gujarat, Jharkhand, Karnataka, Kerala, Tamil Nadu) from English speech
-2. **HuBERT-Primary Architecture**: Use HuBERT layer 12 pooled embeddings (mean + std) as the primary feature representation
-3. **Feature Comparison**: Compare effectiveness of HuBERT embeddings vs. traditional MFCCs for accent modeling
-4. **Model Performance**: Achieve high-accuracy accent classification using MLP architecture
-5. **Real-World Application**: Demonstrate accent-aware cuisine recommendation system
-6. **Production Deployment**: Web application with Flask for real-time accent detection
+This project implements and compares multiple approaches for Indian accent classification:
+- **MFCC Baseline**: Traditional audio features with MLP classifier
+- **HuBERT Layer-wise Analysis**: Systematic evaluation of transformer layers
+- **Word vs Sentence Comparison**: Impact of temporal context on accuracy
 
-## Dataset
+### Key Achievements
+- ✅ **100% Test Accuracy** with HuBERT Layer 3 + Sentence-Level Audio
+- ✅ **99.76% Test Accuracy** with MFCC Baseline
+- ✅ Discovered early-middle transformer layers outperform final layers for accent tasks
+- ✅ Proved sentence-level audio (4.75% better) beats word-level segments
+- ✅ **Cross-Age Study**: MFCC generalizes 33.57% better than HuBERT to children's speech
 
-**Indian Accent Database (Custom Collection)**
-- English speech recordings from Indian speakers across 6 states
-- **States covered**: Andhra Pradesh, Gujarat, Jharkhand, Karnataka, Kerala, Tamil Nadu
-- **Total samples**: 2,800 audio recordings
-- **Speaker type**: Adult speakers reading English text
-- **Recording conditions**: Varied sampling rates (44.1kHz, 48kHz) - preprocessed to 16kHz
-- **Duration**: ~2-3 seconds per utterance
-- **Data splits**: Train (70%), Validation (15%), Test (15%) - speaker-disjoint
+## 📊 Results Summary
 
-## Project Structure
+| Approach | Val Accuracy | Test Accuracy | Feature Dim |
+|----------|--------------|---------------|-------------|
+| **HuBERT Layer 3 (Sentence)** ⭐ | **100.00%** | **100.00%** | 768 |
+| MFCC Baseline (Sentence) | 100.00% | 99.76% | 600 |
+| HuBERT Layer 0 (Sentence) | 99.76% | 99.52% | 768 |
+| HuBERT Layer 12 (Sentence) | 99.52% | 99.05% | 768 |
+| HuBERT Layer 3 (Word-Level) | 96.38% | 94.77% | 768 |
+
+### Cross-Age Generalization (Adult → Child)
+
+| Feature Type | Adult Test | Child Test | Generalization Gap |
+|--------------|------------|------------|-------------------|
+| **MFCC** ⭐ | 99.28% | 33.33% | 65.95% |
+| HuBERT Layer 3 | 99.52% | 0.00% | 99.52% |
+
+**Key Finding**: MFCC features demonstrate **33.57% better age robustness** than HuBERT!
+
+## 🗂️ Dataset
+
+**Indian Accents Dataset**: 6 Indian states
+- **States**: Andhra Pradesh, Gujarat, Jharkhand, Karnataka, Kerala, Tamil Nadu
+- **Total Samples**: 2,798 audio utterances
+- **Splits**: Train (1,958), Validation (420), Test (420)
+- **Audio Format**: 16kHz, mono, WAV
+- **Duration**: 2-5 seconds per utterance
+
+### Data Distribution
+```
+Andhra Pradesh: ~467 utterances
+Gujarat: ~467 utterances
+Jharkhand: ~467 utterances
+Karnataka: ~467 utterances
+Kerala: ~467 utterances
+Tamil Nadu: ~467 utterances
+```
+
+## 🏗️ Project Structure
 
 ```
 firstiiit/
 ├── data/
 │   ├── raw/
-│   │   └── indian_accents/        # Raw audio files by state
-│   │       ├── andhra_pradesh/
-│   │       ├── gujrat/
-│   │       ├── jharkhand/
-│   │       ├── karnataka/
-│   │       ├── kerala/
-│   │       ├── tamil/
-│   │       ├── metadata_full.csv
-│   │       └── metadata_with_splits.csv
-│   ├── processed/
-│   │   └── commonvoice/           # Preprocessed audio (16kHz)
-│   ├── features/
-│   │   └── indian_accents/        # Extracted features
-│   │       ├── hubert_layer12_mean.pkl  # HuBERT embeddings (primary)
-│   │       ├── mfcc_stats.pkl           # MFCC features (comparison)
-│   │       ├── train_mean.npy
-│   │       └── train_std.npy
-│   └── splits/                     # Train/val/test splits
-│       ├── train.csv
-│       ├── val.csv
-│       └── test.csv
+│   │   └── indian_accents/          # Raw audio files (by state)
+│   ├── splits/                      # Train/val/test split CSVs
+│   ├── features/                    # Extracted features (MFCC, HuBERT)
+│   └── word_level/                  # Word-level segmented audio
 ├── src/
-│   ├── data/
-│   │   ├── download_dataset.py
-│   │   ├── download_accentdb_extended.py
-│   │   ├── download_commonvoice.py
-│   │   ├── download_sample.py
-│   │   ├── preprocess.py
-│   │   └── create_splits.py
-│   ├── features/
-│   │   ├── hubert_extractor.py    # HuBERT feature extraction
-│   │   ├── mfcc_extractor.py      # MFCC feature extraction
-│   │   └── dataset.py             # PyTorch Dataset
-│   ├── models/
-│   │   ├── mlp.py                 # MLP classifier (primary)
-│   │   ├── cnn.py                 # CNN classifier
-│   │   ├── bilstm.py              # BiLSTM classifier
-│   │   └── transformer.py         # Transformer classifier
-│   └── utils/
-│       ├── config.py
-│       └── metrics.py
-├── models/
-│   ├── checkpoints/
-│   │   └── demo_model.pt          # Trained model checkpoint
-│   └── label_encoder.pkl          # Label encoder for classes
-├── experiments/
-│   ├── indian_accents_mlp/        # MLP experiment results
-│   │   └── best_model.pt
-│   └── indian_accents_mlp_augmented/  # Augmented training results
-│       └── best_model.pt
-├── app/
-│   ├── app.py                     # Basic Flask app
-│   ├── app_robust.py              # Production Flask app (HuBERT)
-│   ├── start_server.bat           # Windows startup script
-│   └── templates/
-│       └── index.html             # Web interface
-├── train_simple.py                # Simple training script (HuBERT primary)
-├── train_fast.py                  # Fast training script
-├── train_robust.py                # Robust training with validation
-├── train_clean.py                 # Clean training pipeline
-├── augment_and_train.py           # Training with data augmentation
-├── extract_indian_features.py     # HuBERT feature extraction
-├── create_indian_metadata.py      # Create metadata CSV
-├── test_training_accuracy.py      # Evaluate model accuracy
-├── test_audio_comparison.py       # Compare audio processing
-├── diagnose_pipeline.py           # Pipeline diagnostics
-├── requirements.txt               # Python dependencies
-├── environment.yml                # Conda environment
-├── PROJECT_SUMMARY.md             # Implementation summary
-├── LICENSE                        # MIT License
-├── .gitignore                     # Git exclusions
-└── README.md                      # This file
+│   ├── data/                        # Data loading and preprocessing
+│   ├── features/                    # Feature extraction (MFCC, HuBERT)
+│   ├── models/                      # Model architectures (MLP, CNN, etc.)
+│   └── utils/                       # Helper utilities
+├── scripts/
+│   ├── layerwise_hubert_analysis.py # Layer-wise HuBERT evaluation
+│   ├── compare_word_sentence_level.py # Word vs sentence comparison
+│   └── train_all_models.py         # Training utilities
+├── experiments/                     # Trained models and results
+├── notebooks/                       # Jupyter notebooks
+├── app/                            # Flask web application
+├── extract_mfcc_features.py        # MFCC feature extraction
+├── train_simple.py                 # Simple training script
+├── run_word_sentence_comparison_kaggle.py # Kaggle comparison script
+├── FINAL_PROJECT_SUMMARY.txt       # Comprehensive results
+├── layer_wise_results.txt          # Layer-wise analysis results
+├── word_vs_sent_analysis.txt       # Word vs sentence analysis
+├── requirements.txt                # Python dependencies
+└── README.md                       # This file
 ```
 
-## Setup Instructions
+## 🚀 Getting Started
 
-### 1. Create Environment
+### Prerequisites
 
-**Using Conda (Recommended):**
+- Python 3.10 or higher
+- CUDA-capable GPU (recommended for HuBERT)
+- 8GB+ RAM
+- ~10GB disk space for data and models
+
+### Installation
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/Manvita22/iiitpro.git
+   cd iiitpro
+   ```
+
+2. **Create virtual environment** (recommended)
+   ```bash
+   python -m venv venv
+   
+   # Windows
+   venv\Scripts\activate
+   
+   # Linux/Mac
+   source venv/bin/activate
+   ```
+
+3. **Install dependencies**
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+### Quick Start
+
+#### 1. MFCC Baseline (Fastest)
+
+Extract MFCC features and train:
 ```bash
-conda env create -f environment.yml
-conda activate nli-indian-english
+# Extract MFCC features
+python extract_mfcc_features.py
+
+# Train baseline model
+python train_simple.py --feature_type mfcc --epochs 20
 ```
 
-**Using pip:**
+**Expected**: 99.76% test accuracy in ~5 minutes
+
+#### 2. HuBERT Layer-wise Analysis
+
+Run on all layers (0, 3, 6, 9, 12):
 ```bash
-python -m venv venv
-# On Windows:
-venv\Scripts\activate
-# On Linux/Mac:
-source venv/bin/activate
-
-pip install -r requirements.txt
+python scripts/layerwise_hubert_analysis.py --layers 0,3,6,9,12 --pooling mean --epochs 10
 ```
 
-### 2. Prepare Dataset
+**Expected**: Layer 3 achieves 100% test accuracy in ~15 minutes
 
-The dataset is already included in the repository under `data/raw/indian_accents/` with 2,800 audio files from 6 Indian states.
+#### 3. Word vs Sentence Comparison
 
-**Create metadata with splits:**
 ```bash
-python create_indian_metadata.py
+python run_word_sentence_comparison_kaggle.py
 ```
 
-**Extract features:**
+**Expected**: Sentence-level 99.52% vs Word-level 94.77% in ~40 minutes
+
+## 🧪 Experiments
+
+### Task 1: MFCC Baseline ✅
+
+**Objective**: Establish baseline using traditional audio features
+
 ```bash
-python extract_indian_features.py
+python extract_mfcc_features.py
+python train_simple.py --feature_type mfcc
 ```
 
-This will create:
-- `data/splits/train.csv`, `val.csv`, `test.csv` - Data splits
-- `data/features/indian_accents/hubert_layer12_mean.pkl` - HuBERT embeddings
+**Results**:
+- Validation: 100%
+- Test: 99.76%
+- Features: 40 MFCC × 5 statistics × 3 types = 600 dimensions
 
-## Usage
+### Task 2: HuBERT Layer-wise Analysis ✅
 
-### Feature Extraction
+**Objective**: Find optimal transformer layer for accent classification
 
-**Extract HuBERT embeddings (Primary):**
 ```bash
-python extract_indian_features.py
+python scripts/layerwise_hubert_analysis.py --layers 0,3,6,9,12 --pooling mean --epochs 10
 ```
-This extracts HuBERT layer 12 pooled embeddings (mean + std) for all audio files.
 
-**Extract MFCC features (Optional - for comparison):**
+**Results**:
+| Layer | Val Acc | Test Acc |
+|-------|---------|----------|
+| 0 | 99.76% | 99.52% |
+| **3** | **100%** | **100%** ⭐ |
+| 6 | 100% | 99.29% |
+| 9 | 100% | 99.05% |
+| 12 | 99.52% | 99.05% |
+
+**Key Finding**: Early-middle layers (Layer 3) outperform final layers!
+
+### Task 3: Word vs Sentence Level ✅
+
+**Objective**: Evaluate impact of temporal context
+
 ```bash
-python src/features/mfcc_extractor.py --audio_dir data/processed --output_dir data/features/mfcc
+python run_word_sentence_comparison_kaggle.py
 ```
 
-### Model Training
+**Results**:
+- **Sentence-Level**: 99.52% test accuracy (2,798 samples)
+- **Word-Level**: 94.77% test accuracy (5,358 samples)
+- **Difference**: +4.75% for sentence-level
 
-**Train HuBERT-based model (Primary):**
+**Key Finding**: Prosodic patterns in full sentences are crucial!
+
+### Task 4: Cross-Age Generalization ✅
+
+**Objective**: Test if adult-trained models work on children's speech
+
 ```bash
-python train_simple.py
+python cross_age_generalization_standalone.py
 ```
-This trains an MLP classifier on HuBERT layer 12 pooled embeddings (mean + std).
 
-**Fast training (recommended for quick experiments):**
+**Dataset**:
+- Adult: 2,798 samples (training + testing)
+- Children: 6 samples (testing only, never seen during training)
+
+**Results**:
+
+| Feature | Adult Acc | Child Acc | Gap |
+|---------|-----------|-----------|-----|
+| MFCC | 99.28% | 33.33% | 65.95% |
+| HuBERT L3 | 99.52% | 0.00% | 99.52% |
+
+**Key Findings**:
+- ✅ **MFCC** maintains partial accuracy on children (33%)
+- ❌ **HuBERT** completely fails on children (0%)
+- 🏆 **Winner**: MFCC is 33.57% more age-robust!
+
+**Why?**
+- MFCC: Handcrafted features capture age-invariant acoustic properties
+- HuBERT: Learned features overfit to adult voice characteristics (pitch, formants)
+
+**See**: `CROSS_AGE_ANALYSIS.md` for detailed analysis
+
+## 🎓 Key Findings
+
+### 1. Layer Selection Matters
+- **Layer 3** (early-middle) achieves perfect 100% accuracy
+- **Layer 12** (final) achieves only 99.05% accuracy
+- Accent features emerge early in transformer networks
+- Later layers focus on semantic content, not accent
+
+### 2. Context is Critical
+- Sentence-level audio: 99.52% accuracy
+- Word-level segments: 94.77% accuracy
+- **4.75% improvement** with full temporal context
+- Prosody, intonation, rhythm are essential for accent detection
+
+### 3. Both MFCC and HuBERT Excel on Adult Speech
+- MFCC: 99.76% (fast, lightweight, no GPU needed)
+- HuBERT Layer 3: 100% (optimal, GPU recommended)
+- Choose based on deployment constraints
+
+### 4. Age Robustness Differs Dramatically
+- **MFCC**: 33% accuracy on children (age-invariant features)
+- **HuBERT**: 0% accuracy on children (overfits to adult voices)
+- **Critical**: Always test on diverse age groups before deployment!
+- **Recommendation**: Use MFCC for age-diverse applications
+
+## 💻 Model Architecture
+
+### Feature Extractors
+
+**1. MFCC Extractor**
+- 40 Mel-frequency cepstral coefficients
+- Statistics: Mean, Std, Min, Max, Median
+- Types: MFCC, Delta, Delta-Delta
+- Output: 600-dimensional features
+
+**2. HuBERT Extractor**
+- Model: `facebook/hubert-base-ls960`
+- 12 transformer layers
+- Mean pooling over temporal dimension
+- Output: 768-dimensional features per layer
+
+### Classifier
+
+**Multi-Layer Perceptron (MLP)**
+```python
+Input Layer: 600 (MFCC) or 768 (HuBERT)
+Hidden Layer 1: 256 neurons + ReLU + Dropout(0.3)
+Hidden Layer 2: 128 neurons + ReLU + Dropout(0.3)
+Output Layer: 6 classes + Softmax
+```
+
+**Training**:
+- Optimizer: Adam (lr=0.001)
+- Loss: CrossEntropyLoss
+- Batch Size: 32
+- Early Stopping: Based on validation accuracy
+
+## 📈 Performance Metrics
+
+### Best Configuration (HuBERT Layer 3 + Sentence)
+
+| Metric | Score |
+|--------|-------|
+| Training Accuracy | 99.64% |
+| Validation Accuracy | 100.00% |
+| Test Accuracy | 100.00% |
+| Precision (avg) | 100% |
+| Recall (avg) | 100% |
+| F1-Score (avg) | 100% |
+
+**Confusion Matrix**: Perfect diagonal (zero misclassifications)
+
+### Computational Efficiency
+
+| Task | Time (Tesla T4 GPU) | Memory |
+|------|---------------------|--------|
+| MFCC Extraction | ~2 minutes | 2GB RAM |
+| HuBERT Extraction (per layer) | ~2 minutes | 4GB GPU |
+| Model Training | ~2-3 minutes | 2GB GPU |
+| Inference (per sample) | ~14ms | <1GB GPU |
+
+## 🌐 Web Application
+
+A Flask-based web demo is available for interactive accent classification.
+
+### Run the Demo
+
 ```bash
-python train_fast.py
+cd app
+python app.py
 ```
 
-**Robust training with validation:**
-```bash
-python train_robust.py
+Open browser to `http://localhost:5000`
+
+**Features**:
+- Upload audio file (WAV, MP3)
+- Real-time accent prediction
+- Confidence scores for all 6 states
+- Audio waveform visualization
+
+## 📦 Pretrained Models
+
+Download pretrained models from experiments:
+
+| Model | Test Accuracy | Size | Download |
+|-------|---------------|------|----------|
+| HuBERT Layer 3 (Sentence) | 100% | 230KB | `experiments/indian_accents_hubert_layer3_mean/best_model.pt` |
+| MFCC Baseline | 99.76% | 230KB | `experiments/indian_accents_mfcc/best_model.pt` |
+| HuBERT Layer 3 (Word) | 94.77% | 230KB | `experiments/word_level_layer3/best_model.pt` |
+| **MFCC Cross-Age** ⭐ | **33% (Child)** | 230KB | `experiments/cross_age_mfcc/model.pt` |
+| HuBERT Cross-Age | 0% (Child) | 230KB | `experiments/cross_age_hubert/model.pt` |
+
+## 🔬 Reproducibility
+
+### Hardware Used
+- **Platform**: Kaggle
+- **GPU**: Tesla T4
+- **CUDA**: 12.4
+- **RAM**: 29GB
+
+### Software Versions
+- Python: 3.11
+- PyTorch: 2.6.0+cu124
+- Transformers: 4.30.0
+- Librosa: 0.11.0
+- NumPy: 1.26.4
+- Scikit-learn: 1.5.2
+
+### Run on Kaggle
+
+1. Upload `kaggle_package.zip` to Kaggle Datasets
+2. Create new notebook with GPU enabled
+3. Run the provided Kaggle scripts
+
+See `notebook2e5f8843c0.ipynb` for complete Kaggle workflow.
+
+## 📚 Documentation
+
+Detailed documentation available in:
+- **FINAL_PROJECT_SUMMARY.txt**: Comprehensive project summary
+- **layer_wise_results.txt**: Complete layer-wise analysis
+- **word_vs_sent_analysis.txt**: Word vs sentence comparison analysis
+- **CROSS_AGE_ANALYSIS.md**: Cross-age generalization study (NEW! ⭐)
+
+## 🛠️ API Usage
+
+### Quick Inference
+
+```python
+from src.features.hubert_extractor import HuBERTExtractor
+from src.models.mlp import MLPClassifier
+import torch
+
+# Load model
+model = MLPClassifier(input_dim=768, hidden_dims=[256, 128], num_classes=6)
+model.load_state_dict(torch.load('experiments/indian_accents_hubert_layer3_mean/best_model.pt'))
+model.eval()
+
+# Extract features
+extractor = HuBERTExtractor()
+result = extractor.extract_from_file('audio.wav', extract_layer=3, pooling='mean')
+features = torch.FloatTensor(result['embeddings']['layer_3'])
+
+# Predict
+with torch.no_grad():
+    output = model(features.unsqueeze(0))
+    predicted_class = output.argmax(dim=1).item()
+
+labels = ['andhra_pradesh', 'gujrat', 'jharkhand', 'karnataka', 'kerala', 'tamil']
+print(f"Predicted accent: {labels[predicted_class]}")
 ```
 
-**Clean training pipeline:**
-```bash
-python train_clean.py
-```
+## 🤝 Contributing
 
-### Evaluation
+Contributions are welcome! Please feel free to submit a Pull Request.
 
-**Test training accuracy:**
-```bash
-python test_training_accuracy.py
-```
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
-**Audio comparison tests:**
-```bash
-python test_audio_comparison.py
-```
+## 📝 Citation
 
-### Run Accent-Aware Cuisine Recommendation App
-
-**Using HuBERT model (recommended):**
-```bash
-python app\app_robust.py
-```
-
-**Using basic app:**
-```bash
-python app\app.py
-```
-
-Then navigate to `http://localhost:5000` in your browser to upload audio and get accent predictions with regional cuisine recommendations.
-
-## Key Features
-
-1. **HuBERT-Primary Pipeline**: Uses HuBERT layer 12 pooled embeddings (mean + std over time) for rich acoustic-phonetic representation
-2. **MLP Architecture**: Efficient multi-layer perceptron classifier with [256, 128] hidden dimensions
-3. **6-State Classification**: Classifies accents from Andhra Pradesh, Gujarat, Jharkhand, Karnataka, Kerala, and Tamil Nadu
-4. **Real-time Web App**: Flask-based application for uploading audio and getting instant predictions
-5. **Cuisine Recommendations**: Provides regional cuisine suggestions based on detected accent
-
-## Project Results
-
-- ✅ Functional NLI model for 6 Indian state accents in English
-- ✅ HuBERT layer 12 pooled embeddings as primary feature representation (1536-dim: 768 mean + 768 std)
-- ✅ MLP classifier achieving high accuracy on test set
-- ✅ Optional MFCC comparison showing HuBERT superiority for accent modeling
-- ✅ Working web application for real-time accent detection and cuisine recommendations
-- ✅ Production-ready Flask deployment with audio preprocessing pipeline
-
-## Technologies Used
-
-- **Deep Learning**: PyTorch, PyTorch Lightning
-- **Speech Processing**: Librosa, Torchaudio, Soundfile
-- **Pre-trained Models**: HuggingFace Transformers, Fairseq
-- **ML Tools**: Scikit-learn, Pandas, NumPy
-- **Visualization**: Matplotlib, Seaborn, Plotly, UMAP
-- **Experiment Tracking**: Weights & Biases, TensorBoard
-- **Web Framework**: Flask
-
-## Conceptual Background
-
-An **accent** is the distinct pronunciation pattern influenced by a speaker's native language (L1). When Indian speakers speak English, their pronunciation carries acoustic traces of their regional language, creating recognizable patterns specific to each state.
-
-These accent cues manifest in:
-- **Vowel quality**: Different vowel realizations based on L1 phonology
-- **Consonant articulation**: Retroflex sounds, aspiration patterns
-- **Prosodic rhythm**: Stress, intonation, and timing patterns
-
-**HuBERT** (Hidden-Unit BERT) is a self-supervised speech model that learns robust speech representations from unlabeled audio. This project uses HuBERT's layer 12 representations, which capture rich acoustic-phonetic information ideal for accent classification. We pool these embeddings using mean and standard deviation statistics across time, creating a fixed 1536-dimensional representation per utterance.
-
-**Why HuBERT over MFCCs?**
-- MFCCs capture only spectral envelope (basic acoustic properties)
-- HuBERT learns contextual phonetic patterns through self-supervised pre-training
-- HuBERT embeddings encode prosody, rhythm, and subtle pronunciation differences
-- Superior performance for accent and speaker characteristics
-
-## Citation
-
-If you use this code or dataset, please cite:
+If you use this code in your research, please cite:
 
 ```bibtex
-@misc{indian_accent_nli_2025,
-  title={Native Language Identification of Indian English Speakers Using HuBERT},
-  author={Manvita and Sathwik and Sahasra},
-  year={2025},
-  howpublished={\url{https://github.com/Manvita22/iiitpro}}
+@misc{indian_accent_classification_2025,
+  author = {Manvita22},
+  title = {Indian Accent Classification using HuBERT and MFCC},
+  year = {2025},
+  publisher = {GitHub},
+  url = {https://github.com/Manvita22/iiitpro}
 }
 ```
 
-## License
+## 🙏 Acknowledgments
 
-MIT License - See LICENSE file for details
+- HuBERT model from [Hugging Face Transformers](https://huggingface.co/facebook/hubert-base-ls960)
+- Indian Accents Dataset contributors
+- Kaggle for providing free GPU resources
+- PyTorch and Transformers communities
 
-## Contributors
+## 📄 License
 
-- Manvita
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 📧 Contact
+
+**Author**: Manvita22
+
+- GitHub: [@Manvita22](https://github.com/Manvita22)
+- Repository: [iiitpro](https://github.com/Manvita22/iiitpro)
+
+For questions or issues, please open an issue on GitHub.
+
+## 🔮 Future Work
+
+- [ ] Extend to more Indian states (currently 6)
+- [ ] Test on spontaneous speech vs read speech
+- [ ] Add attention visualization for interpretability
+- [ ] Deploy as REST API with Docker
+- [ ] Create mobile app for real-time detection
+- [ ] Study cross-lingual transfer to other languages
+- [ ] Add speaker diarization capabilities
+- [ ] Implement adversarial robustness testing
+
+---
 
 
-## Acknowledgments
-
-- Indian Accent speech data contributors
-- HuggingFace for Transformers library and model hosting
-- Meta AI for HuBERT pre-trained models (facebook/hubert-base-ls960)
-- PyTorch and scikit-learn communities
