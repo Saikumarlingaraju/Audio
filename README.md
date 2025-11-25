@@ -334,13 +334,7 @@ Download pretrained models from experiments:
 - NumPy: 1.26.4
 - Scikit-learn: 1.5.2
 
-### Run on Kaggle
 
-1. Upload `kaggle_package.zip` to Kaggle Datasets
-2. Create new notebook with GPU enabled
-3. Run the provided Kaggle scripts
-
-See `notebook2e5f8843c0.ipynb` for complete Kaggle workflow.
 
 ## 📚 Documentation
 
