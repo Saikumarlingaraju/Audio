@@ -1,0 +1,14 @@
+.git/
+.venv/
+__pycache__/
+*.pyc
+archive/
+models/
+experiments/
+notebooks/
+uploads/
+data/features/
+data/raw/
+data/word_level/
+data/collections/
+*.ipynb

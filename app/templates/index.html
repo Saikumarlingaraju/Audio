@@ -3,510 +3,1600 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Native Language Identification</title>
+    <title>AccentSense - Indian Accent Recognition</title>
+
+    <!-- GitHub Primer CSS (open source) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@primer/css@21.8.0/dist/primer.css">
+
+    <!-- Expressive, non-default typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
     <style>
+        :root {
+            --brand-ink: #0f172a;
+            --brand-teal: #0f766e;
+            --brand-cyan: #0891b2;
+            --brand-amber: #b45309;
+            --brand-soft: #f8fafc;
+            --panel: #ffffff;
+            --text: #111827;
+            --muted: #4b5563;
+            --border: #d1d5db;
+            --ok: #166534;
+            --warn: #92400e;
+            --danger: #b91c1c;
+        }
+
         * {
-            margin: 0;
-            padding: 0;
             box-sizing: border-box;
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0;
+            font-family: "Manrope", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            color: var(--text);
             min-height: 100vh;
-            padding: 20px;
+            background:
+                radial-gradient(circle at 8% 10%, rgba(8, 145, 178, 0.20), transparent 35%),
+                radial-gradient(circle at 92% 0%, rgba(180, 83, 9, 0.16), transparent 32%),
+                linear-gradient(165deg, #f8fafc 0%, #ecfeff 46%, #fefce8 100%);
         }
 
-        .container {
-            max-width: 800px;
+        .page-shell {
+            max-width: 1180px;
             margin: 0 auto;
+            padding: 24px 16px 40px;
         }
 
-        .header {
-            text-align: center;
-            color: white;
-            margin-bottom: 40px;
-            padding: 20px;
-        }
-
-        .header h1 {
-            font-size: 2.5em;
-            margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-        }
-
-        .header p {
-            font-size: 1.1em;
-            opacity: 0.9;
-        }
-
-        .card {
-            background: white;
+        .hero {
+            background: linear-gradient(135deg, #0f172a 0%, #0f766e 70%);
+            color: #f8fafc;
             border-radius: 20px;
-            padding: 40px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
-            margin-bottom: 30px;
+            padding: 24px;
+            box-shadow: 0 16px 34px rgba(2, 6, 23, 0.26);
+            overflow: hidden;
+            position: relative;
+            margin-bottom: 16px;
+            animation: heroReveal 560ms ease;
         }
 
-        .upload-section {
-            text-align: center;
-            padding: 20px;
+        .hero::after {
+            content: "";
+            position: absolute;
+            width: 280px;
+            height: 280px;
+            right: -90px;
+            top: -110px;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.24), transparent 62%);
+            pointer-events: none;
         }
 
-        .upload-box {
-            border: 3px dashed #667eea;
-            border-radius: 15px;
-            padding: 40px;
-            margin: 20px 0;
-            background: #f8f9ff;
-            cursor: pointer;
-            transition: all 0.3s ease;
+        .hero h1 {
+            margin: 0 0 8px;
+            font-size: 34px;
+            line-height: 1.08;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            position: relative;
+            z-index: 1;
         }
 
-        .upload-box:hover {
-            background: #eef0ff;
-            border-color: #764ba2;
+        .hero p {
+            margin: 0;
+            font-size: 16px;
+            color: rgba(241, 245, 249, 0.95);
+            max-width: 680px;
+            position: relative;
+            z-index: 1;
         }
 
-        .upload-box.dragover {
-            background: #e0e4ff;
-            border-color: #764ba2;
+        .main-grid {
+            display: grid;
+            grid-template-columns: 330px 1fr;
+            gap: 16px;
         }
 
-        .upload-icon {
-            font-size: 3em;
+        .panel {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
+            animation: panelRise 420ms ease;
+        }
+
+        .panel-body {
+            padding: 16px;
+        }
+
+        .side-section {
+            margin-bottom: 16px;
+            border-bottom: 1px solid #e5e7eb;
+            padding-bottom: 12px;
+        }
+
+        .side-section:last-child {
+            margin-bottom: 0;
+            border-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .side-title {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--muted);
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        .kv-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .kv-key {
+            color: var(--muted);
+        }
+
+        .kv-val {
+            text-align: right;
+            font-weight: 700;
+            color: #111827;
+        }
+
+        .mode-warning {
+            display: none;
+            background: #fff7ed;
+            border: 1px solid #fdba74;
+            color: var(--warn);
+            border-radius: 10px;
+            font-size: 13px;
+            padding: 10px;
             margin-bottom: 10px;
+            line-height: 1.35;
+        }
+
+        .tag-cloud {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 7px;
+        }
+
+        .chip {
+            background: #ecfeff;
+            color: #0c4a6e;
+            border: 1px solid #bae6fd;
+            border-radius: 999px;
+            padding: 4px 10px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .dropzone {
+            border: 2px dashed #94a3b8;
+            background: #f8fafc;
+            border-radius: 14px;
+            padding: 30px 18px;
+            text-align: center;
+            transition: all 0.22s ease;
+            cursor: pointer;
+        }
+
+        .dropzone:hover,
+        .dropzone.dragover {
+            border-color: #0f766e;
+            background: #ecfeff;
+            transform: translateY(-1px);
+        }
+
+        .dropzone h3 {
+            margin: 0 0 6px;
+            font-size: 21px;
+            letter-spacing: -0.01em;
+        }
+
+        .dropzone p {
+            margin: 0;
+            color: var(--muted);
+            font-size: 14px;
         }
 
         #fileInput {
             display: none;
         }
 
+        .file-card {
+            display: none;
+            margin-top: 12px;
+            border: 1px solid #dbeafe;
+            background: #eff6ff;
+            border-radius: 12px;
+            padding: 12px;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .file-card.active {
+            display: flex;
+            animation: panelRise 280ms ease;
+        }
+
         .file-name {
-            margin: 15px 0;
-            font-weight: bold;
-            color: #667eea;
-            min-height: 24px;
+            font-weight: 700;
+            color: #1e3a8a;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            max-width: 230px;
         }
 
-        .btn {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 15px 40px;
-            border: none;
-            border-radius: 30px;
-            font-size: 1.1em;
-            font-weight: bold;
+        .controls {
+            margin-top: 14px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .analyze-btn {
+            border: 0;
+            border-radius: 999px;
+            padding: 11px 20px;
+            font-weight: 800;
+            letter-spacing: 0.01em;
             cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            color: #ffffff;
+            background: linear-gradient(135deg, #0f766e 0%, #0891b2 100%);
+            box-shadow: 0 7px 16px rgba(8, 145, 178, 0.34);
+            transition: all 0.2s ease;
         }
 
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        .analyze-btn:hover:not(:disabled) {
+            transform: translateY(-1px);
+            box-shadow: 0 10px 18px rgba(8, 145, 178, 0.37);
         }
 
-        .btn:disabled {
-            background: #ccc;
+        .analyze-btn:disabled {
             cursor: not-allowed;
+            opacity: 0.6;
             box-shadow: none;
-            transform: none;
         }
 
         .loading {
             display: none;
-            margin: 20px 0;
-            color: #667eea;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+            color: #0f766e;
         }
 
-        .spinner {
-            border: 3px solid #f3f3f3;
-            border-top: 3px solid #667eea;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto;
+        .dot {
+            width: 9px;
+            height: 9px;
+            border-radius: 999px;
+            background: #0f766e;
+            animation: pulse 1s infinite ease-in-out;
         }
 
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        .dot:nth-child(2) { animation-delay: 0.15s; }
+        .dot:nth-child(3) { animation-delay: 0.3s; }
+
+        .error-banner {
+            display: none;
+            margin-top: 12px;
+            border: 1px solid #fecaca;
+            background: #fef2f2;
+            color: var(--danger);
+            border-radius: 10px;
+            padding: 10px 12px;
+            font-size: 14px;
+            font-weight: 600;
         }
 
         .result {
             display: none;
-            margin-top: 30px;
-            padding: 30px;
-            background: linear-gradient(135deg, #f5f7ff 0%, #e8ebff 100%);
-            border-radius: 15px;
-            border-left: 5px solid #667eea;
+            margin-top: 16px;
+            border: 1px solid #bfdbfe;
+            background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+            border-radius: 14px;
+            padding: 16px;
+            animation: panelRise 360ms ease;
         }
 
         .result.show {
             display: block;
-            animation: slideIn 0.5s ease;
         }
 
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        .result-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            gap: 8px;
+            border-bottom: 1px solid #e5e7eb;
+            padding-bottom: 10px;
+            margin-bottom: 12px;
         }
 
-        .result h2 {
-            color: #667eea;
-            margin-bottom: 20px;
-            font-size: 1.8em;
+        .result-title {
+            margin: 0;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--muted);
+            font-weight: 800;
         }
 
-        .prediction-main {
-            background: white;
-            padding: 25px;
-            border-radius: 12px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-
-        .prediction-label {
-            font-size: 1em;
-            color: #666;
-            margin-bottom: 10px;
-        }
-
-        .prediction-value {
-            font-size: 2em;
-            font-weight: bold;
-            color: #667eea;
+        .predicted {
+            margin: 2px 0 0;
+            font-size: 31px;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            color: #0f172a;
             text-transform: capitalize;
-            margin-bottom: 10px;
         }
 
-        .confidence-bar {
-            background: #e0e0e0;
-            border-radius: 10px;
-            height: 20px;
-            overflow: hidden;
+        .status-pill {
+            display: inline-flex;
+            align-items: center;
+            padding: 5px 10px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: 0.02em;
+            border: 1px solid #a7f3d0;
+            background: #ecfdf5;
+            color: #166534;
+        }
+
+        .status-pill.warn {
+            border-color: #fdba74;
+            background: #fff7ed;
+            color: #9a3412;
+        }
+
+        .uncertain-note {
+            display: none;
+            margin-top: 8px;
+            padding: 8px 10px;
+            border: 1px solid #fdba74;
+            background: #fff7ed;
+            border-radius: 8px;
+            color: #9a3412;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .conf-wrap {
             margin-top: 10px;
         }
 
-        .confidence-fill {
-            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
-            height: 100%;
-            border-radius: 10px;
-            transition: width 1s ease;
+        .conf-row {
             display: flex;
-            align-items: center;
-            justify-content: flex-end;
-            padding-right: 10px;
-            color: white;
-            font-size: 0.9em;
-            font-weight: bold;
+            justify-content: space-between;
+            font-size: 13px;
+            color: var(--muted);
+            margin-bottom: 6px;
+            font-weight: 700;
         }
 
-        .top-predictions {
-            margin-top: 20px;
+        .conf-track {
+            height: 12px;
+            background: #e5e7eb;
+            border-radius: 999px;
+            overflow: hidden;
         }
 
-        .top-predictions h3 {
-            color: #555;
-            margin-bottom: 15px;
-            font-size: 1.2em;
+        .conf-fill {
+            width: 0;
+            height: 100%;
+            background: linear-gradient(90deg, #0f766e 0%, #0891b2 100%);
+            border-radius: 999px;
+            transition: width 720ms ease;
+        }
+
+        .low-confidence {
+            display: none;
+            margin-top: 8px;
+            color: var(--warn);
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .cards-grid {
+            margin-top: 14px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .sub-card {
+            border: 1px solid #e5e7eb;
+            background: #ffffff;
+            border-radius: 10px;
+            padding: 12px;
+        }
+
+        .sub-card h4 {
+            margin: 0 0 8px;
+            font-size: 14px;
+            color: #0f172a;
+            letter-spacing: 0.01em;
         }
 
         .prediction-item {
-            background: white;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 10px;
             display: flex;
             justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-        }
-
-        .prediction-item .accent {
-            font-weight: bold;
-            color: #333;
-            text-transform: capitalize;
-        }
-
-        .prediction-item .conf {
-            color: #667eea;
-            font-weight: bold;
-        }
-
-        .recommendations {
-            margin-top: 30px;
-        }
-
-        .recommendations h3 {
-            color: #555;
-            margin-bottom: 15px;
-            font-size: 1.2em;
-        }
-
-        .recommendation-card {
-            background: white;
-            padding: 20px;
+            border: 1px solid #eef2ff;
+            background: #f8fafc;
             border-radius: 8px;
-            margin-bottom: 15px;
-            border-left: 5px solid #667eea;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-        }
-
-        .recommendation-card h4 {
-            color: #667eea;
+            padding: 8px 10px;
             margin-bottom: 8px;
-            font-size: 1.1em;
+            font-size: 14px;
         }
 
-        .recommendation-card .region {
-            color: #764ba2;
-            font-weight: bold;
+        .prediction-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .prediction-accent {
+            text-transform: capitalize;
+            font-weight: 700;
+        }
+
+        .prediction-score {
+            color: #0369a1;
+            font-weight: 800;
+        }
+
+        .rec-card {
+            border-left: 4px solid #0f766e;
+            border-radius: 8px;
+            background: #f0fdfa;
+            padding: 8px 10px;
             margin-bottom: 8px;
-            font-size: 0.9em;
         }
 
-        .recommendation-card .description {
-            color: #666;
-            line-height: 1.5;
+        .rec-card:last-child {
+            margin-bottom: 0;
         }
 
-        .error {
+        .rec-name {
+            margin: 0 0 2px;
+            font-weight: 800;
+            font-size: 14px;
+            color: #134e4a;
+        }
+
+        .rec-region {
+            margin: 0 0 3px;
+            font-size: 12px;
+            font-weight: 700;
+            color: #0f766e;
+        }
+
+        .rec-desc {
+            margin: 0;
+            font-size: 13px;
+            color: #334155;
+            line-height: 1.35;
+        }
+
+        .quality-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            font-size: 13px;
+        }
+
+        .quality-item {
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 8px;
+            background: #f8fafc;
+        }
+
+        .quality-item .k {
+            color: #64748b;
+            font-weight: 700;
+            font-size: 12px;
+            margin-bottom: 3px;
+        }
+
+        .quality-item .v {
+            color: #0f172a;
+            font-weight: 800;
+        }
+
+        .quality-issues {
+            margin-top: 8px;
+            font-size: 12px;
+            color: #9a3412;
+            font-weight: 700;
+            line-height: 1.4;
+        }
+
+        .footer-note {
+            margin-top: 12px;
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        .admin-tools {
+            margin-top: 10px;
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .btn-lite {
+            border: 1px solid #cbd5e1;
+            background: #ffffff;
+            color: #0f172a;
+            font-size: 12px;
+            font-weight: 700;
+            border-radius: 8px;
+            padding: 6px 10px;
+            cursor: pointer;
+        }
+
+        .btn-lite:hover {
+            background: #f8fafc;
+        }
+
+        .summary-line {
+            margin-top: 8px;
+            font-size: 12px;
+            color: #475569;
+            font-weight: 700;
+        }
+
+        .feedback-wrap {
+            margin-top: 12px;
+            border-top: 1px dashed #cbd5e1;
+            padding-top: 10px;
+        }
+
+        .feedback-title {
+            font-size: 13px;
+            color: #334155;
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+
+        .feedback-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 8px;
+        }
+
+        .btn-good,
+        .btn-bad {
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            padding: 7px 10px;
+            font-size: 12px;
+            font-weight: 800;
+            cursor: pointer;
+            background: #ffffff;
+        }
+
+        .btn-good:hover {
+            border-color: #86efac;
+            background: #f0fdf4;
+            color: #166534;
+        }
+
+        .btn-bad:hover {
+            border-color: #fdba74;
+            background: #fff7ed;
+            color: #9a3412;
+        }
+
+        .feedback-form {
             display: none;
-            background: #ffe0e0;
-            border-left: 5px solid #ff4444;
-            padding: 20px;
-            border-radius: 10px;
-            color: #cc0000;
-            margin-top: 20px;
+            margin-top: 8px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 10px;
+            background: #f8fafc;
         }
 
-        .error.show {
+        .feedback-form.show {
             display: block;
         }
 
-        .model-info {
-            background: rgba(255,255,255,0.1);
-            padding: 20px;
+        .feedback-form label {
+            display: block;
+            font-size: 12px;
+            font-weight: 700;
+            color: #475569;
+            margin-bottom: 4px;
+        }
+
+        .feedback-form select,
+        .feedback-form textarea {
+            width: 100%;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            padding: 7px 8px;
+            font-size: 13px;
+            margin-bottom: 8px;
+            font-family: inherit;
+        }
+
+        .feedback-status {
+            display: none;
+            margin-top: 6px;
+            font-size: 12px;
+            font-weight: 700;
+            color: #0f766e;
+        }
+
+        .feedback-status.show {
+            display: block;
+        }
+
+        .mode-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .mode-tab {
+            padding: 10px 14px;
+            border: none;
+            background: transparent;
+            color: #64748b;
+            font-weight: 700;
+            font-size: 13px;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .mode-tab:hover {
+            color: #0f766e;
+        }
+
+        .mode-tab.active {
+            color: #0f766e;
+            border-bottom-color: #0f766e;
+        }
+
+        .upload-section {
+            display: none;
+        }
+
+        .upload-section.active {
+            display: block;
+        }
+
+        .batch-list {
+            margin-top: 12px;
+            border: 1px solid #e5e7eb;
             border-radius: 10px;
-            margin-top: 20px;
-            color: white;
-            text-align: left;
+            overflow: hidden;
+            max-height: 300px;
+            overflow-y: auto;
         }
 
-        .model-info h3 {
-            margin-bottom: 10px;
+        .batch-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 12px;
+            border-bottom: 1px solid #f3f4f6;
+            font-size: 13px;
         }
 
-        .model-info p {
-            margin: 5px 0;
-            opacity: 0.9;
+        .batch-item:last-child {
+            border-bottom: none;
         }
 
-        .badge {
-            display: inline-block;
-            background: rgba(255,255,255,0.2);
-            padding: 5px 12px;
-            border-radius: 15px;
-            font-size: 0.9em;
-            margin: 3px;
+        .batch-item-name {
+            font-weight: 700;
+            color: #1e3a8a;
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .batch-item-remove {
+            background: #fee2e2;
+            color: #991b1b;
+            border: none;
+            border-radius: 4px;
+            padding: 4px 8px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-left: 8px;
+        }
+
+        .batch-item-remove:hover {
+            background: #fecaca;
+        }
+
+        .batch-controls {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .batch-results {
+            display: none;
+            margin-top: 16px;
+            border: 1px solid #dbeafe;
+            background: #f0f9ff;
+            border-radius: 10px;
+            padding: 12px;
+        }
+
+        .batch-results.show {
+            display: block;
+        }
+
+        .batch-results h4 {
+            margin: 0 0 8px;
+            font-size: 14px;
+            color: #0c4a6e;
+            font-weight: 800;
+        }
+
+        .batch-result-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px;
+            background: white;
+            border-radius: 6px;
+            margin-bottom: 6px;
+            font-size: 12px;
+            border-left: 3px solid #0891b2;
+        }
+
+        .batch-result-item.success {
+            border-left-color: #10b981;
+        }
+
+        .batch-result-item.error {
+            border-left-color: #ef4444;
+        }
+
+        .batch-result-filename {
+            font-weight: 700;
+            color: #1e3a8a;
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .batch-result-accent {
+            background: #dbeafe;
+            color: #0c4a6e;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-weight: 700;
+            margin: 0 8px;
+        }
+
+        .batch-result-confidence {
+            color: #0369a1;
+            font-weight: 800;
+        }
+
+        .batch-result-error {
+            color: #991b1b;
+            font-style: italic;
+        }
+
+        .batch-export {
+            margin-top: 12px;
+            display: flex;
+            gap: 8px;
+        }
+
+        @media (max-width: 920px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .cards-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .hero h1 {
+                font-size: 29px;
+            }
+
+            .file-card.active {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .file-name {
+                max-width: 100%;
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(0.9); opacity: 0.65; }
+            50% { transform: scale(1.1); opacity: 1; }
+        }
+
+        @keyframes heroReveal {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes panelRise {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>🎙️ Indian Accent Recognition System</h1>
-            <p>Upload an audio file to identify the speaker's Indian state accent</p>
-            <div class="model-info">
-                <h3>📊 Model Information</h3>
-                <p><strong>Architecture:</strong> MLP Classifier [1536 → 256 → 128 → 6]</p>
-                <p><strong>Test Accuracy:</strong> 100.00%</p>
-                <p><strong>Dataset:</strong> IndicAccentDB (2,798 samples)</p>
-                <p><strong>Supported Indian State Accents:</strong></p>
-                <div>
-                    <span class="badge">Andhra Pradesh</span>
-                    <span class="badge">Gujarat</span>
-                    <span class="badge">Jharkhand</span>
-                    <span class="badge">Karnataka</span>
-                    <span class="badge">Kerala</span>
-                    <span class="badge">Tamil Nadu</span>
-                </div>
-            </div>
-        </div>
+    <div class="page-shell">
+        <header class="hero">
+            <h1>AccentSense</h1>
+            <p>Upload a voice clip and get Indian state accent prediction with confidence, alternatives, and regional cuisine insights.</p>
+        </header>
 
-        <div class="card">
-            <div class="upload-section">
-                <div class="upload-box" id="uploadBox" onclick="document.getElementById('fileInput').click()">
-                    <div class="upload-icon">📁</div>
-                    <h3>Click to upload or drag & drop audio file</h3>
-                    <p style="color: #888; margin-top: 10px;">Supported formats: WAV, MP3, M4A, FLAC</p>
-                </div>
-                <input type="file" id="fileInput" accept="audio/*">
-                <div class="file-name" id="fileName"></div>
-                <button class="btn" id="predictBtn" onclick="predictAccent()" disabled>🔍 Predict Accent</button>
-            </div>
+        <div class="main-grid">
+            <aside class="panel">
+                <div class="panel-body">
+                    <div class="side-section">
+                        <div class="side-title">Model Runtime</div>
+                        <div id="modeWarning" class="mode-warning"></div>
+                        <div class="kv-row"><span class="kv-key">Engine</span><span id="modelName" class="kv-val">Loading...</span></div>
+                        <div class="kv-row"><span class="kv-key">Architecture</span><span id="architecture" class="kv-val">Loading...</span></div>
+                        <div class="kv-row"><span class="kv-key">Test Accuracy</span><span id="testAccuracy" class="kv-val">Loading...</span></div>
+                        <div class="kv-row"><span class="kv-key">Dataset</span><span id="dataset" class="kv-val">IndicAccentDB</span></div>
+                    </div>
 
-            <div class="loading" id="loading">
-                <div class="spinner"></div>
-                <p style="margin-top: 10px;">Analyzing audio...</p>
-            </div>
-
-            <div class="result" id="result">
-                <h2>🎯 Prediction Result</h2>
-                <div class="prediction-main">
-                    <div class="prediction-label">Detected Indian State Accent:</div>
-                    <div class="prediction-value" id="predictedAccent">-</div>
-                    <div class="confidence-bar">
-                        <div class="confidence-fill" id="confidenceFill" style="width: 0%">
-                            <span id="confidenceText">0%</span>
+                    <div class="side-section">
+                        <div class="side-title">Supported Accents</div>
+                        <div class="tag-cloud">
+                            <span class="chip">Andhra Pradesh</span>
+                            <span class="chip">Gujarat</span>
+                            <span class="chip">Jharkhand</span>
+                            <span class="chip">Karnataka</span>
+                            <span class="chip">Kerala</span>
+                            <span class="chip">Tamil Nadu</span>
                         </div>
                     </div>
-                </div>
-                <div class="top-predictions">
-                    <h3>📊 Top 3 Predictions</h3>
-                    <div id="topPredictions"></div>
-                </div>
 
-                <div class="recommendations">
-                    <h3>🍽️ Recommended Dishes from This Region</h3>
-                    <div id="recommendations"></div>
-                </div>
-            </div>
+                    <div class="side-section">
+                        <div class="side-title">Admin Review</div>
+                        <div id="feedbackSummary" class="summary-line">Feedback: loading...</div>
+                        <div id="retrainStatus" class="summary-line">Retrain set: not prepared</div>
+                        <div class="admin-tools">
+                            <button id="exportCsvBtn" class="btn-lite" type="button">Export Feedback CSV</button>
+                            <button id="prepareRetrainBtn" class="btn-lite" type="button">Prepare Retrain CSV</button>
+                        </div>
+                    </div>
 
-            <div class="error" id="error">
-                <strong>❌ Error:</strong> <span id="errorMessage"></span>
-            </div>
+                    <div class="footer-note">Built with open-source GitHub Primer CSS and CPU-friendly inference support.</div>
+                </div>
+            </aside>
+
+            <main class="panel">
+                <div class="panel-body">
+                    <div class="mode-tabs">
+                        <button class="mode-tab active" onclick="switchMode('single')">Single Upload</button>
+                        <button class="mode-tab" onclick="switchMode('batch')">Batch Upload</button>
+                        <button class="mode-tab" onclick="openDashboard()">📊 Feedback Dashboard</button>
+                        <button class="mode-tab" onclick="openStudentIntake()">Class Intake Form</button>
+                    </div>
+
+                    <section id="singleUploadSection" class="upload-section active">
+                        <div id="uploadBox" class="dropzone" role="button" tabindex="0" aria-label="Upload audio file">
+                            <h3>Drop Audio Here or Click to Browse</h3>
+                            <p>Supports WAV, MP3, M4A, FLAC</p>
+                        </div>
+
+                        <input type="file" id="fileInput" accept="audio/*">
+
+                        <div id="fileCard" class="file-card">
+                            <div>
+                                <div class="file-name" id="fileName">No file selected</div>
+                                <div style="font-size: 12px; color: #1d4ed8; font-weight: 700; margin-top: 2px;">Ready for analysis</div>
+                            </div>
+                            <audio id="audioPlayer" controls></audio>
+                        </div>
+
+                        <div class="controls">
+                            <button id="predictBtn" class="analyze-btn" disabled>Analyze Accent</button>
+                            <div id="loading" class="loading">
+                                <div class="dot"></div>
+                                <div class="dot"></div>
+                                <div class="dot"></div>
+                                <span>Analyzing...</span>
+                            </div>
+                        </div>
+
+                        <div id="errorBanner" class="error-banner"></div>
+
+                        <section id="result" class="result">
+                            <div class="result-head">
+                                <div>
+                                    <h2 class="result-title">Primary Prediction</h2>
+                                    <p id="predictedAccent" class="predicted">-</p>
+                                    <div id="uncertainNote" class="uncertain-note"></div>
+                                </div>
+                                <div id="predictionStatus" class="status-pill">Reliable</div>
+                            </div>
+
+                            <div class="conf-wrap">
+                                <div class="conf-row">
+                                    <span>Confidence</span>
+                                    <span id="confidenceText">0%</span>
+                                </div>
+                                <div class="conf-track">
+                                    <div id="confidenceFill" class="conf-fill"></div>
+                                </div>
+                                <div id="lowConfidence" class="low-confidence">Low confidence: try a cleaner recording for better reliability.</div>
+                            </div>
+
+                            <div class="cards-grid">
+                                <div class="sub-card">
+                                    <h4>Top 3 Predictions</h4>
+                                    <div id="topPredictions"></div>
+                                </div>
+
+                                <div class="sub-card">
+                                    <h4>Regional Cuisine Suggestions</h4>
+                                    <div id="recommendations"></div>
+                                </div>
+
+                                <div class="sub-card">
+                                    <h4>Audio Quality Gate</h4>
+                                    <div class="quality-grid">
+                                        <div class="quality-item"><div class="k">Quality Score</div><div id="qScore" class="v">-</div></div>
+                                        <div class="quality-item"><div class="k">Quality Level</div><div id="qLevel" class="v">-</div></div>
+                                        <div class="quality-item"><div class="k">Duration</div><div id="qDuration" class="v">-</div></div>
+                                        <div class="quality-item"><div class="k">Silence Ratio</div><div id="qSilence" class="v">-</div></div>
+                                    </div>
+                                    <div id="qIssues" class="quality-issues"></div>
+                                </div>
+                            </div>
+
+                            <div class="feedback-wrap">
+                                <div class="feedback-title">Was this prediction correct?</div>
+                                <div class="feedback-actions">
+                                    <button id="feedbackCorrectBtn" class="btn-good" type="button">Yes, Correct</button>
+                                    <button id="feedbackWrongBtn" class="btn-bad" type="button">No, Incorrect</button>
+                                </div>
+
+                                <div id="feedbackForm" class="feedback-form">
+                                    <label for="correctedAccent">Correct accent</label>
+                                    <select id="correctedAccent">
+                                        <option value="">Select correct accent</option>
+                                        <option value="andhra_pradesh">Andhra Pradesh</option>
+                                        <option value="gujarat">Gujarat</option>
+                                        <option value="jharkhand">Jharkhand</option>
+                                        <option value="karnataka">Karnataka</option>
+                                        <option value="kerala">Kerala</option>
+                                        <option value="tamil_nadu">Tamil Nadu</option>
+                                    </select>
+
+                                    <label for="feedbackNotes">Notes (optional)</label>
+                                    <textarea id="feedbackNotes" rows="3" placeholder="Any context that helps review this prediction"></textarea>
+                                    <button id="submitWrongFeedbackBtn" class="btn-lite" type="button">Submit Correction</button>
+                                </div>
+
+                                <div id="feedbackStatus" class="feedback-status"></div>
+                            </div>
+                        </section>
+                    </section>
+
+                    <section id="batchUploadSection" class="upload-section">
+                        <div id="batchUploadBox" class="dropzone" role="button" tabindex="0" aria-label="Upload multiple audio files">
+                            <h3>Drop Files Here or Click to Browse</h3>
+                            <p>Select multiple WAV, MP3, M4A, or FLAC files for batch processing</p>
+                        </div>
+
+                        <input type="file" id="batchFileInput" accept="audio/*" multiple>
+
+                        <div id="batchList" class="batch-list" style="display: none;"></div>
+
+                        <div class="batch-controls">
+                            <button id="batchProcessBtn" class="analyze-btn" disabled style="display: none;">Process Batch</button>
+                            <button id="batchClearBtn" class="btn-lite" type="button" style="display: none;">Clear Selected</button>
+                            <div id="batchLoading" class="loading" style="display: none;">
+                                <div class="dot"></div>
+                                <div class="dot"></div>
+                                <div class="dot"></div>
+                                <span>Processing...</span>
+                            </div>
+                        </div>
+
+                        <div id="batchErrorBanner" class="error-banner"></div>
+
+                        <div id="batchResults" class="batch-results">
+                            <h4>Batch Processing Results</h4>
+                            <div id="batchResultsList"></div>
+                            <div class="batch-export">
+                                <button id="exportBatchResultsBtn" class="btn-lite" type="button">Export Results as CSV</button>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </main>
         </div>
     </div>
 
     <script>
         let selectedFile = null;
+        let previewUrl = null;
 
-        // File input change
-        document.getElementById('fileInput').addEventListener('change', function(e) {
-            if (e.target.files.length > 0) {
-                selectedFile = e.target.files[0];
-                document.getElementById('fileName').textContent = `Selected: ${selectedFile.name}`;
-                document.getElementById('predictBtn').disabled = false;
-                hideResults();
+        const uploadBox = document.getElementById('uploadBox');
+        const fileInput = document.getElementById('fileInput');
+        const fileCard = document.getElementById('fileCard');
+        const fileName = document.getElementById('fileName');
+        const audioPlayer = document.getElementById('audioPlayer');
+        const predictBtn = document.getElementById('predictBtn');
+        const loading = document.getElementById('loading');
+        const errorBanner = document.getElementById('errorBanner');
+        const result = document.getElementById('result');
+        const feedbackSummary = document.getElementById('feedbackSummary');
+        const retrainStatus = document.getElementById('retrainStatus');
+        const feedbackStatus = document.getElementById('feedbackStatus');
+        const feedbackForm = document.getElementById('feedbackForm');
+        const correctedAccent = document.getElementById('correctedAccent');
+        const feedbackNotes = document.getElementById('feedbackNotes');
+        let lastPredictionData = null;
+        let batchPredictionsCache = [];
+
+        function resetMessages() {
+            errorBanner.style.display = 'none';
+            errorBanner.textContent = '';
+            result.classList.remove('show');
+            feedbackStatus.classList.remove('show');
+            feedbackStatus.textContent = '';
+            feedbackForm.classList.remove('show');
+        }
+
+        function showError(message) {
+            errorBanner.textContent = message || 'Something went wrong.';
+            errorBanner.style.display = 'block';
+        }
+
+        function normalizeLabel(label) {
+            return String(label || '').replace(/_/g, ' ').trim();
+        }
+
+        function csvEscape(value) {
+            const text = String(value ?? '');
+            if (text.includes('"') || text.includes(',') || text.includes('\n')) {
+                return '"' + text.replace(/"/g, '""') + '"';
+            }
+            return text;
+        }
+
+        function bindSelectedFile(file) {
+            if (!file) {
+                return;
+            }
+
+            selectedFile = file;
+            fileName.textContent = file.name;
+
+            if (previewUrl) {
+                URL.revokeObjectURL(previewUrl);
+            }
+            previewUrl = URL.createObjectURL(file);
+            audioPlayer.src = previewUrl;
+
+            fileCard.classList.add('active');
+            predictBtn.disabled = false;
+            resetMessages();
+        }
+
+        uploadBox.addEventListener('click', () => fileInput.click());
+        uploadBox.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                fileInput.click();
             }
         });
 
-        // Drag and drop
-        const uploadBox = document.getElementById('uploadBox');
-        
-        uploadBox.addEventListener('dragover', function(e) {
+        uploadBox.addEventListener('dragover', (e) => {
             e.preventDefault();
             uploadBox.classList.add('dragover');
         });
 
-        uploadBox.addEventListener('dragleave', function(e) {
+        uploadBox.addEventListener('dragleave', (e) => {
             e.preventDefault();
             uploadBox.classList.remove('dragover');
         });
 
-        uploadBox.addEventListener('drop', function(e) {
+        uploadBox.addEventListener('drop', (e) => {
             e.preventDefault();
             uploadBox.classList.remove('dragover');
-            
-            if (e.dataTransfer.files.length > 0) {
-                selectedFile = e.dataTransfer.files[0];
-                document.getElementById('fileInput').files = e.dataTransfer.files;
-                document.getElementById('fileName').textContent = `Selected: ${selectedFile.name}`;
-                document.getElementById('predictBtn').disabled = false;
-                hideResults();
+            const file = e.dataTransfer.files && e.dataTransfer.files[0];
+            bindSelectedFile(file);
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            const file = e.target.files && e.target.files[0];
+            bindSelectedFile(file);
+        });
+
+        predictBtn.addEventListener('click', async () => {
+            if (!selectedFile) {
+                showError('Please choose an audio file first.');
+                return;
             }
-        });
 
-        function hideResults() {
-            document.getElementById('result').classList.remove('show');
-            document.getElementById('error').classList.remove('show');
-        }
+            resetMessages();
+            loading.style.display = 'flex';
+            predictBtn.disabled = true;
 
-        async function predictAccent() {
-            if (!selectedFile) return;
-
-            // Show loading, hide results
-            document.getElementById('loading').style.display = 'block';
-            document.getElementById('predictBtn').disabled = true;
-            hideResults();
-
-            // Prepare form data
             const formData = new FormData();
             formData.append('audio', selectedFile);
 
             try {
                 const response = await fetch('/predict', {
                     method: 'POST',
-                    body: formData
+                    body: formData,
+                    cache: 'no-store'
                 });
 
                 const data = await response.json();
-
-                // Hide loading
-                document.getElementById('loading').style.display = 'none';
-                document.getElementById('predictBtn').disabled = false;
-
-                if (data.success && data.predicted_accent) {
-                    // Show result
-                    document.getElementById('predictedAccent').textContent = data.predicted_accent;
-                    document.getElementById('confidenceText').textContent = data.confidence.toFixed(1) + '%';
-                    document.getElementById('confidenceFill').style.width = data.confidence + '%';
-
-                    // Show top predictions
-                    const topPredictionsDiv = document.getElementById('topPredictions');
-                    topPredictionsDiv.innerHTML = '';
-                    
-                    data.top_predictions.forEach((pred, index) => {
-                        const item = document.createElement('div');
-                        item.className = 'prediction-item';
-                        item.innerHTML = `
-                            <span class="accent">${index + 1}. ${pred.accent}</span>
-                            <span class="conf">${pred.confidence.toFixed(1)}%</span>
-                        `;
-                        topPredictionsDiv.appendChild(item);
-                    });
-
-                    // Show cuisine recommendations
-                    const recommendationsDiv = document.getElementById('recommendations');
-                    recommendationsDiv.innerHTML = '';
-                    
-                    if (data.recommendations && data.recommendations.length > 0) {
-                        data.recommendations.forEach((rec) => {
-                            const card = document.createElement('div');
-                            card.className = 'recommendation-card';
-                            card.innerHTML = `
-                                <h4>${rec.name}</h4>
-                                <p class="region">📍 ${rec.region}</p>
-                                <p class="description">${rec.description}</p>
-                            `;
-                            recommendationsDiv.appendChild(card);
-                        });
-                    }
-
-                    document.getElementById('result').classList.add('show');
-                } else {
-                    // Show error
-                    document.getElementById('errorMessage').textContent = data.error || 'Unknown error occurred';
-                    document.getElementById('error').classList.add('show');
+                if (!data.success) {
+                    throw new Error(data.error || 'Prediction failed.');
                 }
-            } catch (error) {
-                document.getElementById('loading').style.display = 'none';
-                document.getElementById('predictBtn').disabled = false;
-                document.getElementById('errorMessage').textContent = 'Failed to connect to server: ' + error.message;
-                document.getElementById('error').classList.add('show');
+
+                renderResult(data);
+            } catch (err) {
+                showError('Prediction error: ' + err.message);
+            } finally {
+                loading.style.display = 'none';
+                predictBtn.disabled = false;
+            }
+        });
+
+        function renderResult(data) {
+            lastPredictionData = data;
+            const accent = normalizeLabel(data.predicted_accent) || 'Unknown';
+            const confidence = Number(data.confidence || 0);
+            const safeConfidence = Math.max(0, Math.min(100, confidence));
+            const isUncertain = Boolean(data.is_uncertain);
+
+            document.getElementById('predictedAccent').textContent = accent;
+            document.getElementById('confidenceText').textContent = safeConfidence.toFixed(1) + '%';
+
+            const status = document.getElementById('predictionStatus');
+            const uncertainNote = document.getElementById('uncertainNote');
+            if (isUncertain) {
+                status.textContent = 'Uncertain';
+                status.classList.add('warn');
+                uncertainNote.style.display = 'block';
+                uncertainNote.textContent = data.uncertain_reason || 'Confidence is low for this sample.';
+            } else {
+                status.textContent = 'Reliable';
+                status.classList.remove('warn');
+                uncertainNote.style.display = 'none';
+                uncertainNote.textContent = '';
+            }
+
+            const confidenceFill = document.getElementById('confidenceFill');
+            confidenceFill.style.width = '0%';
+            setTimeout(() => {
+                confidenceFill.style.width = safeConfidence.toFixed(1) + '%';
+            }, 50);
+
+            const lowConfidence = document.getElementById('lowConfidence');
+            lowConfidence.style.display = (isUncertain || safeConfidence < 43) ? 'block' : 'none';
+
+            const topPredictions = document.getElementById('topPredictions');
+            topPredictions.innerHTML = '';
+            const topList = Array.isArray(data.top_predictions) ? data.top_predictions.slice(0, 3) : [];
+            if (topList.length === 0) {
+                topPredictions.innerHTML = '<div class="prediction-item"><span class="prediction-accent">No alternatives</span><span class="prediction-score">-</span></div>';
+            } else {
+                topList.forEach((item) => {
+                    const row = document.createElement('div');
+                    row.className = 'prediction-item';
+                    row.innerHTML = '<span class="prediction-accent">' + normalizeLabel(item.accent) + '</span>' +
+                        '<span class="prediction-score">' + Number(item.confidence || 0).toFixed(1) + '%</span>';
+                    topPredictions.appendChild(row);
+                });
+            }
+
+            const recommendations = document.getElementById('recommendations');
+            recommendations.innerHTML = '';
+            const recs = Array.isArray(data.recommendations) ? data.recommendations : [];
+            if (recs.length === 0) {
+                recommendations.innerHTML = '<div class="rec-card"><p class="rec-desc">No recommendations available for this prediction yet.</p></div>';
+            } else {
+                recs.forEach((rec) => {
+                    const card = document.createElement('div');
+                    card.className = 'rec-card';
+                    card.innerHTML =
+                        '<p class="rec-name">' + (rec.name || 'Unknown dish') + '</p>' +
+                        '<p class="rec-region">' + (rec.region || 'Unknown region') + '</p>' +
+                        '<p class="rec-desc">' + (rec.description || '') + '</p>';
+                    recommendations.appendChild(card);
+                });
+            }
+
+            const quality = data.quality || {};
+            document.getElementById('qScore').textContent = (Number(quality.score || 0)).toFixed(1) + '/100';
+            document.getElementById('qLevel').textContent = normalizeLabel(quality.level || 'unknown');
+            document.getElementById('qDuration').textContent = quality.duration_sec != null ? Number(quality.duration_sec).toFixed(2) + ' s' : 'N/A';
+            document.getElementById('qSilence').textContent = quality.silent_ratio != null ? (Number(quality.silent_ratio) * 100).toFixed(1) + '%' : 'N/A';
+
+            const issues = Array.isArray(quality.issues) ? quality.issues : [];
+            document.getElementById('qIssues').textContent = issues.length > 0
+                ? 'Detected issues: ' + issues.map(normalizeLabel).join(', ')
+                : 'No major quality issues detected.';
+
+            result.classList.add('show');
+            result.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        async function submitFeedback(userFeedback, corrected = '', notes = '') {
+            if (!lastPredictionData) {
+                return;
+            }
+
+            const payload = {
+                user_feedback: userFeedback,
+                corrected_accent: corrected,
+                notes: notes,
+                audio_filename: selectedFile ? selectedFile.name : '',
+                mode: lastPredictionData.mode || '',
+                predicted_accent: lastPredictionData.predicted_accent || '',
+                is_uncertain: Boolean(lastPredictionData.is_uncertain),
+                confidence: Number(lastPredictionData.confidence || 0),
+                calibrated_confidence: Number(lastPredictionData.calibrated_confidence || 0),
+                raw_confidence: Number(lastPredictionData.raw_confidence || 0),
+                top_predictions: Array.isArray(lastPredictionData.top_predictions) ? lastPredictionData.top_predictions : [],
+                quality: lastPredictionData.quality || {}
+            };
+
+            try {
+                const response = await fetch('/feedback', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload),
+                    cache: 'no-store'
+                });
+                const data = await response.json();
+                if (!response.ok || !data.success) {
+                    throw new Error(data.error || 'Failed to save feedback');
+                }
+
+                feedbackStatus.textContent = 'Thanks. Your feedback has been saved.';
+                feedbackStatus.classList.add('show');
+                feedbackForm.classList.remove('show');
+                correctedAccent.value = '';
+                feedbackNotes.value = '';
+                loadFeedbackSummary();
+            } catch (err) {
+                feedbackStatus.textContent = 'Feedback error: ' + err.message;
+                feedbackStatus.classList.add('show');
             }
         }
+
+        async function loadFeedbackSummary() {
+            try {
+                const response = await fetch('/feedback/summary', { cache: 'no-store' });
+                const data = await response.json();
+                if (!data.success) {
+                    throw new Error('summary_unavailable');
+                }
+                feedbackSummary.textContent =
+                    'Feedback: ' + data.total +
+                    ' | Correct: ' + data.correct +
+                    ' | Incorrect: ' + data.incorrect +
+                    ' | Uncertain: ' + data.uncertain +
+                    ' | Proxy Accuracy: ' + Number(data.accuracy_proxy || 0).toFixed(1) + '%';
+            } catch (err) {
+                feedbackSummary.textContent = 'Feedback summary unavailable';
+            }
+        }
+
+        async function loadModelInfo() {
+            try {
+                const response = await fetch('/info', { cache: 'no-store' });
+                const info = await response.json();
+
+                document.getElementById('modelName').textContent = info.model || 'Unknown';
+                document.getElementById('architecture').textContent = info.architecture || 'N/A';
+                document.getElementById('testAccuracy').textContent = info.test_accuracy || 'N/A';
+                document.getElementById('dataset').textContent = info.dataset || 'IndicAccentDB';
+
+                const modeWarning = document.getElementById('modeWarning');
+                if (info.mode && info.mode !== 'model') {
+                    modeWarning.style.display = 'block';
+                    if (info.mode === 'mfcc-lite') {
+                        modeWarning.textContent = 'MFCC-lite mode is active for CPU-friendly inference. Results are real but may be less accurate than full HuBERT model.';
+                    } else {
+                        modeWarning.textContent = 'Demo mode is active. Results are placeholders until trained weights are available.';
+                    }
+                } else {
+                    modeWarning.style.display = 'none';
+                }
+            } catch (err) {
+                document.getElementById('modelName').textContent = 'Unavailable';
+                document.getElementById('architecture').textContent = 'Unavailable';
+                document.getElementById('testAccuracy').textContent = 'Unavailable';
+            }
+        }
+
+        document.getElementById('feedbackCorrectBtn').addEventListener('click', () => {
+            submitFeedback('correct', '', '');
+        });
+
+        document.getElementById('feedbackWrongBtn').addEventListener('click', () => {
+            feedbackForm.classList.add('show');
+            feedbackStatus.classList.remove('show');
+            feedbackStatus.textContent = '';
+        });
+
+        document.getElementById('submitWrongFeedbackBtn').addEventListener('click', () => {
+            const corrected = (correctedAccent.value || '').trim();
+            const notes = (feedbackNotes.value || '').trim();
+            if (!corrected) {
+                feedbackStatus.textContent = 'Please select the correct accent before submitting.';
+                feedbackStatus.classList.add('show');
+                return;
+            }
+            submitFeedback('incorrect', corrected, notes);
+        });
+
+        document.getElementById('exportCsvBtn').addEventListener('click', () => {
+            window.open('/feedback/export', '_blank');
+        });
+
+        // ========== BATCH UPLOAD HANDLERS ==========
+        let batchFiles = [];
+
+        function switchMode(mode) {
+            const tabs = document.querySelectorAll('.mode-tab');
+            const sections = document.querySelectorAll('.upload-section');
+            
+            tabs.forEach(tab => tab.classList.remove('active'));
+            sections.forEach(sec => sec.classList.remove('active'));
+            
+            if (mode === 'single') {
+                tabs[0].classList.add('active');
+                document.getElementById('singleUploadSection').classList.add('active');
+            } else if (mode === 'batch') {
+                tabs[1].classList.add('active');
+                document.getElementById('batchUploadSection').classList.add('active');
+            }
+        }
+
+        function openDashboard() {
+            window.open('/admin/feedback_dashboard', '_blank');
+        }
+
+        function openStudentIntake() {
+            window.open('/student/intake', '_blank');
+        }
+
+        const batchUploadBox = document.getElementById('batchUploadBox');
+        const batchFileInput = document.getElementById('batchFileInput');
+        const batchList = document.getElementById('batchList');
+        const batchProcessBtn = document.getElementById('batchProcessBtn');
+        const batchClearBtn = document.getElementById('batchClearBtn');
+        const batchLoading = document.getElementById('batchLoading');
+        const batchErrorBanner = document.getElementById('batchErrorBanner');
+        const batchResults = document.getElementById('batchResults');
+        const batchResultsList = document.getElementById('batchResultsList');
+
+        function renderBatchList() {
+            if (batchFiles.length === 0) {
+                batchList.style.display = 'none';
+                batchProcessBtn.style.display = 'none';
+                batchClearBtn.style.display = 'none';
+                return;
+            }
+
+            batchList.style.display = 'block';
+            batchProcessBtn.style.display = 'inline-block';
+            batchClearBtn.style.display = 'inline-block';
+            batchProcessBtn.disabled = false;
+
+            let html = '';
+            batchFiles.forEach((file, idx) => {
+                html += '<div class="batch-item">' +
+                    '<span class="batch-item-name">' + file.name + '</span>' +
+                    '<button class="batch-item-remove" onclick="removeBatchFile(' + idx + ')">Remove</button>' +
+                    '</div>';
+            });
+            batchList.innerHTML = html;
+        }
+
+        function removeBatchFile(idx) {
+            batchFiles.splice(idx, 1);
+            renderBatchList();
+        }
+
+        function clearBatchError() {
+            batchErrorBanner.textContent = '';
+            batchErrorBanner.style.display = 'none';
+        }
+
+        function showBatchError(msg) {
+            batchErrorBanner.textContent = msg;
+            batchErrorBanner.style.display = 'block';
+        }
+
+        batchUploadBox.addEventListener('click', () => batchFileInput.click());
+        batchUploadBox.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            batchUploadBox.classList.add('dragover');
+        });
+        batchUploadBox.addEventListener('dragleave', () => {
+            batchUploadBox.classList.remove('dragover');
+        });
+        batchUploadBox.addEventListener('drop', (e) => {
+            e.preventDefault();
+            batchUploadBox.classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            if (files) {
+                batchFiles = Array.from(files);
+                renderBatchList();
+                clearBatchError();
+            }
+        });
+
+        batchFileInput.addEventListener('change', (e) => {
+            if (e.target.files) {
+                batchFiles = Array.from(e.target.files);
+                renderBatchList();
+                clearBatchError();
+            }
+        });
+
+        batchClearBtn.addEventListener('click', () => {
+            batchFiles = [];
+            batchPredictionsCache = [];
+            batchFileInput.value = '';
+            renderBatchList();
+            clearBatchError();
+            batchResults.classList.remove('show');
+        });
+
+        batchProcessBtn.addEventListener('click', async () => {
+            if (batchFiles.length === 0) {
+                showBatchError('Please select files first.');
+                return;
+            }
+
+            clearBatchError();
+            batchLoading.style.display = 'flex';
+            batchProcessBtn.disabled = true;
+
+            const formData = new FormData();
+            batchFiles.forEach(file => {
+                formData.append('files', file);
+            });
+
+            try {
+                const response = await fetch('/batch_predict', {
+                    method: 'POST',
+                    body: formData,
+                    cache: 'no-store'
+                });
+
+                const data = await response.json();
+                if (!data.success) {
+                    throw new Error(data.error || 'Batch prediction failed');
+                }
+
+                batchPredictionsCache = Array.isArray(data.predictions) ? data.predictions : [];
+                renderBatchResults(data.predictions || []);
+                batchResults.classList.add('show');
+                batchResults.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            } catch (err) {
+                showBatchError('Batch process error: ' + err.message);
+            } finally {
+                batchLoading.style.display = 'none';
+                batchProcessBtn.disabled = false;
+            }
+        });
+
+        function renderBatchResults(predictions) {
+            let html = '';
+            predictions.forEach((pred, idx) => {
+                if (pred.success) {
+                    const accent = normalizeLabel(pred.predicted_accent);
+                    const confidence = Number(pred.confidence || 0).toFixed(1);
+                    const status = pred.is_uncertain ? 'uncertain' : 'success';
+                    html += '<div class="batch-result-item ' + status + '">' +
+                        '<span class="batch-result-filename">' + pred.original_filename + '</span>' +
+                        '<span class="batch-result-accent">' + accent + '</span>' +
+                        '<span class="batch-result-confidence">' + confidence + '%</span>' +
+                        '</div>';
+                } else {
+                    html += '<div class="batch-result-item error">' +
+                        '<span class="batch-result-filename">' + pred.original_filename + '</span>' +
+                        '<span class="batch-result-error">' + pred.error + '</span>' +
+                        '</div>';
+                }
+            });
+            batchResultsList.innerHTML = html;
+        }
+
+        document.getElementById('exportBatchResultsBtn').addEventListener('click', () => {
+            if (!Array.isArray(batchPredictionsCache) || batchPredictionsCache.length === 0) {
+                showBatchError('No batch results available to export yet.');
+                return;
+            }
+
+            const header = [
+                'original_filename', 'success', 'predicted_accent', 'confidence',
+                'is_uncertain', 'uncertain_reason', 'error'
+            ];
+            const rows = [header.join(',')];
+
+            batchPredictionsCache.forEach((pred) => {
+                rows.push([
+                    csvEscape(pred.original_filename || ''),
+                    csvEscape(Boolean(pred.success)),
+                    csvEscape(pred.predicted_accent || ''),
+                    csvEscape(Number(pred.confidence || 0).toFixed(2)),
+                    csvEscape(Boolean(pred.is_uncertain)),
+                    csvEscape(pred.uncertain_reason || ''),
+                    csvEscape(pred.error || '')
+                ].join(','));
+            });
+
+            const blob = new Blob([rows.join('\n')], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'batch_predictions_' + Date.now() + '.csv';
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            URL.revokeObjectURL(url);
+        });
+
+        document.getElementById('prepareRetrainBtn').addEventListener('click', async () => {
+            retrainStatus.textContent = 'Retrain set: preparing...';
+            try {
+                const response = await fetch('/feedback/retrain/prepare', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        min_quality_score: 35,
+                        min_confidence: 35,
+                        include_uncertain: false,
+                        include_unrated: false
+                    }),
+                    cache: 'no-store'
+                });
+                const data = await response.json();
+                if (!response.ok || !data.success) {
+                    throw new Error(data.error || 'Failed to prepare retrain dataset');
+                }
+                retrainStatus.textContent =
+                    'Retrain set: ' + data.accepted_records + ' rows | labels: ' +
+                    Object.keys(data.label_distribution || {}).length;
+            } catch (err) {
+                retrainStatus.textContent = 'Retrain set error: ' + err.message;
+            }
+        });
+
+        loadModelInfo();
+        loadFeedbackSummary();
     </script>
 </body>
 </html>
