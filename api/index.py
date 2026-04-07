@@ -218,15 +218,22 @@ def student_submissions_summary():
             'total_recordings': total_recordings,
             'aiven_sync_enabled': True,
             'aiven_db_configured': True,
-            'storage_backend': 'aiven-postgres-bytea'
+            'storage_backend': 'aiven-postgres-bytea',
+            'db_status': 'ok',
+            'db_error': ''
         })
     except Exception as err:
         return jsonify({
-            'success': False,
-            'error': f'Summary failed: {err}',
+            'success': True,
+            'submissions': 0,
+            'unique_students': 0,
+            'total_recordings': 0,
             'aiven_sync_enabled': True,
-            'aiven_db_configured': _get_aiven_db_uri() != ''
-        }), 500
+            'aiven_db_configured': _get_aiven_db_uri() != '',
+            'storage_backend': 'aiven-postgres-bytea',
+            'db_status': 'error',
+            'db_error': str(err)
+        }), 200
 
 
 @app.route('/student/submissions/export')

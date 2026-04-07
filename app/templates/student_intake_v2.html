@@ -555,14 +555,32 @@
             try {
                 const response = await fetch('/student/submissions/summary', { cache: 'no-store' });
                 const data = await response.json();
-                if (!data.success) throw new Error('summary unavailable');
-                document.getElementById('chipStudents').textContent = 'Students: ' + data.unique_students;
-                document.getElementById('chipRecordings').textContent = 'Recordings: ' + data.total_recordings;
-                document.getElementById('chipSync').textContent = 'Aiven Sync: ' + (data.aiven_db_configured ? 'configured' : 'not configured');
+
+                const students = Number(data.unique_students || 0);
+                const recordings = Number(data.total_recordings || 0);
+                const configured = Boolean(data.aiven_db_configured);
+                const dbStatus = String(data.db_status || 'unknown').toLowerCase();
+                const dbError = String(data.db_error || '').trim();
+
+                document.getElementById('chipStudents').textContent = 'Students: ' + students;
+                document.getElementById('chipRecordings').textContent = 'Recordings: ' + recordings;
+
+                if (!configured) {
+                    document.getElementById('chipSync').textContent = 'Aiven Sync: not configured';
+                } else if (dbStatus === 'ok') {
+                    document.getElementById('chipSync').textContent = 'Aiven Sync: connected';
+                } else if (dbStatus === 'error') {
+                    document.getElementById('chipSync').textContent = 'Aiven Sync: DB error';
+                    if (dbError) {
+                        showBanner('Aiven DB issue: ' + dbError, 'warn');
+                    }
+                } else {
+                    document.getElementById('chipSync').textContent = 'Aiven Sync: checking';
+                }
             } catch (err) {
                 document.getElementById('chipStudents').textContent = 'Students: unavailable';
                 document.getElementById('chipRecordings').textContent = 'Recordings: unavailable';
-                document.getElementById('chipSync').textContent = 'Aiven Sync: unknown';
+                document.getElementById('chipSync').textContent = 'Aiven Sync: network error';
             }
         }
 
