@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Class Audio Intake Form</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@primer/css@21.8.0/dist/primer.css">
+    <style>
+        :root {
+            --ink: #0f172a;
+            --teal: #0f766e;
+            --sky: #0284c7;
+            --bg: #f8fafc;
+            --border: #cbd5e1;
+            --danger: #991b1b;
+            --success: #166534;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            background:
+                radial-gradient(circle at 12% 10%, rgba(2, 132, 199, 0.16), transparent 35%),
+                radial-gradient(circle at 88% 0%, rgba(15, 118, 110, 0.15), transparent 34%),
+                linear-gradient(160deg, #f8fafc 0%, #eff6ff 100%);
+            color: var(--ink);
+            min-height: 100vh;
+            padding: 18px;
+        }
+
+        .shell {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, var(--ink) 0%, var(--teal) 70%);
+            color: #f8fafc;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: 0 14px 28px rgba(15, 23, 42, 0.2);
+        }
+
+        .hero h1 {
+            margin: 0 0 8px;
+            font-size: 29px;
+            letter-spacing: -0.02em;
+        }
+
+        .hero p {
+            margin: 0;
+            font-size: 14px;
+            opacity: 0.95;
+            line-height: 1.4;
+        }
+
+        .card {
+            border: 1px solid var(--border);
+            background: #ffffff;
+            border-radius: 14px;
+            box-shadow: 0 8px 18px rgba(15, 23, 42, 0.08);
+            overflow: hidden;
+        }
+
+        .card-head {
+            padding: 14px 16px;
+            border-bottom: 1px solid #e2e8f0;
+            background: #f8fafc;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: #334155;
+            font-weight: 800;
+        }
+
+        .form-body {
+            padding: 16px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .full {
+            grid-column: 1 / -1;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 4px;
+            font-size: 12px;
+            color: #334155;
+            font-weight: 700;
+        }
+
+        input,
+        select {
+            width: 100%;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 9px 10px;
+            font-size: 14px;
+            font-family: inherit;
+        }
+
+        .prompts {
+            border: 1px solid #bae6fd;
+            background: #f0f9ff;
+            border-radius: 10px;
+            padding: 12px;
+            margin-top: 4px;
+        }
+
+        .prompts ol {
+            margin: 0;
+            padding-left: 18px;
+        }
+
+        .prompts li {
+            margin-bottom: 6px;
+            color: #0c4a6e;
+            font-size: 14px;
+            line-height: 1.3;
+        }
+
+        .prompts li:last-child {
+            margin-bottom: 0;
+        }
+
+        .consent {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            border: 1px solid #fde68a;
+            background: #fffbeb;
+            border-radius: 10px;
+            padding: 10px;
+        }
+
+        .consent input {
+            width: auto;
+            margin-top: 3px;
+        }
+
+        .actions {
+            padding: 0 16px 16px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-submit {
+            border: 0;
+            border-radius: 999px;
+            padding: 10px 18px;
+            color: #ffffff;
+            background: linear-gradient(135deg, var(--teal) 0%, var(--sky) 100%);
+            font-weight: 800;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .btn-submit:disabled {
+            opacity: 0.55;
+            cursor: not-allowed;
+        }
+
+        .status {
+            display: none;
+            padding: 10px 12px;
+            border-radius: 9px;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .status.show {
+            display: block;
+        }
+
+        .status.error {
+            border: 1px solid #fecaca;
+            background: #fef2f2;
+            color: var(--danger);
+        }
+
+        .status.ok {
+            border: 1px solid #86efac;
+            background: #f0fdf4;
+            color: var(--success);
+        }
+
+        .helper {
+            font-size: 12px;
+            color: #475569;
+            line-height: 1.35;
+        }
+
+        @media (max-width: 820px) {
+            .form-body {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="shell">
+        <section class="hero">
+            <h1>Class Student Speech Collection</h1>
+            <p>Fill your details and upload exactly three recordings. Keep each recording around 10 to 15 seconds in a quiet place.</p>
+        </section>
+
+        <section class="card">
+            <div class="card-head">Student Intake Form</div>
+            <form id="studentForm" enctype="multipart/form-data">
+                <div class="form-body">
+                    <div>
+                        <label for="name">Full Name</label>
+                        <input id="name" name="name" type="text" required>
+                    </div>
+
+                    <div>
+                        <label for="studentId">Student ID / Roll Number</label>
+                        <input id="studentId" name="student_id" type="text" required>
+                    </div>
+
+                    <div>
+                        <label for="departmentSection">Department + Year/Section</label>
+                        <input id="departmentSection" name="department_section" type="text" placeholder="CSE - 3rd Year A" required>
+                    </div>
+
+                    <div>
+                        <label for="nativeLanguage">Native Language / Home State</label>
+                        <select id="nativeLanguage" name="native_language" required>
+                            <option value="">Select one</option>
+                            <option value="andhra_pradesh">Andhra Pradesh</option>
+                            <option value="gujarat">Gujarat</option>
+                            <option value="jharkhand">Jharkhand</option>
+                            <option value="karnataka">Karnataka</option>
+                            <option value="kerala">Kerala</option>
+                            <option value="tamil_nadu">Tamil Nadu</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="full">
+                        <label>Recording Prompts</label>
+                        <div class="prompts">
+                            <ol>
+                                {% for prompt in prompts %}
+                                <li>{{ prompt }}</li>
+                                {% endfor %}
+                            </ol>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="audio1">Audio 1 (Prompt 1)</label>
+                        <input id="audio1" name="audio_1" type="file" accept="audio/*" required>
+                    </div>
+
+                    <div>
+                        <label for="audio2">Audio 2 (Prompt 2)</label>
+                        <input id="audio2" name="audio_2" type="file" accept="audio/*" required>
+                    </div>
+
+                    <div class="full">
+                        <label for="audio3">Audio 3 (Prompt 3)</label>
+                        <input id="audio3" name="audio_3" type="file" accept="audio/*" required>
+                    </div>
+
+                    <div class="full consent">
+                        <input id="consent" name="consent" type="checkbox" value="yes" required>
+                        <label for="consent" style="margin: 0; font-size: 13px; font-weight: 600; color: #78350f;">
+                            I consent to using my recordings and metadata for academic research and machine learning model training in this project.
+                        </label>
+                    </div>
+
+                    <div class="full helper">
+                        Submission tip: avoid noise, speak clearly, and keep a short pause before speaking.
+                    </div>
+                </div>
+
+                <div class="actions">
+                    <button id="submitBtn" class="btn-submit" type="submit">Submit Recordings</button>
+                    <div id="statusBox" class="status"></div>
+                </div>
+            </form>
+        </section>
+    </div>
+
+    <script>
+        const studentForm = document.getElementById('studentForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const statusBox = document.getElementById('statusBox');
+
+        function showStatus(message, isError) {
+            statusBox.textContent = message;
+            statusBox.classList.remove('error', 'ok');
+            statusBox.classList.add(isError ? 'error' : 'ok');
+            statusBox.classList.add('show');
+        }
+
+        function validateThreeFiles() {
+            const a1 = document.getElementById('audio1').files.length;
+            const a2 = document.getElementById('audio2').files.length;
+            const a3 = document.getElementById('audio3').files.length;
+            return a1 === 1 && a2 === 1 && a3 === 1;
+        }
+
+        studentForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            statusBox.classList.remove('show');
+
+            if (!validateThreeFiles()) {
+                showStatus('Please upload all 3 recordings before submitting.', true);
+                return;
+            }
+
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Submitting...';
+
+            try {
+                const formData = new FormData(studentForm);
+                const response = await fetch('/student/submit', {
+                    method: 'POST',
+                    body: formData,
+                    cache: 'no-store'
+                });
+                const data = await response.json();
+
+                if (!response.ok || !data.success) {
+                    throw new Error(data.error || 'Submission failed');
+                }
+
+                showStatus('Submission successful. Your ID: ' + data.submission_id, false);
+                studentForm.reset();
+            } catch (err) {
+                showStatus('Submission failed: ' + err.message, true);
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Submit Recordings';
+            }
+        });
+    </script>
+</body>
+</html>

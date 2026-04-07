@@ -32,6 +32,9 @@ def extract_features():
             feat_dict = extractor.extract_from_file(str(audio_path), return_frames=False)
             # Extract just the feature array (not the dict)
             feat_array = feat_dict['features'] if isinstance(feat_dict, dict) else feat_dict
+            if feat_array is None:
+                errors.append((audio_path.name, 'empty_features'))
+                continue
             features_list.append({
                 'features': feat_array,
                 'native_language': row['native_language'],

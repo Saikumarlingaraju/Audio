@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feedback Dashboard - AccentSense</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@primer/css@21.8.0/dist/primer.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --ink: #0f172a;
+            --teal: #0f766e;
+            --sky: #0891b2;
+            --muted: #4b5563;
+            --border: #d1d5db;
+            --bg: #f8fafc;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            font-family: "Manrope", sans-serif;
+            color: #111827;
+            background:
+                radial-gradient(circle at 12% 10%, rgba(8, 145, 178, 0.15), transparent 34%),
+                radial-gradient(circle at 88% 0%, rgba(15, 118, 110, 0.12), transparent 30%),
+                linear-gradient(160deg, #f8fafc 0%, #eff6ff 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .wrap {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, var(--ink) 0%, var(--teal) 72%);
+            color: #f8fafc;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: 0 14px 30px rgba(15, 23, 42, 0.22);
+        }
+
+        .hero h1 {
+            margin: 0 0 6px;
+            font-size: 28px;
+            letter-spacing: -0.01em;
+            font-weight: 800;
+        }
+
+        .hero p {
+            margin: 0;
+            opacity: 0.95;
+            font-size: 14px;
+        }
+
+        .filters {
+            border: 1px solid var(--border);
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 14px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .field label {
+            display: block;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--muted);
+            margin-bottom: 4px;
+            font-weight: 700;
+        }
+
+        .field input,
+        .field select {
+            width: 100%;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 8px 10px;
+            font-family: inherit;
+            font-size: 13px;
+            background: #ffffff;
+        }
+
+        .actions {
+            display: flex;
+            gap: 8px;
+            align-items: flex-end;
+        }
+
+        .btn {
+            border: 0;
+            border-radius: 999px;
+            padding: 9px 14px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 800;
+            letter-spacing: 0.01em;
+        }
+
+        .btn-primary {
+            color: #ffffff;
+            background: linear-gradient(135deg, var(--teal) 0%, var(--sky) 100%);
+        }
+
+        .btn-muted {
+            color: #0f172a;
+            background: #e5e7eb;
+        }
+
+        .stats {
+            margin-bottom: 12px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+        }
+
+        .stat {
+            border: 1px solid var(--border);
+            background: #ffffff;
+            border-radius: 10px;
+            padding: 12px;
+            text-align: center;
+        }
+
+        .stat .v {
+            font-size: 26px;
+            font-weight: 800;
+            color: var(--teal);
+            line-height: 1;
+        }
+
+        .stat .k {
+            margin-top: 5px;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--muted);
+            font-weight: 700;
+        }
+
+        .panel {
+            border: 1px solid var(--border);
+            background: #ffffff;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .panel-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 12px;
+            border-bottom: 1px solid #e5e7eb;
+            background: #f8fafc;
+            font-size: 12px;
+            color: #334155;
+            font-weight: 700;
+        }
+
+        .table-wrap {
+            overflow-x: auto;
+            max-height: 68vh;
+            overflow-y: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+        }
+
+        th {
+            position: sticky;
+            top: 0;
+            z-index: 1;
+            background: #eef2ff;
+            color: #334155;
+            text-transform: uppercase;
+            font-size: 10px;
+            letter-spacing: 0.06em;
+            font-weight: 800;
+            padding: 10px 8px;
+            border-bottom: 1px solid #dbeafe;
+            text-align: left;
+        }
+
+        td {
+            padding: 9px 8px;
+            border-bottom: 1px solid #f1f5f9;
+            vertical-align: top;
+        }
+
+        tr:hover {
+            background: #f8fafc;
+        }
+
+        .badge {
+            display: inline-flex;
+            padding: 3px 7px;
+            border-radius: 999px;
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 0.03em;
+            text-transform: uppercase;
+        }
+
+        .ok { background: #dcfce7; color: #166534; }
+        .bad { background: #fee2e2; color: #991b1b; }
+        .warn { background: #fef3c7; color: #92400e; }
+        .safe { background: #dbeafe; color: #1d4ed8; }
+
+        .muted {
+            color: #64748b;
+            font-size: 11px;
+        }
+
+        .pager {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 12px;
+            border-top: 1px solid #e5e7eb;
+            background: #f8fafc;
+            font-size: 12px;
+            color: #334155;
+        }
+
+        @media (max-width: 900px) {
+            body { padding: 12px; }
+            .hero h1 { font-size: 24px; }
+            .actions { grid-column: 1 / -1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="wrap">
+        <section class="hero">
+            <h1>Feedback Operations Dashboard</h1>
+            <p>Week 4 analytics: filtered records, label corrections, uncertainty tracking, and retraining readiness.</p>
+        </section>
+
+        <section class="filters">
+            <div class="field">
+                <label>Feedback</label>
+                <select id="feedbackFilter">
+                    <option value="">All</option>
+                    <option value="correct">Correct</option>
+                    <option value="incorrect">Incorrect</option>
+                </select>
+            </div>
+            <div class="field">
+                <label>Status</label>
+                <select id="uncertainFilter">
+                    <option value="">All</option>
+                    <option value="false">Reliable</option>
+                    <option value="true">Uncertain</option>
+                </select>
+            </div>
+            <div class="field">
+                <label>Mode</label>
+                <select id="modeFilter">
+                    <option value="">All</option>
+                    <option value="mfcc-lite">MFCC Lite</option>
+                    <option value="model">Model</option>
+                    <option value="demo">Demo</option>
+                </select>
+            </div>
+            <div class="field">
+                <label>Predicted Accent</label>
+                <select id="predictedFilter">
+                    <option value="">All</option>
+                    <option value="andhra_pradesh">Andhra Pradesh</option>
+                    <option value="gujarat">Gujarat</option>
+                    <option value="jharkhand">Jharkhand</option>
+                    <option value="karnataka">Karnataka</option>
+                    <option value="kerala">Kerala</option>
+                    <option value="tamil_nadu">Tamil Nadu</option>
+                    <option value="uncertain">Uncertain</option>
+                </select>
+            </div>
+            <div class="field">
+                <label>From Date</label>
+                <input id="fromDateFilter" type="date">
+            </div>
+            <div class="field">
+                <label>To Date</label>
+                <input id="toDateFilter" type="date">
+            </div>
+            <div class="actions">
+                <button class="btn btn-primary" id="applyBtn" type="button">Apply</button>
+                <button class="btn btn-muted" id="resetBtn" type="button">Reset</button>
+            </div>
+        </section>
+
+        <section class="stats">
+            <div class="stat"><div class="v" id="totalV">0</div><div class="k">Filtered Total</div></div>
+            <div class="stat"><div class="v" id="correctV">0</div><div class="k">Correct</div></div>
+            <div class="stat"><div class="v" id="incorrectV">0</div><div class="k">Incorrect</div></div>
+            <div class="stat"><div class="v" id="uncertainV">0</div><div class="k">Uncertain</div></div>
+            <div class="stat"><div class="v" id="accuracyV">0%</div><div class="k">Accuracy Proxy</div></div>
+        </section>
+
+        <section class="panel">
+            <div class="panel-head">
+                <span id="tableMeta">Loading records...</span>
+                <span class="muted">Showing most recent first</span>
+            </div>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Timestamp</th>
+                            <th>Audio</th>
+                            <th>Predicted</th>
+                            <th>Corrected</th>
+                            <th>Feedback</th>
+                            <th>Status</th>
+                            <th>Confidence</th>
+                            <th>Quality</th>
+                            <th>Notes</th>
+                        </tr>
+                    </thead>
+                    <tbody id="rows"></tbody>
+                </table>
+            </div>
+            <div class="pager">
+                <span id="pageInfo">0 records</span>
+                <div>
+                    <button class="btn btn-muted" id="prevBtn" type="button">Prev</button>
+                    <button class="btn btn-muted" id="nextBtn" type="button">Next</button>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        const state = {
+            limit: 100,
+            offset: 0,
+            filteredTotal: 0
+        };
+
+        function q(id) { return document.getElementById(id); }
+
+        function normalizeLabel(text) {
+            return String(text || '').replace(/_/g, ' ').trim();
+        }
+
+        function badgeHtml(text, type) {
+            return '<span class="badge ' + type + '">' + text + '</span>';
+        }
+
+        function currentFilters() {
+            return {
+                feedback: q('feedbackFilter').value,
+                is_uncertain: q('uncertainFilter').value,
+                mode: q('modeFilter').value,
+                predicted_accent: q('predictedFilter').value,
+                from_date: q('fromDateFilter').value,
+                to_date: q('toDateFilter').value
+            };
+        }
+
+        function buildQuery() {
+            const params = new URLSearchParams();
+            const filters = currentFilters();
+            Object.keys(filters).forEach((k) => {
+                if (filters[k]) params.set(k, filters[k]);
+            });
+            params.set('limit', String(state.limit));
+            params.set('offset', String(state.offset));
+            return params.toString();
+        }
+
+        function setStats(summary, filteredTotal) {
+            q('totalV').textContent = String(filteredTotal || 0);
+            q('correctV').textContent = String(summary.correct || 0);
+            q('incorrectV').textContent = String(summary.incorrect || 0);
+            q('uncertainV').textContent = String(summary.uncertain || 0);
+            q('accuracyV').textContent = Number(summary.accuracy_proxy || 0).toFixed(1) + '%';
+        }
+
+        function renderRows(records) {
+            const rows = q('rows');
+            if (!records || records.length === 0) {
+                rows.innerHTML = '<tr><td colspan="9" class="muted">No records found for this filter set.</td></tr>';
+                return;
+            }
+
+            rows.innerHTML = records.map((r) => {
+                const feedback = String(r.user_feedback || '').toLowerCase();
+                const isUncertain = Boolean(r.is_uncertain);
+                const fb = feedback === 'correct' ? badgeHtml('Correct', 'ok') : badgeHtml('Incorrect', 'bad');
+                const st = isUncertain ? badgeHtml('Uncertain', 'warn') : badgeHtml('Reliable', 'safe');
+                const ts = String(r.timestamp_utc || '').slice(0, 19).replace('T', ' ');
+                const conf = Number(r.confidence || 0).toFixed(1) + '%';
+                const quality = Number(r.quality_score || 0).toFixed(1);
+                return (
+                    '<tr>' +
+                        '<td>' + (ts || '-') + '</td>' +
+                        '<td>' + (r.audio_filename || '-') + '</td>' +
+                        '<td>' + normalizeLabel(r.predicted_accent || '-') + '</td>' +
+                        '<td>' + normalizeLabel(r.corrected_accent || '-') + '</td>' +
+                        '<td>' + fb + '</td>' +
+                        '<td>' + st + '</td>' +
+                        '<td>' + conf + '</td>' +
+                        '<td>' + quality + '</td>' +
+                        '<td>' + (r.notes || '-') + '</td>' +
+                    '</tr>'
+                );
+            }).join('');
+        }
+
+        async function fetchRecords() {
+            q('tableMeta').textContent = 'Loading records...';
+            try {
+                const res = await fetch('/feedback/records?' + buildQuery(), { cache: 'no-store' });
+                const data = await res.json();
+                if (!res.ok || !data.success) {
+                    throw new Error(data.error || 'Failed to load records');
+                }
+
+                state.filteredTotal = Number(data.filtered_total || 0);
+                setStats(data.summary || {}, state.filteredTotal);
+                renderRows(data.records || []);
+
+                const pageStart = state.offset + 1;
+                const pageEnd = Math.min(state.offset + state.limit, state.filteredTotal);
+                q('tableMeta').textContent = 'Total: ' + state.filteredTotal + ' filtered records';
+                q('pageInfo').textContent = state.filteredTotal === 0
+                    ? '0 records'
+                    : ('Showing ' + pageStart + ' to ' + pageEnd + ' of ' + state.filteredTotal);
+                q('prevBtn').disabled = state.offset <= 0;
+                q('nextBtn').disabled = (state.offset + state.limit) >= state.filteredTotal;
+            } catch (err) {
+                q('rows').innerHTML = '<tr><td colspan="9" class="muted">Error: ' + err.message + '</td></tr>';
+                q('tableMeta').textContent = 'Load failed';
+            }
+        }
+
+        q('applyBtn').addEventListener('click', () => {
+            state.offset = 0;
+            fetchRecords();
+        });
+
+        q('resetBtn').addEventListener('click', () => {
+            q('feedbackFilter').value = '';
+            q('uncertainFilter').value = '';
+            q('modeFilter').value = '';
+            q('predictedFilter').value = '';
+            q('fromDateFilter').value = '';
+            q('toDateFilter').value = '';
+            state.offset = 0;
+            fetchRecords();
+        });
+
+        q('prevBtn').addEventListener('click', () => {
+            state.offset = Math.max(0, state.offset - state.limit);
+            fetchRecords();
+        });
+
+        q('nextBtn').addEventListener('click', () => {
+            state.offset += state.limit;
+            fetchRecords();
+        });
+
+        fetchRecords();
+        setInterval(fetchRecords, 12000);
+    </script>
+</body>
+</html>
