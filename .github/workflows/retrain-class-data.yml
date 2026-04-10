@@ -1,0 +1,161 @@
+name: Retrain Class Accent Model
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'src/**'
+      - 'scripts/**'
+      - 'train_simple.py'
+      - 'train_robust.py'
+      - '.github/workflows/retrain-class-data.yml'
+      - 'data/collections/class_students/**'
+  schedule:
+    - cron: '0 2 * * 0'
+  workflow_dispatch:
+    inputs:
+      export_from_aiven:
+        description: 'Export latest class data from Aiven before training'
+        type: boolean
+        default: true
+      min_bytes:
+        description: 'Minimum recording size in bytes during export/filtering'
+        type: string
+        default: '1000'
+      epochs:
+        description: 'Epochs for train_simple.py auto-run'
+        type: string
+        default: '20'
+
+concurrency:
+  group: retrain-class-data
+  cancel-in-progress: true
+
+jobs:
+  retrain_mfcc:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    env:
+      PYTHONUNBUFFERED: '1'
+      CLASS_DATA_DIR: data/collections/class_students/organized_by_state_clean
+      SPLIT_DIR: data/splits/class_students
+      FEATURE_DIR: data/features/class_students/mfcc
+      EXPERIMENT_DIR: experiments/class_students_auto_mfcc
+      AIVEN_DB_URI: ${{ secrets.AIVEN_DB_URI }}
+      MIN_BYTES: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.min_bytes || '1000' }}
+      EPOCHS: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.epochs || '20' }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+          cache: 'pip'
+
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Decide export mode
+        id: decide
+        shell: bash
+        run: |
+          SHOULD_EXPORT=true
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" && "${{ github.event.inputs.export_from_aiven }}" == "false" ]]; then
+            SHOULD_EXPORT=false
+          fi
+          echo "should_export=${SHOULD_EXPORT}" >> "$GITHUB_OUTPUT"
+
+      - name: Verify Aiven credentials for export
+        id: guard
+        shell: bash
+        run: |
+          CAN_TRAIN=true
+          if [[ "${{ steps.decide.outputs.should_export }}" == "true" && -z "${AIVEN_DB_URI}" ]]; then
+            echo "AIVEN_DB_URI secret is missing. Skipping export and retraining."
+            CAN_TRAIN=false
+          fi
+          echo "can_train=${CAN_TRAIN}" >> "$GITHUB_OUTPUT"
+
+      - name: Export latest class data from Aiven
+        if: steps.guard.outputs.can_train == 'true' && steps.decide.outputs.should_export == 'true'
+        run: |
+          python scripts/organize_aiven_by_state_and_name.py \
+            --output-dir "${CLASS_DATA_DIR}" \
+            --min-bytes "${MIN_BYTES}"
+
+      - name: Prepare metadata for training
+        if: steps.guard.outputs.can_train == 'true'
+        run: |
+          python scripts/prepare_class_metadata_for_training.py \
+            --metadata "${CLASS_DATA_DIR}/metadata_all.csv" \
+            --audio_root "${CLASS_DATA_DIR}" \
+            --output "${CLASS_DATA_DIR}/metadata_training_ready.csv" \
+            --min_bytes "${MIN_BYTES}" \
+            --strict
+
+      - name: Create speaker-disjoint splits
+        if: steps.guard.outputs.can_train == 'true'
+        run: |
+          python src/data/create_splits.py \
+            --metadata "${CLASS_DATA_DIR}/metadata_training_ready.csv" \
+            --output_dir "${SPLIT_DIR}" \
+            --train_ratio 0.7 \
+            --dev_ratio 0.15 \
+            --test_ratio 0.15
+
+      - name: Validate dataset integrity
+        if: steps.guard.outputs.can_train == 'true'
+        run: |
+          python scripts/validate_class_dataset.py \
+            --metadata "${CLASS_DATA_DIR}/metadata_training_ready.csv" \
+            --audio_root "${CLASS_DATA_DIR}" \
+            --split_dir "${SPLIT_DIR}"
+
+      - name: Extract MFCC features
+        if: steps.guard.outputs.can_train == 'true'
+        run: |
+          python src/features/mfcc_extractor.py \
+            --metadata "${CLASS_DATA_DIR}/metadata_training_ready.csv" \
+            --audio_dir "${CLASS_DATA_DIR}" \
+            --output_dir "${FEATURE_DIR}"
+
+      - name: Retrain baseline model
+        if: steps.guard.outputs.can_train == 'true'
+        run: |
+          python train_simple.py \
+            --features_path "${FEATURE_DIR}/mfcc_stats.pkl" \
+            --train_csv "${SPLIT_DIR}/train.csv" \
+            --val_csv "${SPLIT_DIR}/dev.csv" \
+            --test_csv "${SPLIT_DIR}/test.csv" \
+            --output_dir "${EXPERIMENT_DIR}" \
+            --num_epochs "${EPOCHS}" \
+            --batch_size 8 \
+            --device cpu
+
+      - name: Upload training artifacts
+        if: steps.guard.outputs.can_train == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: class-student-auto-retrain-${{ github.run_id }}
+          path: |
+            ${{ env.EXPERIMENT_DIR }}
+            ${{ env.SPLIT_DIR }}
+            ${{ env.FEATURE_DIR }}
+            ${{ env.CLASS_DATA_DIR }}/metadata_training_ready.csv
+          retention-days: 14
+
+      - name: Explain skipped run
+        if: steps.guard.outputs.can_train != 'true'
+        run: |
+          echo "Run skipped because AIVEN_DB_URI secret is not configured for export."
+          echo "Add AIVEN_DB_URI in repository secrets to enable end-to-end retraining."

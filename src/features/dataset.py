@@ -10,6 +10,32 @@ import numpy as np
 from pathlib import Path
 
 
+def _normalize_path_value(path_value):
+    """Normalize path separators and casing for stable matching."""
+    normalized = str(path_value or "").strip().replace('\\', '/').replace('//', '/')
+    return normalized.lower().lstrip('./')
+
+
+def _path_candidates(path_value):
+    """Build candidate keys from a path for robust relative/absolute matching."""
+    normalized = _normalize_path_value(path_value)
+    candidates = set()
+
+    if not normalized:
+        return candidates
+
+    candidates.add(normalized)
+
+    for anchor in ('organized_by_state/', 'indian_accents/', 'raw/'):
+        marker = f"/{anchor}"
+        if marker in normalized:
+            candidates.add(normalized.split(marker, 1)[1])
+        if normalized.startswith(anchor):
+            candidates.add(normalized)
+
+    return {c for c in candidates if c}
+
+
 class NLIDataset(Dataset):
     """Dataset for Native Language Identification."""
     
@@ -85,16 +111,19 @@ def load_features_and_create_dataset(features_path, split_csv=None, label_encode
     # Filter by split if provided
     if split_csv:
         split_df = pd.read_csv(split_csv)
-        # Get list of filepaths from split
-        split_filepaths = set(split_df['filepath'].apply(lambda x: str(Path(x).stem)).tolist())
-        
-        # Filter features
+
+        split_filepaths = set()
+        for value in split_df['filepath'].tolist():
+            split_filepaths.update(_path_candidates(value))
+
         filtered_features = []
         for item in features_list:
-            filepath_stem = str(Path(item['filepath']).stem)
-            if filepath_stem in split_filepaths:
+            item_path = item.get('filepath', '')
+            item_candidates = _path_candidates(item_path)
+
+            if any(candidate in split_filepaths for candidate in item_candidates):
                 filtered_features.append(item)
-        
+
         features_list = filtered_features
         print(f"✓ Filtered to {len(features_list)} samples based on split CSV")
     

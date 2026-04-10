@@ -343,6 +343,148 @@ Detailed documentation available in:
 - **word_vs_sent_analysis.txt**: Word vs sentence comparison analysis
 - **CROSS_AGE_ANALYSIS.md**: Cross-age generalization study (NEW! ⭐)
 
+## ☁️ Colab Training Starter (Class Data)
+
+Use the starter notebook to run full training without local heavy compute:
+
+- Notebook: `notebooks/colab_class_training_starter.ipynb`
+- It performs: Drive mount -> repo sync -> metadata prep -> split creation -> validation -> MFCC/HuBERT extraction -> training
+
+### Colab Quick Run
+
+1. Open `notebooks/colab_class_training_starter.ipynb` in Colab or VS Code Colab extension.
+2. Set `REPO_URL` and `REPO_BRANCH` if needed.
+3. Set `DRIVE_AUDIO_ROOT` to your Google Drive class-audio folder.
+4. Run all cells in order.
+
+## 🔄 Exact Audio Upload and Sync Workflow
+
+This is the recommended production workflow for class collection data.
+
+### Step 1: Keep metadata in GitHub
+
+- Commit and push:
+   - `data/collections/class_students/organized_by_state_clean/metadata_all.csv`
+- Do not commit raw audio blobs to GitHub.
+
+### Step 2: Upload audio to Google Drive
+
+Create this folder layout in Drive:
+
+```text
+MyDrive/
+   iiitpro_audio/
+      organized_by_state_clean/
+         andhra_pradesh/
+         telangana/
+         telugu/
+         ...
+```
+
+Important:
+- Copy only state folders under `organized_by_state_clean` (not inside another nested folder).
+- Keep filenames unchanged (`prompt_1.webm`, `prompt_2.webm`, `prompt_3.webm`).
+
+### Step 3: Normalize metadata for training paths
+
+Run:
+
+```bash
+python scripts/prepare_class_metadata_for_training.py \
+   --metadata data/collections/class_students/organized_by_state_clean/metadata_all.csv \
+   --audio_root /content/drive/MyDrive/iiitpro_audio/organized_by_state_clean \
+   --output data/collections/class_students/organized_by_state_clean/metadata_training_ready.csv \
+   --min_bytes 1000 --strict
+```
+
+What it does:
+- Filters tiny/invalid files.
+- Normalizes path mismatches between export metadata and real folder layout.
+- Normalizes language labels (for example `telengana` -> `telangana`).
+
+### Step 4: Create speaker-disjoint splits
+
+```bash
+python src/data/create_splits.py \
+   --metadata data/collections/class_students/organized_by_state_clean/metadata_training_ready.csv \
+   --output_dir data/splits/class_students \
+   --train_ratio 0.7 --dev_ratio 0.15 --test_ratio 0.15
+```
+
+### Step 5: Validate before training
+
+```bash
+python scripts/validate_class_dataset.py \
+   --metadata data/collections/class_students/organized_by_state_clean/metadata_training_ready.csv \
+   --audio_root /content/drive/MyDrive/iiitpro_audio/organized_by_state_clean \
+   --split_dir data/splits/class_students
+```
+
+### Step 6: Extract features and train
+
+MFCC baseline:
+
+```bash
+python src/features/mfcc_extractor.py \
+   --metadata data/collections/class_students/organized_by_state_clean/metadata_training_ready.csv \
+   --audio_dir /content/drive/MyDrive/iiitpro_audio/organized_by_state_clean \
+   --output_dir data/features/class_students/mfcc
+
+python train_simple.py \
+   --features_path data/features/class_students/mfcc/mfcc_stats.pkl \
+   --train_csv data/splits/class_students/train.csv \
+   --val_csv data/splits/class_students/dev.csv \
+   --test_csv data/splits/class_students/test.csv \
+   --output_dir experiments/class_students_colab_mfcc
+```
+
+HuBERT + robust model:
+
+```bash
+python src/features/hubert_extractor.py \
+   --metadata data/collections/class_students/organized_by_state_clean/metadata_training_ready.csv \
+   --audio_dir /content/drive/MyDrive/iiitpro_audio/organized_by_state_clean \
+   --output_dir data/features/class_students/hubert \
+   --extract_layer 3 --pooling mean
+
+python train_robust.py \
+   --features_path data/features/class_students/hubert/hubert_layer3_mean.pkl \
+   --train_csv data/splits/class_students/train.csv \
+   --val_csv data/splits/class_students/dev.csv \
+   --test_csv data/splits/class_students/test.csv \
+   --output_dir experiments/class_students_colab_hubert_robust \
+   --model_type robust_mlp --num_epochs 30
+```
+
+## ⚙️ GitHub Actions: Auto-Retrain on New Commits
+
+Workflow file:
+
+- `.github/workflows/retrain-class-data.yml`
+
+Triggers:
+- Push to `main` when training/data code changes.
+- Weekly schedule.
+- Manual run with input controls.
+
+What it runs automatically:
+1. (Optional) export latest class recordings from Aiven.
+2. Prepare normalized metadata.
+3. Create speaker-disjoint splits.
+4. Validate integrity.
+5. Extract MFCC features.
+6. Retrain baseline model (`train_simple.py`).
+7. Upload artifacts (model + splits + features + metadata).
+
+Required repository secret:
+
+- `AIVEN_DB_URI` (needed when export step is enabled).
+
+Notes:
+- GitHub-hosted runners are CPU-only.
+- This workflow is intentionally CPU-safe (MFCC baseline).
+- Use Colab (or a self-hosted GPU runner) for HuBERT-heavy retraining.
+
 
 
 
