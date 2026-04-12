@@ -185,7 +185,7 @@ def add_no_cache_headers(response):
 
 @app.route('/')
 def root():
-    return render_template('student_intake_v2.html', prompts=STUDENT_PROMPTS)
+    return render_template('index.html')
 
 
 @app.route('/student/intake')
@@ -204,18 +204,64 @@ def student_submissions_summary():
         with _db_connect() as conn:
             _ensure_tables(conn)
             with conn.cursor() as cur:
-                cur.execute('SELECT COUNT(*) FROM student_submissions')
-                submissions = int(cur.fetchone()[0])
-                cur.execute('SELECT COUNT(DISTINCT speaker_id) FROM student_submissions')
-                unique_students = int(cur.fetchone()[0])
-                cur.execute('SELECT COALESCE(SUM(num_recordings), 0) FROM student_submissions')
-                total_recordings = int(cur.fetchone()[0] or 0)
+                cur.execute(
+                    """
+                    SELECT speaker_id, native_language, native_language_other, num_recordings
+                    FROM student_submissions
+                    """
+                )
+                rows = cur.fetchall()
+
+        submissions = len(rows)
+        unique_students_set = set()
+        total_recordings = 0
+        state_breakdown = {}
+
+        for speaker_id, native_language, native_language_other, num_recordings in rows:
+            speaker_text = str(speaker_id or '').strip()
+            if speaker_text != '':
+                unique_students_set.add(speaker_text)
+
+            record_count = int(num_recordings or 0)
+            total_recordings += record_count
+
+            raw_state = str(native_language or '').strip()
+            if raw_state == '':
+                raw_state = str(native_language_other or '').strip()
+
+            state_key = _normalize_accent_label(raw_state)
+            if state_key == '':
+                state_key = 'unknown'
+
+            if state_key not in state_breakdown:
+                state_breakdown[state_key] = {
+                    'submissions': 0,
+                    'records': 0,
+                    'unique_students': set()
+                }
+
+            state_breakdown[state_key]['submissions'] += 1
+            state_breakdown[state_key]['records'] += record_count
+            if speaker_text != '':
+                state_breakdown[state_key]['unique_students'].add(speaker_text)
+
+        state_breakdown_json = {}
+        for state, stats in sorted(state_breakdown.items(), key=lambda x: x[0]):
+            state_breakdown_json[state] = {
+                'submissions': int(stats.get('submissions', 0)),
+                'records': int(stats.get('records', 0)),
+                'unique_students': len(stats.get('unique_students', set()))
+            }
 
         return jsonify({
             'success': True,
             'submissions': submissions,
-            'unique_students': unique_students,
+            'datasets_collected': submissions,
+            'unique_students': len(unique_students_set),
             'total_recordings': total_recordings,
+            'exact_records_collected': total_recordings,
+            'unique_states': len(state_breakdown_json),
+            'state_breakdown': state_breakdown_json,
             'aiven_sync_enabled': True,
             'aiven_db_configured': True,
             'storage_backend': 'aiven-postgres-bytea',
@@ -226,8 +272,12 @@ def student_submissions_summary():
         return jsonify({
             'success': True,
             'submissions': 0,
+            'datasets_collected': 0,
             'unique_students': 0,
             'total_recordings': 0,
+            'exact_records_collected': 0,
+            'unique_states': 0,
+            'state_breakdown': {},
             'aiven_sync_enabled': True,
             'aiven_db_configured': _get_aiven_db_uri() != '',
             'storage_backend': 'aiven-postgres-bytea',
