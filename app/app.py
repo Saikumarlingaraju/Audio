@@ -1482,16 +1482,53 @@ def student_submissions_summary():
     records = _read_student_submissions()
     unique_students = sorted({str(r.get('speaker_id', '')).strip() for r in records if str(r.get('speaker_id', '')).strip() != ''})
     total_recordings = 0
+    state_breakdown = {}
     for r in records:
         audio_files = r.get('audio_files', [])
+        recording_count = 0
         if isinstance(audio_files, list):
-            total_recordings += len(audio_files)
+            recording_count = len(audio_files)
+            total_recordings += recording_count
+
+        raw_state = str(r.get('native_language', '')).strip()
+        if raw_state == '':
+            raw_state = str(r.get('native_language_other', '')).strip()
+
+        state_key = _normalize_accent_label(raw_state)
+        if state_key == '':
+            state_key = 'unknown'
+
+        if state_key not in state_breakdown:
+            state_breakdown[state_key] = {
+                'submissions': 0,
+                'records': 0,
+                'unique_students': set()
+            }
+
+        state_breakdown[state_key]['submissions'] += 1
+        state_breakdown[state_key]['records'] += recording_count
+
+        speaker = str(r.get('speaker_id', '')).strip()
+        if speaker != '':
+            state_breakdown[state_key]['unique_students'].add(speaker)
+
+    state_breakdown_json = {}
+    for state, stats in sorted(state_breakdown.items(), key=lambda x: x[0]):
+        state_breakdown_json[state] = {
+            'submissions': int(stats.get('submissions', 0)),
+            'records': int(stats.get('records', 0)),
+            'unique_students': len(stats.get('unique_students', set()))
+        }
 
     return jsonify({
         'success': True,
         'submissions': len(records),
+        'datasets_collected': len(records),
         'unique_students': len(unique_students),
         'total_recordings': total_recordings,
+        'exact_records_collected': total_recordings,
+        'unique_states': len(state_breakdown_json),
+        'state_breakdown': state_breakdown_json,
         'metadata_csv_path': str(STUDENT_METADATA_CSV_PATH),
         'aiven_sync_enabled': AIVEN_DB_SYNC_ENABLED,
         'aiven_db_configured': AIVEN_DB_URI != ''

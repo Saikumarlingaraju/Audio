@@ -679,6 +679,146 @@
             display: block;
         }
 
+        .classroom-layout,
+        .intake-layout {
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            background: #f8fafc;
+            padding: 14px;
+        }
+
+        .classroom-intro,
+        .intake-intro {
+            font-size: 13px;
+            color: #334155;
+            margin-bottom: 12px;
+            line-height: 1.5;
+        }
+
+        .classroom-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .classroom-stat-card {
+            background: #ffffff;
+            border: 1px solid #cbd5e1;
+            border-radius: 10px;
+            padding: 10px;
+        }
+
+        .classroom-stat-label {
+            font-size: 12px;
+            color: #475569;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .classroom-stat-value {
+            font-size: 22px;
+            color: #0f766e;
+            font-weight: 800;
+            line-height: 1;
+        }
+
+        .classroom-filter-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 10px;
+        }
+
+        .classroom-filter-row label {
+            font-size: 12px;
+            font-weight: 700;
+            color: #475569;
+        }
+
+        .classroom-filter-row select {
+            min-width: 220px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            padding: 8px 10px;
+            font-size: 13px;
+            background: #ffffff;
+            color: #0f172a;
+        }
+
+        .classroom-state-detail,
+        .intake-note {
+            border: 1px dashed #94a3b8;
+            border-radius: 8px;
+            background: #ffffff;
+            padding: 10px;
+            font-size: 12px;
+            color: #334155;
+            margin-bottom: 12px;
+        }
+
+        .classroom-mic-card {
+            border: 1px solid #bae6fd;
+            border-radius: 10px;
+            background: #eff6ff;
+            padding: 12px;
+        }
+
+        .classroom-mic-card h4,
+        .intake-preview h4 {
+            margin: 0 0 6px;
+            font-size: 14px;
+            color: #0c4a6e;
+            font-weight: 800;
+        }
+
+        .classroom-mic-card p,
+        .intake-preview p {
+            margin: 0 0 8px;
+            font-size: 12px;
+            color: #334155;
+            line-height: 1.5;
+        }
+
+        .intake-preview {
+            background: #ffffff;
+            border: 1px solid #cbd5e1;
+            border-radius: 10px;
+            padding: 12px;
+            margin-bottom: 12px;
+        }
+
+        .intake-preview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+        }
+
+        .intake-field label {
+            display: block;
+            font-size: 11px;
+            font-weight: 700;
+            color: #64748b;
+            margin-bottom: 4px;
+        }
+
+        .intake-field input,
+        .intake-field textarea {
+            width: 100%;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            padding: 7px 8px;
+            font-size: 12px;
+            font-family: inherit;
+            background: #f8fafc;
+            color: #475569;
+        }
+
+        .intake-field.full {
+            grid-column: 1 / -1;
+        }
+
         .batch-list {
             margin-top: 12px;
             border: 1px solid #e5e7eb;
@@ -893,10 +1033,12 @@
             <main class="panel">
                 <div class="panel-body">
                     <div class="mode-tabs">
-                        <button class="mode-tab active" onclick="switchMode('single')">Single Upload</button>
-                        <button class="mode-tab" onclick="switchMode('batch')">Batch Upload</button>
+                        <button class="mode-tab active" data-mode="single" onclick="switchMode('single')">Single Upload</button>
+                        <button class="mode-tab" data-mode="batch" onclick="switchMode('batch')">Batch Upload</button>
                         <button class="mode-tab" onclick="openDashboard()">📊 Feedback Dashboard</button>
                         <button class="mode-tab" onclick="openStudentIntake()">Class Intake Form</button>
+                        <button class="mode-tab" data-mode="classroom" onclick="switchMode('classroom')">Classroom</button>
+                        <button class="mode-tab" data-mode="intake" onclick="switchMode('intake')">Intake data</button>
                     </div>
 
                     <section id="singleUploadSection" class="upload-section active">
@@ -1031,6 +1173,99 @@
                             </div>
                         </div>
                     </section>
+
+                    <section id="classroomSection" class="upload-section">
+                        <div class="classroom-layout">
+                            <p class="classroom-intro">
+                                Classroom metrics show what was collected from student intake submissions. Use the state filter to view
+                                state-level counts, and use the speak mic section below to continue collection through the existing intake recorder.
+                            </p>
+
+                            <div class="classroom-stats-grid">
+                                <div class="classroom-stat-card">
+                                    <div class="classroom-stat-label">Datasets Collected</div>
+                                    <div id="classDatasetsCollected" class="classroom-stat-value">--</div>
+                                </div>
+                                <div class="classroom-stat-card">
+                                    <div class="classroom-stat-label">Unique States</div>
+                                    <div id="classUniqueStates" class="classroom-stat-value">--</div>
+                                </div>
+                                <div class="classroom-stat-card">
+                                    <div class="classroom-stat-label">Exact Records Collected</div>
+                                    <div id="classExactRecords" class="classroom-stat-value">--</div>
+                                </div>
+                            </div>
+
+                            <div class="classroom-filter-row">
+                                <label for="classStateFilter">Filter by state</label>
+                                <select id="classStateFilter">
+                                    <option value="all">All States</option>
+                                </select>
+                            </div>
+
+                            <div id="classroomStateDetail" class="classroom-state-detail">Select a state to view filtered counts.</div>
+
+                            <div class="classroom-mic-card">
+                                <h4>Speak Mic Section</h4>
+                                <p>
+                                    Use the existing classroom intake recorder to capture prompt audio from students.
+                                    This keeps one consistent recording workflow and stores data directly in the intake pipeline.
+                                </p>
+                                <button class="btn-lite" type="button" onclick="openStudentIntake()">Open Intake Recorder</button>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section id="intakeDataSection" class="upload-section">
+                        <div class="intake-layout">
+                            <p class="intake-intro">
+                                This section shows the fill-in format used during student intake. Students provide metadata fields and
+                                record or upload prompt audio, which is then saved to classroom collection logs.
+                            </p>
+
+                            <div class="intake-preview">
+                                <h4>Fill-in-the-blank format used for intake</h4>
+                                <p>Preview of the same core fields used in the live student intake form.</p>
+                                <div class="intake-preview-grid">
+                                    <div class="intake-field">
+                                        <label>Student Name</label>
+                                        <input type="text" placeholder="Enter your full name" disabled>
+                                    </div>
+                                    <div class="intake-field">
+                                        <label>Student ID</label>
+                                        <input type="text" placeholder="Enter your student ID" disabled>
+                                    </div>
+                                    <div class="intake-field">
+                                        <label>Department / Section</label>
+                                        <input type="text" placeholder="Example: CSE-B" disabled>
+                                    </div>
+                                    <div class="intake-field">
+                                        <label>Hometown</label>
+                                        <input type="text" placeholder="City / District / State" disabled>
+                                    </div>
+                                    <div class="intake-field">
+                                        <label>Native Language</label>
+                                        <input type="text" placeholder="Select native language" disabled>
+                                    </div>
+                                    <div class="intake-field">
+                                        <label>Native Language (Other)</label>
+                                        <input type="text" placeholder="If not listed, specify" disabled>
+                                    </div>
+                                    <div class="intake-field full">
+                                        <label>Prompt Audio (3 prompts)</label>
+                                        <textarea rows="3" disabled>Prompt 1, Prompt 2, Prompt 3 are recorded or uploaded in the live form.</textarea>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="intake-note">
+                                Data collection method: student fills metadata -> records/uploads three prompt audios -> submits ->
+                                files and metadata are stored in classroom collection records for training and analysis.
+                            </div>
+
+                            <button class="btn-lite" type="button" onclick="openStudentIntake()">Open Live Intake Form</button>
+                        </div>
+                    </section>
                 </div>
             </main>
         </div>
@@ -1055,8 +1290,14 @@
         const feedbackForm = document.getElementById('feedbackForm');
         const correctedAccent = document.getElementById('correctedAccent');
         const feedbackNotes = document.getElementById('feedbackNotes');
+        const classDatasetsCollected = document.getElementById('classDatasetsCollected');
+        const classUniqueStates = document.getElementById('classUniqueStates');
+        const classExactRecords = document.getElementById('classExactRecords');
+        const classStateFilter = document.getElementById('classStateFilter');
+        const classroomStateDetail = document.getElementById('classroomStateDetail');
         let lastPredictionData = null;
         let batchPredictionsCache = [];
+        let classroomSummaryCache = null;
 
         function resetMessages() {
             errorBanner.style.display = 'none';
@@ -1082,6 +1323,89 @@
                 return '"' + text.replace(/"/g, '""') + '"';
             }
             return text;
+        }
+
+        function titleCaseState(value) {
+            return String(value || '')
+                .replace(/_/g, ' ')
+                .replace(/\b\w/g, (c) => c.toUpperCase());
+        }
+
+        function setClassroomValues(datasets, states, records) {
+            classDatasetsCollected.textContent = String(datasets);
+            classUniqueStates.textContent = String(states);
+            classExactRecords.textContent = String(records);
+        }
+
+        function renderClassroomSelection(selectedState) {
+            if (!classroomSummaryCache) {
+                return;
+            }
+
+            const breakdown = classroomSummaryCache.state_breakdown || {};
+            if (selectedState && selectedState !== 'all' && breakdown[selectedState]) {
+                const stats = breakdown[selectedState];
+                setClassroomValues(stats.submissions || 0, 1, stats.records || 0);
+                classroomStateDetail.textContent =
+                    'Selected state: ' + titleCaseState(selectedState) +
+                    ' | submissions: ' + (stats.submissions || 0) +
+                    ' | records: ' + (stats.records || 0) +
+                    ' | unique students: ' + (stats.unique_students || 0);
+                return;
+            }
+
+            const datasets = Number(classroomSummaryCache.datasets_collected ?? classroomSummaryCache.submissions ?? 0);
+            const states = Number(classroomSummaryCache.unique_states ?? 0);
+            const records = Number(classroomSummaryCache.exact_records_collected ?? classroomSummaryCache.total_recordings ?? 0);
+            setClassroomValues(datasets, states, records);
+
+            if (states === 0) {
+                classroomStateDetail.textContent = 'No classroom submissions yet. Use the intake form to collect student data.';
+            } else {
+                classroomStateDetail.textContent =
+                    'Showing all states | datasets: ' + datasets +
+                    ' | records: ' + records +
+                    ' | unique states: ' + states;
+            }
+        }
+
+        function populateClassroomStateFilter(breakdown) {
+            const previous = classStateFilter.value || 'all';
+            classStateFilter.innerHTML = '<option value="all">All States</option>';
+
+            Object.keys(breakdown || {}).sort().forEach((stateKey) => {
+                const opt = document.createElement('option');
+                opt.value = stateKey;
+                opt.textContent = titleCaseState(stateKey);
+                classStateFilter.appendChild(opt);
+            });
+
+            if ([...classStateFilter.options].some((opt) => opt.value === previous)) {
+                classStateFilter.value = previous;
+            } else {
+                classStateFilter.value = 'all';
+            }
+        }
+
+        async function loadClassroomSummary() {
+            if (!classDatasetsCollected || !classUniqueStates || !classExactRecords) {
+                return;
+            }
+
+            try {
+                const response = await fetch('/student/submissions/summary', { cache: 'no-store' });
+                const data = await response.json();
+                if (!response.ok || !data.success) {
+                    throw new Error(data.error || 'Unable to load classroom summary');
+                }
+
+                classroomSummaryCache = data;
+                populateClassroomStateFilter(data.state_breakdown || {});
+                renderClassroomSelection(classStateFilter.value || 'all');
+            } catch (err) {
+                setClassroomValues('--', '--', '--');
+                classroomStateDetail.textContent = 'Failed to load classroom data: ' + err.message;
+            }
         }
 
         function bindSelectedFile(file) {
@@ -1366,18 +1690,35 @@
         let batchFiles = [];
 
         function switchMode(mode) {
-            const tabs = document.querySelectorAll('.mode-tab');
+            const tabs = document.querySelectorAll('.mode-tab[data-mode]');
             const sections = document.querySelectorAll('.upload-section');
             
             tabs.forEach(tab => tab.classList.remove('active'));
             sections.forEach(sec => sec.classList.remove('active'));
-            
-            if (mode === 'single') {
-                tabs[0].classList.add('active');
-                document.getElementById('singleUploadSection').classList.add('active');
-            } else if (mode === 'batch') {
-                tabs[1].classList.add('active');
-                document.getElementById('batchUploadSection').classList.add('active');
+
+            const sectionMap = {
+                single: 'singleUploadSection',
+                batch: 'batchUploadSection',
+                classroom: 'classroomSection',
+                intake: 'intakeDataSection'
+            };
+
+            const targetTab = document.querySelector('.mode-tab[data-mode="' + mode + '"]');
+            const targetSectionId = sectionMap[mode];
+
+            if (targetTab) {
+                targetTab.classList.add('active');
+            }
+
+            if (targetSectionId) {
+                const targetSection = document.getElementById(targetSectionId);
+                if (targetSection) {
+                    targetSection.classList.add('active');
+                }
+            }
+
+            if (mode === 'classroom') {
+                loadClassroomSummary();
             }
         }
 
@@ -1595,8 +1936,13 @@
             }
         });
 
+        classStateFilter.addEventListener('change', () => {
+            renderClassroomSelection(classStateFilter.value || 'all');
+        });
+
         loadModelInfo();
         loadFeedbackSummary();
+        loadClassroomSummary();
     </script>
 </body>
 </html>
