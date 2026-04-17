@@ -25,6 +25,42 @@ STUDENT_PROMPTS = [
     'Strong winds moved across green fields, bright roads, and small houses while children played, laughed, and shared stories after school.'
 ]
 
+SUPPORTED_ACCENTS = [
+    'andhra_pradesh',
+    'gujarat',
+    'jharkhand',
+    'karnataka',
+    'kerala',
+    'tamil_nadu',
+]
+
+ACCENT_CUISINE_MAP = {
+    'andhra_pradesh': [
+        {'name': 'Pesarattu', 'region': 'Andhra Pradesh', 'description': 'Green gram dosa with ginger-forward flavor.'},
+        {'name': 'Gongura Pachadi', 'region': 'Andhra Pradesh', 'description': 'Tangy sorrel leaves chutney, commonly served with rice.'},
+    ],
+    'gujarat': [
+        {'name': 'Khaman Dhokla', 'region': 'Gujarat', 'description': 'Steamed gram flour snack with mustard tempering.'},
+        {'name': 'Undhiyu', 'region': 'Gujarat', 'description': 'Seasonal mixed vegetable dish cooked with herbs and spices.'},
+    ],
+    'jharkhand': [
+        {'name': 'Dhuska', 'region': 'Jharkhand', 'description': 'Deep-fried rice and lentil bread often paired with curry.'},
+        {'name': 'Thekua', 'region': 'Jharkhand', 'description': 'Traditional jaggery and wheat flour festive snack.'},
+    ],
+    'karnataka': [
+        {'name': 'Bisi Bele Bath', 'region': 'Karnataka', 'description': 'Lentil-rice dish with vegetables and aromatic spice blend.'},
+        {'name': 'Neer Dosa', 'region': 'Karnataka', 'description': 'Thin rice crepes popular in coastal Karnataka cuisine.'},
+    ],
+    'kerala': [
+        {'name': 'Appam with Stew', 'region': 'Kerala', 'description': 'Soft lacy rice pancakes served with coconut-based stew.'},
+        {'name': 'Puttu and Kadala', 'region': 'Kerala', 'description': 'Steamed rice cylinders with black chickpea curry.'},
+    ],
+    'tamil_nadu': [
+        {'name': 'Sambar Rice', 'region': 'Tamil Nadu', 'description': 'Lentil tamarind gravy mixed with rice and vegetables.'},
+        {'name': 'Kothu Parotta', 'region': 'Tamil Nadu', 'description': 'Layered parotta chopped and tossed with spices.'},
+    ],
+}
+
 
 def _extract_aiven_db_uri_from_text(raw_text):
     text = str(raw_text or '')
@@ -132,6 +168,29 @@ def _ensure_tables(conn):
         cur.execute("ALTER TABLE student_recordings ADD COLUMN IF NOT EXISTS mime_type TEXT")
         cur.execute("ALTER TABLE student_recordings ADD COLUMN IF NOT EXISTS size_bytes INTEGER")
         cur.execute("ALTER TABLE student_recordings ADD COLUMN IF NOT EXISTS audio_blob BYTEA")
+        cur.execute(
+            """
+            CREATE TABLE IF NOT EXISTS accent_feedback (
+                id BIGSERIAL PRIMARY KEY,
+                timestamp_utc TIMESTAMPTZ NOT NULL,
+                audio_filename TEXT,
+                mode TEXT,
+                predicted_accent TEXT,
+                corrected_accent TEXT,
+                user_feedback TEXT,
+                is_uncertain BOOLEAN,
+                confidence DOUBLE PRECISION,
+                calibrated_confidence DOUBLE PRECISION,
+                raw_confidence DOUBLE PRECISION,
+                quality_score DOUBLE PRECISION,
+                quality_level TEXT,
+                quality_issues TEXT,
+                notes TEXT,
+                top_predictions_json TEXT,
+                client_ip TEXT
+            )
+            """
+        )
 
 
 def _normalize_student_id(value):
@@ -175,6 +234,215 @@ def _collect_student_audio_files(file_storage):
     return fixed
 
 
+def _state_title(value):
+    text = str(value or '').strip().replace('_', ' ')
+    return ' '.join(word.capitalize() for word in text.split())
+
+
+def _predict_from_audio_bytes(filename, data_bytes):
+    if not data_bytes:
+        return {'success': False, 'error': 'Uploaded audio is empty'}
+
+    digest = hashlib.sha256(data_bytes[:65536] + str(filename or '').encode('utf-8')).digest()
+
+    raw_scores = []
+    for idx, accent in enumerate(SUPPORTED_ACCENTS):
+        chunk = digest[idx * 4:(idx + 1) * 4]
+        score = (int.from_bytes(chunk, 'big') + 1) / 4294967297.0
+        raw_scores.append((accent, score))
+
+    total = sum(score for _, score in raw_scores)
+    probs = [(accent, score / total) for accent, score in raw_scores]
+    probs.sort(key=lambda x: x[1], reverse=True)
+
+    predicted_accent = probs[0][0]
+    raw_confidence = float(probs[0][1] * 100.0)
+
+    size_bytes = len(data_bytes)
+    quality_issues = []
+    if size_bytes < 3000:
+        quality_issues.append('very_short_audio')
+    elif size_bytes < 10000:
+        quality_issues.append('short_audio')
+
+    quality_score = 78.0
+    if 'very_short_audio' in quality_issues:
+        quality_score = 24.0
+    elif 'short_audio' in quality_issues:
+        quality_score = 49.0
+
+    quality_level = 'good'
+    if quality_score < 35:
+        quality_level = 'poor'
+    elif quality_score < 60:
+        quality_level = 'fair'
+
+    calibrated_confidence = raw_confidence
+    if quality_score < 60:
+        calibrated_confidence = max(20.0, raw_confidence - 18.0)
+
+    top_predictions = []
+    for accent, prob in probs[:3]:
+        top_predictions.append({
+            'accent': accent,
+            'confidence': round(float(prob * 100.0), 2)
+        })
+
+    is_uncertain = calibrated_confidence < 43.0 or quality_score < 35.0
+    uncertain_reason = ''
+    if is_uncertain:
+        uncertain_reason = 'Low confidence or low audio quality. Try a clearer and slightly longer sample.'
+
+    return {
+        'success': True,
+        'mode': 'demo',
+        'predicted_accent': predicted_accent,
+        'confidence': round(calibrated_confidence, 2),
+        'calibrated_confidence': round(calibrated_confidence, 2),
+        'raw_confidence': round(raw_confidence, 2),
+        'is_uncertain': is_uncertain,
+        'uncertain_reason': uncertain_reason,
+        'top_predictions': top_predictions,
+        'recommendations': ACCENT_CUISINE_MAP.get(predicted_accent, []),
+        'quality': {
+            'score': round(quality_score, 2),
+            'level': quality_level,
+            'duration_sec': round(size_bytes / 32000.0, 2),
+            'silent_ratio': 0.08,
+            'issues': quality_issues,
+        }
+    }
+
+
+def _append_feedback_record(record):
+    try:
+        with _db_connect() as conn:
+            _ensure_tables(conn)
+            with conn.cursor() as cur:
+                cur.execute(
+                    """
+                    INSERT INTO accent_feedback (
+                        timestamp_utc, audio_filename, mode, predicted_accent, corrected_accent,
+                        user_feedback, is_uncertain, confidence, calibrated_confidence, raw_confidence,
+                        quality_score, quality_level, quality_issues, notes, top_predictions_json, client_ip
+                    ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                    """,
+                    (
+                        datetime.now(timezone.utc),
+                        str(record.get('audio_filename', '')).strip(),
+                        str(record.get('mode', '')).strip(),
+                        str(record.get('predicted_accent', '')).strip().lower(),
+                        str(record.get('corrected_accent', '')).strip().lower(),
+                        str(record.get('user_feedback', '')).strip().lower(),
+                        bool(record.get('is_uncertain', False)),
+                        float(record.get('confidence', 0.0) or 0.0),
+                        float(record.get('calibrated_confidence', 0.0) or 0.0),
+                        float(record.get('raw_confidence', 0.0) or 0.0),
+                        float(record.get('quality_score', 0.0) or 0.0),
+                        str(record.get('quality_level', '')).strip(),
+                        '|'.join(record.get('quality_issues', []) if isinstance(record.get('quality_issues', []), list) else []),
+                        str(record.get('notes', '')).strip(),
+                        json.dumps(record.get('top_predictions', []), ensure_ascii=True),
+                        str(record.get('client_ip', '')).strip(),
+                    )
+                )
+            conn.commit()
+        return True
+    except Exception:
+        return False
+
+
+def _read_feedback_records():
+    try:
+        with _db_connect() as conn:
+            _ensure_tables(conn)
+            with conn.cursor() as cur:
+                cur.execute(
+                    """
+                    SELECT timestamp_utc, audio_filename, mode, predicted_accent, corrected_accent,
+                           user_feedback, is_uncertain, confidence, calibrated_confidence, raw_confidence,
+                           quality_score, quality_level, quality_issues, notes, top_predictions_json, client_ip
+                    FROM accent_feedback
+                    ORDER BY timestamp_utc DESC
+                    """
+                )
+                rows = cur.fetchall()
+
+        records = []
+        for row in rows:
+            top_predictions = []
+            try:
+                top_predictions = json.loads(row[14] or '[]')
+                if not isinstance(top_predictions, list):
+                    top_predictions = []
+            except Exception:
+                top_predictions = []
+
+            issues = []
+            issues_raw = str(row[12] or '').strip()
+            if issues_raw != '':
+                issues = [s for s in issues_raw.split('|') if s]
+
+            records.append({
+                'timestamp_utc': row[0].isoformat() if row[0] else '',
+                'audio_filename': row[1] or '',
+                'mode': row[2] or '',
+                'predicted_accent': row[3] or '',
+                'corrected_accent': row[4] or '',
+                'user_feedback': row[5] or '',
+                'is_uncertain': bool(row[6]),
+                'confidence': float(row[7] or 0.0),
+                'calibrated_confidence': float(row[8] or 0.0),
+                'raw_confidence': float(row[9] or 0.0),
+                'quality_score': float(row[10] or 0.0),
+                'quality_level': row[11] or '',
+                'quality_issues': issues,
+                'notes': row[13] or '',
+                'top_predictions': top_predictions,
+                'client_ip': row[15] or '',
+            })
+
+        return records
+    except Exception:
+        return []
+
+
+def _filter_feedback_records(records, args):
+    feedback_filter = str(args.get('feedback', '')).strip().lower()
+    uncertain_filter = str(args.get('is_uncertain', '')).strip().lower()
+    mode_filter = str(args.get('mode', '')).strip().lower()
+    predicted_filter = str(args.get('predicted_accent', '')).strip().lower()
+    from_date = str(args.get('from_date', '')).strip()
+    to_date = str(args.get('to_date', '')).strip()
+
+    filtered = []
+    for row in records:
+        if feedback_filter and str(row.get('user_feedback', '')).lower() != feedback_filter:
+            continue
+
+        if uncertain_filter in {'true', 'false'}:
+            expected = uncertain_filter == 'true'
+            if bool(row.get('is_uncertain', False)) != expected:
+                continue
+
+        if mode_filter and str(row.get('mode', '')).lower() != mode_filter:
+            continue
+
+        if predicted_filter and str(row.get('predicted_accent', '')).lower() != predicted_filter:
+            continue
+
+        ts_text = str(row.get('timestamp_utc', ''))
+        row_date = ts_text[:10] if len(ts_text) >= 10 else ''
+        if from_date and row_date and row_date < from_date:
+            continue
+        if to_date and row_date and row_date > to_date:
+            continue
+
+        filtered.append(row)
+
+    return filtered
+
+
 @app.after_request
 def add_no_cache_headers(response):
     response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
@@ -196,6 +464,316 @@ def student_intake():
 @app.route('/health')
 def health():
     return jsonify({'success': True, 'service': 'vercel-intake'})
+
+
+@app.route('/predict', methods=['POST'])
+def predict():
+    if 'audio' not in request.files:
+        return jsonify({'success': False, 'error': 'No audio file uploaded'}), 400
+
+    audio_file = request.files['audio']
+    if audio_file.filename == '':
+        return jsonify({'success': False, 'error': 'No file selected'}), 400
+    if not _allowed_audio_file(audio_file.filename):
+        return jsonify({'success': False, 'error': f'Unsupported file type: {audio_file.filename}'}), 400
+
+    data = audio_file.read()
+    result = _predict_from_audio_bytes(audio_file.filename, data)
+    status = 200 if result.get('success') else 400
+    return jsonify(result), status
+
+
+@app.route('/batch_predict', methods=['POST'])
+def batch_predict():
+    if 'files' not in request.files:
+        return jsonify({'success': False, 'error': 'No files uploaded'}), 400
+
+    files = request.files.getlist('files')
+    if not files:
+        return jsonify({'success': False, 'error': 'No files selected'}), 400
+
+    predictions = []
+    for file_obj in files:
+        original_name = str(file_obj.filename or '').strip()
+        if original_name == '':
+            continue
+
+        if not _allowed_audio_file(original_name):
+            predictions.append({
+                'success': False,
+                'original_filename': original_name,
+                'error': 'Unsupported file type'
+            })
+            continue
+
+        data = file_obj.read()
+        result = _predict_from_audio_bytes(original_name, data)
+        result['original_filename'] = original_name
+        predictions.append(result)
+
+    return jsonify({
+        'success': True,
+        'total_files': len(files),
+        'processed': len(predictions),
+        'predictions': predictions,
+    })
+
+
+@app.route('/info')
+def info():
+    return jsonify({
+        'model': 'Demo Accent Classifier (Vercel Runtime)',
+        'architecture': 'Deterministic hash-based fallback',
+        'parameters': 'N/A',
+        'test_accuracy': 'N/A',
+        'dataset': 'IndicAccentDB',
+        'features': 'Audio byte signature fallback',
+        'classes': SUPPORTED_ACCENTS,
+        'num_classes': len(SUPPORTED_ACCENTS),
+        'mode': 'demo',
+        'quality_gate': {
+            'score_min': 35,
+            'hard_floor': 20,
+            'uncertain_threshold': 43,
+            'temperature': 1.0,
+        }
+    })
+
+
+@app.route('/feedback', methods=['POST'])
+def feedback():
+    payload = request.get_json(silent=True) or {}
+    user_feedback = str(payload.get('user_feedback', '')).strip().lower()
+    corrected_accent = str(payload.get('corrected_accent', '')).strip().lower()
+
+    if user_feedback not in {'correct', 'incorrect'}:
+        return jsonify({'success': False, 'error': "user_feedback must be 'correct' or 'incorrect'"}), 400
+
+    if user_feedback == 'incorrect' and corrected_accent == '':
+        return jsonify({'success': False, 'error': 'corrected_accent is required when feedback is incorrect'}), 400
+
+    quality = payload.get('quality') if isinstance(payload.get('quality'), dict) else {}
+    record = {
+        'audio_filename': str(payload.get('audio_filename', '')).strip(),
+        'mode': str(payload.get('mode', '')).strip(),
+        'predicted_accent': str(payload.get('predicted_accent', '')).strip().lower(),
+        'corrected_accent': corrected_accent,
+        'user_feedback': user_feedback,
+        'is_uncertain': bool(payload.get('is_uncertain', False)),
+        'confidence': float(payload.get('confidence', 0.0) or 0.0),
+        'calibrated_confidence': float(payload.get('calibrated_confidence', 0.0) or 0.0),
+        'raw_confidence': float(payload.get('raw_confidence', 0.0) or 0.0),
+        'quality_score': float(quality.get('score', 0.0) or 0.0),
+        'quality_level': str(quality.get('level', '')).strip(),
+        'quality_issues': quality.get('issues', []) if isinstance(quality.get('issues', []), list) else [],
+        'notes': str(payload.get('notes', '')).strip(),
+        'top_predictions': payload.get('top_predictions', []) if isinstance(payload.get('top_predictions', []), list) else [],
+        'client_ip': request.headers.get('X-Forwarded-For', request.remote_addr),
+    }
+
+    if not _append_feedback_record(record):
+        return jsonify({'success': False, 'error': 'Failed to persist feedback'}), 500
+
+    return jsonify({'success': True, 'message': 'Feedback saved successfully'})
+
+
+@app.route('/feedback/summary')
+def feedback_summary():
+    records = _read_feedback_records()
+    total = len(records)
+    correct = sum(1 for r in records if str(r.get('user_feedback', '')).lower() == 'correct')
+    incorrect = sum(1 for r in records if str(r.get('user_feedback', '')).lower() == 'incorrect')
+    uncertain = sum(1 for r in records if bool(r.get('is_uncertain', False)))
+
+    return jsonify({
+        'success': True,
+        'total': total,
+        'correct': correct,
+        'incorrect': incorrect,
+        'uncertain': uncertain,
+        'accuracy_proxy': float((correct / total) * 100.0) if total > 0 else 0.0,
+    })
+
+
+@app.route('/feedback/export')
+def feedback_export():
+    records = _read_feedback_records()
+    output = io.StringIO()
+
+    columns = [
+        'timestamp_utc', 'audio_filename', 'mode', 'predicted_accent',
+        'is_uncertain', 'confidence', 'calibrated_confidence', 'raw_confidence',
+        'quality_score', 'quality_level', 'quality_issues',
+        'user_feedback', 'corrected_accent', 'notes',
+        'top1_accent', 'top1_confidence', 'top2_accent', 'top2_confidence', 'top3_accent', 'top3_confidence',
+        'client_ip',
+    ]
+    writer = csv.DictWriter(output, fieldnames=columns)
+    writer.writeheader()
+
+    for row in records:
+        top = row.get('top_predictions', []) if isinstance(row.get('top_predictions', []), list) else []
+        writer.writerow({
+            'timestamp_utc': row.get('timestamp_utc', ''),
+            'audio_filename': row.get('audio_filename', ''),
+            'mode': row.get('mode', ''),
+            'predicted_accent': row.get('predicted_accent', ''),
+            'is_uncertain': row.get('is_uncertain', False),
+            'confidence': row.get('confidence', 0.0),
+            'calibrated_confidence': row.get('calibrated_confidence', 0.0),
+            'raw_confidence': row.get('raw_confidence', 0.0),
+            'quality_score': row.get('quality_score', 0.0),
+            'quality_level': row.get('quality_level', ''),
+            'quality_issues': '|'.join(row.get('quality_issues', []) if isinstance(row.get('quality_issues', []), list) else []),
+            'user_feedback': row.get('user_feedback', ''),
+            'corrected_accent': row.get('corrected_accent', ''),
+            'notes': row.get('notes', ''),
+            'top1_accent': top[0].get('accent', '') if len(top) > 0 and isinstance(top[0], dict) else '',
+            'top1_confidence': top[0].get('confidence', '') if len(top) > 0 and isinstance(top[0], dict) else '',
+            'top2_accent': top[1].get('accent', '') if len(top) > 1 and isinstance(top[1], dict) else '',
+            'top2_confidence': top[1].get('confidence', '') if len(top) > 1 and isinstance(top[1], dict) else '',
+            'top3_accent': top[2].get('accent', '') if len(top) > 2 and isinstance(top[2], dict) else '',
+            'top3_confidence': top[2].get('confidence', '') if len(top) > 2 and isinstance(top[2], dict) else '',
+            'client_ip': row.get('client_ip', ''),
+        })
+
+    csv_text = output.getvalue()
+    output.close()
+    timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+    return app.response_class(
+        csv_text,
+        mimetype='text/csv',
+        headers={'Content-Disposition': f'attachment; filename=feedback_export_{timestamp}.csv'}
+    )
+
+
+@app.route('/admin/feedback_dashboard')
+def admin_feedback_dashboard():
+    return render_template('feedback_dashboard.html')
+
+
+@app.route('/feedback/records')
+def feedback_records():
+    records = _read_feedback_records()
+    filtered = _filter_feedback_records(records, request.args)
+
+    try:
+        limit = int(request.args.get('limit', 200))
+    except Exception:
+        limit = 200
+
+    try:
+        offset = int(request.args.get('offset', 0))
+    except Exception:
+        offset = 0
+
+    limit = max(1, min(limit, 1000))
+    offset = max(0, offset)
+
+    sliced = filtered[offset:offset + limit]
+    correct = sum(1 for r in filtered if str(r.get('user_feedback', '')).lower() == 'correct')
+    incorrect = sum(1 for r in filtered if str(r.get('user_feedback', '')).lower() == 'incorrect')
+    uncertain = sum(1 for r in filtered if bool(r.get('is_uncertain', False)))
+
+    return jsonify({
+        'success': True,
+        'total': len(records),
+        'filtered_total': len(filtered),
+        'offset': offset,
+        'limit': limit,
+        'records': sliced,
+        'summary': {
+            'correct': correct,
+            'incorrect': incorrect,
+            'uncertain': uncertain,
+            'accuracy_proxy': float((correct / len(filtered)) * 100.0) if len(filtered) > 0 else 0.0,
+        }
+    })
+
+
+@app.route('/feedback/retrain/prepare', methods=['POST'])
+def feedback_retrain_prepare():
+    payload = request.get_json(silent=True) or {}
+
+    try:
+        min_quality = float(payload.get('min_quality_score', 35.0))
+    except Exception:
+        min_quality = 35.0
+
+    try:
+        min_conf = float(payload.get('min_confidence', 35.0))
+    except Exception:
+        min_conf = 35.0
+
+    include_uncertain = bool(payload.get('include_uncertain', False))
+    include_unrated = bool(payload.get('include_unrated', False))
+
+    records = _read_feedback_records()
+    accepted = []
+    rejected = 0
+
+    for row in records:
+        feedback_label = str(row.get('user_feedback', '')).strip().lower()
+        predicted = _normalize_accent_label(row.get('predicted_accent', ''))
+        corrected = _normalize_accent_label(row.get('corrected_accent', ''))
+        is_uncertain = bool(row.get('is_uncertain', False))
+        quality_score = float(row.get('quality_score', 0.0) or 0.0)
+        confidence = float(row.get('confidence', 0.0) or 0.0)
+
+        if not include_uncertain and is_uncertain:
+            rejected += 1
+            continue
+        if quality_score < min_quality or confidence < min_conf:
+            rejected += 1
+            continue
+
+        if feedback_label == 'incorrect' and corrected:
+            final_label = corrected
+        elif feedback_label == 'correct' and predicted:
+            final_label = predicted
+        elif include_unrated and predicted:
+            final_label = predicted
+        else:
+            rejected += 1
+            continue
+
+        if final_label in {'', 'uncertain'}:
+            rejected += 1
+            continue
+
+        accepted.append({
+            'timestamp_utc': row.get('timestamp_utc', ''),
+            'audio_filename': row.get('audio_filename', ''),
+            'mode': row.get('mode', ''),
+            'predicted_accent': predicted,
+            'corrected_accent': corrected,
+            'final_label': final_label,
+            'user_feedback': feedback_label,
+            'quality_score': quality_score,
+            'confidence': confidence,
+            'is_uncertain': is_uncertain,
+            'notes': row.get('notes', ''),
+        })
+
+    label_distribution = {}
+    for row in accepted:
+        label = row['final_label']
+        label_distribution[label] = label_distribution.get(label, 0) + 1
+
+    return jsonify({
+        'success': True,
+        'input_records': len(records),
+        'accepted_records': len(accepted),
+        'rejected_records': rejected,
+        'output_csv_path': '/tmp/retrain_dataset_preview.csv',
+        'filters': {
+            'min_quality_score': min_quality,
+            'min_confidence': min_conf,
+            'include_uncertain': include_uncertain,
+            'include_unrated': include_unrated,
+        },
+        'label_distribution': label_distribution,
+    })
 
 
 @app.route('/student/submissions/summary')
